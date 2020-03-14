@@ -1,0 +1,29 @@
+﻿<Application x:Class="WPF_Trello.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:WPF_Trello"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
+                <ResourceDictionary>
+                    <local:ViewModelLocator x:Key="ViewModelLocator" />
+                    <!-- primary -->
+                    <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#58a8f2"/>
+                    <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#0079bf"/>
+                    <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#005296"/>
+                    <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="#FFFFFF"/>
+                    <!-- accent -->
+                    <SolidColorBrush x:Key="SecondaryAccentBrush" Color="#ebecf0"/>
+                    <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="#172b4d"/>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
