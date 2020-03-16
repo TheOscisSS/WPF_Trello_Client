@@ -1,10 +1,6 @@
 ﻿using DevExpress.Mvvm;
-using System;
-using System.Collections.Generic;
+using WebSocketSharp;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using WPF_Trello.Pages;
 using WPF_Trello.Services;
@@ -23,14 +19,17 @@ namespace WPF_Trello.ViewModels
             _pageService = pageService;
         }
 
-        public ICommand ChangePage => new AsyncCommand(async () =>
+        public ICommand ComeToRegisterPage => new AsyncCommand(async () =>
         {
             _pageService.ChangePage(new Register());
         });
-
-        public ICommand SendCredentialsToServer => new DelegateCommand(() =>
+        public ICommand ComeToHomePage => new AsyncCommand(async () =>
         {
-            Debug.WriteLine($"Your email is {EmailInputField}");
+            _pageService.ChangePage(new Home());
+        });
+        public ICommand SendCredentialsToServer => new AsyncCommand(async () =>
+        {
+            Debug.WriteLine($"Your credentials are {EmailInputField} : {PasswordInputField}");
         });
     }
 }

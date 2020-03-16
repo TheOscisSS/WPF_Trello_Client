@@ -15,9 +15,8 @@ namespace WPF_Trello.ViewModels
         {
             _pageService = pageService;
 
-
             _pageService.OnPageChanged += (page) => PageSource = page;
-            _pageService.ChangePage(new Login());
+            _pageService.ChangePage(new Home());
         }
     }
 }

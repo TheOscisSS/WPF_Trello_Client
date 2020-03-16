@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:local="clr-namespace:WPF_Trello.Pages"
+      xmlns:ui="clr-namespace:WPF_Trello.UI"
       DataContext="{Binding RegisterViewModel, Source={StaticResource ViewModelLocator}}"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
@@ -29,6 +30,7 @@
                          FontSize="14"
                          FontWeight="Regular"
                          VerticalAlignment="Top"
+                         Text="{Binding EmailInputField, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource MaterialDesignFilledTextFieldTextBox}"
                          materialDesign:HintAssist.Hint="Emai"
                          />
@@ -36,6 +38,8 @@
                          FontSize="14"
                          FontWeight="Regular"
                          VerticalAlignment="Top"
+                         ui:PasswordBoxAssistant.BindPassword="True"
+                         ui:PasswordBoxAssistant.BoundPassword="{Binding PasswordInputField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource MaterialDesignFilledPasswordFieldPasswordBox}"
                          materialDesign:HintAssist.Hint="Password"
                          />
@@ -43,15 +47,18 @@
                          FontSize="14"
                          FontWeight="Regular"
                          VerticalAlignment="Top"
+                         ui:PasswordBoxAssistant.BindPassword="True"
+                         ui:PasswordBoxAssistant.BoundPassword="{Binding ConfirmPasswordInputField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource MaterialDesignFilledPasswordFieldPasswordBox}"
                          materialDesign:HintAssist.Hint="Confirm password"
                          />
                 <Button Height="44" Background="#5AAC44" BorderBrush="Transparent" 
-                        materialDesign:ShadowAssist.ShadowDepth="Depth0">
+                        materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                        Command="{Binding SendCredentialsToServer}">
                     Create new account
                 </Button>
                 <TextBlock HorizontalAlignment="Center" Margin="0 25 0 0">
-                    <Hyperlink Command="{Binding ChangePage}">Already have an account? Log In</Hyperlink>
+                    <Hyperlink Command="{Binding ComeToLoginPage}">Already have an account? Log In</Hyperlink>
                 </TextBlock>
             </StackPanel>
         </Grid>

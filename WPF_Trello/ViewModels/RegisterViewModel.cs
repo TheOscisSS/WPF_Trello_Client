@@ -1,6 +1,7 @@
 ﻿using DevExpress.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,15 +14,23 @@ namespace WPF_Trello.ViewModels
     public class RegisterViewModel : BindableBase
     {
         private readonly PageService _pageService;
-
+        public string EmailInputField { get; set; }
+        public string PasswordInputField { get; set; }
+        public string ConfirmPasswordInputField { get; set; }
         public RegisterViewModel(PageService pageService)
         {
             _pageService = pageService;
         }
 
-        public ICommand ChangePage => new AsyncCommand(async () =>
+        public ICommand ComeToLoginPage => new AsyncCommand(async () =>
         {
             _pageService.ChangePage(new Login());
+        });
+        public ICommand SendCredentialsToServer => new DelegateCommand(() =>
+        {
+            Debug.WriteLine($"Your credentials are {EmailInputField} : {PasswordInputField} - {ConfirmPasswordInputField}");
+
+
         });
     }
 }

@@ -5,8 +5,10 @@ D:\WPF_Trello\packages\MaterialDesignThemes.3.0.1\lib\net45\MaterialDesignThemes
 D:\WPF_Trello\packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll
 D:\WPF_Trello\packages\Microsoft.Extensions.DependencyInjection.Abstractions.3.1.2\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 D:\WPF_Trello\packages\Microsoft.Extensions.DependencyInjection.3.1.2\lib\net461\Microsoft.Extensions.DependencyInjection.dll
+D:\WPF_Trello\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll
 D:\WPF_Trello\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll
 D:\WPF_Trello\packages\System.Threading.Tasks.Extensions.4.5.2\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll
+D:\WPF_Trello\packages\WebSocketSharpFork.1.0.4.0\lib\net35\websocket-sharp.dll
 D:\WPF_Trello\packages\DevExpressMvvm.19.2.3\lib\net452\DevExpress.Mvvm.pdb
 D:\WPF_Trello\packages\DevExpressMvvm.19.2.3\lib\net452\DevExpress.Mvvm.UI.pdb
 D:\WPF_Trello\packages\MaterialDesignColors.1.2.2\lib\net45\MaterialDesignColors.pdb
@@ -15,5 +17,6 @@ D:\WPF_Trello\packages\MaterialDesignThemes.3.0.1\lib\net45\MaterialDesignThemes
 D:\WPF_Trello\packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.xml
 D:\WPF_Trello\packages\Microsoft.Extensions.DependencyInjection.3.1.2\lib\net461\Microsoft.Extensions.DependencyInjection.xml
 D:\WPF_Trello\packages\Microsoft.Extensions.DependencyInjection.Abstractions.3.1.2\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.xml
+D:\WPF_Trello\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.xml
 D:\WPF_Trello\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.xml
 D:\WPF_Trello\packages\System.Threading.Tasks.Extensions.4.5.2\lib\netstandard2.0\System.Threading.Tasks.Extensions.xml

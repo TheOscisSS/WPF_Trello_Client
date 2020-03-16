@@ -40,3 +40,10 @@ D:\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Login.g.cs
 D:\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Login.baml
 D:\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Register.g.cs
 D:\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Register.baml
+D:\WPF_Trello\WPF_Trello\bin\x86\Debug\websocket-sharp.dll
+D:\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Home.g.cs
+D:\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Home.baml
+D:\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Boards.g.cs
+D:\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Boards.baml
+D:\WPF_Trello\WPF_Trello\bin\x86\Debug\Newtonsoft.Json.dll
+D:\WPF_Trello\WPF_Trello\bin\x86\Debug\Newtonsoft.Json.xml
