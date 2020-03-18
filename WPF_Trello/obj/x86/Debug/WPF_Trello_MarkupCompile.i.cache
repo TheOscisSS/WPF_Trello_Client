@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 D:\WPF_Trello\WPF_Trello\App.xaml
-5478669605
+5-2097844753
 
-18-617006891
+231934326200
 1291093136916
-MainWindow.xaml;Pages\Boards.xaml;Pages\Home.xaml;Pages\Login.xaml;Pages\Register.xaml;
+MainWindow.xaml;Pages\Home.xaml;Pages\ListOfBoards.xaml;Pages\Login.xaml;Pages\Register.xaml;
 
-True
+False
 

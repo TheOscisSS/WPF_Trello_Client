@@ -16,8 +16,10 @@ namespace WPF_Trello
             services.AddTransient<LoginViewModel>();
             services.AddTransient<RegisterViewModel>();
             services.AddTransient<HomeViewModel>();
+            services.AddTransient<ListOfBoardsViewModel>();
 
             services.AddSingleton<PageService>();
+            services.AddSingleton<AuthenticationService>();
 
 
             _provider = services.BuildServiceProvider();
@@ -32,5 +34,6 @@ namespace WPF_Trello
         public LoginViewModel LoginViewModel => _provider.GetRequiredService<LoginViewModel>();
         public RegisterViewModel RegisterViewModel => _provider.GetRequiredService<RegisterViewModel>();
         public HomeViewModel HomeViewModel => _provider.GetRequiredService<HomeViewModel>();
+        public ListOfBoardsViewModel ListOfBoardsViewModel => _provider.GetRequiredService<ListOfBoardsViewModel>();
     }
 }

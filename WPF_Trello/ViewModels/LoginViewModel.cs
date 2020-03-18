@@ -26,6 +26,7 @@ namespace WPF_Trello.ViewModels
         public ICommand ComeToHomePage => new AsyncCommand(async () =>
         {
             _pageService.ChangePage(new Home());
+            _pageService.ChangeStatus(true);
         });
         public ICommand SendCredentialsToServer => new AsyncCommand(async () =>
         {

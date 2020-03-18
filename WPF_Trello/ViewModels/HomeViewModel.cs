@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using WPF_Trello.Models;
@@ -36,9 +37,5 @@ namespace WPF_Trello.ViewModels
                 new Board {Name="Front-end Students Lab", Img="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSdloN9vDgDJgeKa1VcgSK38PPKuhUx5GhZH9wMtgXKr2rlNl00"},
             };
         }
-        public ICommand ComeToLoginPage => new AsyncCommand(async () =>
-        {
-            _pageService.ChangePage(new Register());
-        });
     }
 }
