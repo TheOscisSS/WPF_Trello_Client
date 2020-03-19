@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WPF_Trello.Models
 {
-    class CustomIdentity : IIdentity
+    public class CustomIdentity : IIdentity
     {
         public string Name { get; private set; }
         public string[] Roles { get; private set; }

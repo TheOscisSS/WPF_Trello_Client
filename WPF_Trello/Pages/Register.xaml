@@ -30,9 +30,9 @@
                          FontSize="14"
                          FontWeight="Regular"
                          VerticalAlignment="Top"
-                         Text="{Binding EmailInputField, UpdateSourceTrigger=PropertyChanged}"
+                         Text="{Binding UsernameInputField, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource MaterialDesignFilledTextFieldTextBox}"
-                         materialDesign:HintAssist.Hint="Emai"
+                         materialDesign:HintAssist.Hint="Username"
                          />
                 <PasswordBox Margin="0 0 0 30"
                          FontSize="14"

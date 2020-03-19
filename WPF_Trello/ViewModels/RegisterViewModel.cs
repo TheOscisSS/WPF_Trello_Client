@@ -14,7 +14,7 @@ namespace WPF_Trello.ViewModels
     public class RegisterViewModel : BindableBase
     {
         private readonly PageService _pageService;
-        public string EmailInputField { get; set; }
+        public string UsernameInputField { get; set; }
         public string PasswordInputField { get; set; }
         public string ConfirmPasswordInputField { get; set; }
         public RegisterViewModel(PageService pageService)
@@ -28,7 +28,7 @@ namespace WPF_Trello.ViewModels
         });
         public ICommand SendCredentialsToServer => new DelegateCommand(() =>
         {
-            Debug.WriteLine($"Your credentials are {EmailInputField} : {PasswordInputField} - {ConfirmPasswordInputField}");
+            Debug.WriteLine($"Your credentials are {UsernameInputField} : {PasswordInputField} - {ConfirmPasswordInputField}");
 
 
         });

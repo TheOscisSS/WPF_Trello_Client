@@ -7,17 +7,19 @@ using System.Threading.Tasks;
 
 namespace WPF_Trello.Models
 {
-    class CustomPrincipal : IPrincipal
+    public class CustomPrincipal : IPrincipal
     {
-        CustomIdentity _customIdentity;
+        private CustomIdentity _identity;
 
-        CustomIdentity CustomIdentity {
-            get => _customIdentity ?? new AnonymousIdentity();
-            set { _customIdentity = value; } 
+        public CustomIdentity Identity {
+            get => _identity ?? new AnonymousIdentity();
+            set { _identity = value; } 
         }
 
-        public IIdentity Identity => CustomIdentity;
+        IIdentity IPrincipal.Identity {
+            get => Identity;
+        }
         public bool IsInRole(string role) => 
-            _customIdentity.Roles.Contains(role);
+            _identity.Roles.Contains(role);
     }
 }

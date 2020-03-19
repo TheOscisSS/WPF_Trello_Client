@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -21,15 +22,17 @@ namespace WPF_Trello.ViewModels
     {
 
         private readonly PageService _pageService;
+        private readonly AuthenticationService _authenticationService;
         public string EmailInputField { get; set; }
         public string PasswordInputField { get; set; }
         public string ConfirmPasswordInputField { get; set; }
 
         public ObservableCollection<Board> Boards { get; set; }
 
-        public HomeViewModel(PageService pageService)
+        public HomeViewModel(PageService pageService, AuthenticationService authenticationService)
         {
             _pageService = pageService;
+            _authenticationService = authenticationService;
 
             Boards = new ObservableCollection<Board>
             {
