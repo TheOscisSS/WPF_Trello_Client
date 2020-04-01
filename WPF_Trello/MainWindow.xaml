@@ -11,7 +11,7 @@
     <Window.Resources>
         <ControlTemplate x:Key="HeaderTemplate">
             <Grid Grid.Row="0" Background="#026aa7" Name="Header">
-                
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
@@ -95,7 +95,7 @@
                         </Border>
                     </StackPanel>
                 </Grid>
-                </Grid>
+            </Grid>
             <ControlTemplate.Triggers>
                 <DataTrigger Binding="{Binding IsAuthenticated, UpdateSourceTrigger=PropertyChanged}" Value="false">
                     <Setter TargetName="Header" Property="Visibility" Value="Collapsed" />
@@ -112,7 +112,11 @@
         <ContentControl Grid.Column="0" Template="{StaticResource HeaderTemplate}"/>
 
         <Grid Grid.Row="1">
-            <Frame Content="{Binding PageSource}" NavigationUIVisibility="Hidden"/>
-        </Grid>    
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="163*"/>
+                <ColumnDefinition Width="630*"/>
+            </Grid.ColumnDefinitions>
+            <Frame Content="{Binding PageSource}" NavigationUIVisibility="Hidden" Grid.ColumnSpan="2" Margin="0,0,-0.4,-0.4"/>
+        </Grid>
     </Grid>
 </Window>

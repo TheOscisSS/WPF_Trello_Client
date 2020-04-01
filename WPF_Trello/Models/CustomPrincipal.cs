@@ -19,6 +19,7 @@ namespace WPF_Trello.Models
         IIdentity IPrincipal.Identity {
             get => Identity;
         }
+
         public bool IsInRole(string role) => 
             _identity.Roles.Contains(role);
     }

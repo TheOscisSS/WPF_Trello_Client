@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="WPF_Trello.ViewModelLocator">
+    <Position X="6" Y="0.5" Width="1.75" />
+    <AssociationLine Name="MainViewModel" Type="WPF_Trello.ViewModels.MainViewModel" ManuallyRouted="true">
+      <Path>
+        <Point X="6" Y="1.698" />
+        <Point X="4.927" Y="1.698" Type="JumpStart" />
+        <Point X="4.76" Y="1.698" Type="JumpEnd" />
+        <Point X="2.148" Y="1.698" />
+        <Point X="2.148" Y="8.25" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="HomeViewModel" Type="WPF_Trello.ViewModels.HomeViewModel" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.75" Y="1.278" />
+        <Point X="11.5" Y="1.278" />
+        <Point X="11.5" Y="9" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACEAAAAAAAAAAAAAAAACAAAAAICAACAAACAAAAAAA=</HashCode>
+      <FileName>ViewModelLocator.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MainViewModel" />
+      <Property Name="LoginViewModel" />
+      <Property Name="RegisterViewModel" />
+      <Property Name="HomeViewModel" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="WPF_Trello.ViewModels.MainViewModel">
+    <Position X="0.5" Y="8.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAQAAIiACAAAABCAAAAAIAAAAA=</HashCode>
+      <FileName>ViewModels\MainViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_pageService" />
+      <Field Name="_authenticationService" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="WPF_Trello.ViewModels.RegisterViewModel">
+    <Position X="3.75" Y="8.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AABIgAAAAAAAEAAAIAAQgAAEAAAIAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>ViewModels\RegisterViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_pageService" />
+      <Field Name="_authenticationService" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="WPF_Trello.ViewModels.LoginViewModel">
+    <Position X="7.5" Y="8.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AABJAAAAAAAAEAkQIAAQAAAAAAAIAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>ViewModels\LoginViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_pageService" />
+      <Field Name="_authenticationService" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="WPF_Trello.Services.PageService">
+    <Position X="15" Y="4.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\PageService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WPF_Trello.Services.AuthenticationService">
+    <Position X="17.5" Y="0.5" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAACAAAAAAAAAAAAQCAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Services\AuthenticationService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WPF_Trello.Services.HttpResponseException">
+    <Position X="17.5" Y="6.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\AuthenticationService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WPF_Trello.ViewModels.HomeViewModel">
+    <Position X="11" Y="9" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAEAAAAQAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>ViewModels\HomeViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_pageService" />
+      <Field Name="_authenticationService" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="WPF_Trello.Models.AnonymousIdentity" Collapsed="true">
+    <Position X="19.5" Y="9.25" Width="1.75" />
+    <InheritanceLine Type="WPF_Trello.Models.CustomIdentity" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="17.875" Y="9.25" />
+        <Point X="17.875" Y="8.875" />
+        <Point X="19.125" Y="8.875" />
+        <Point X="19.125" Y="10.316" />
+        <Point X="20.125" Y="10.316" />
+        <Point X="20.125" Y="9.941" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\AnonymousIdentity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WPF_Trello.Models.Board">
+    <Position X="13.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAgiEAAACAAAAAAAAAAAQAAAAAEAAAAAAA=</HashCode>
+      <FileName>Models\Board.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WPF_Trello.Models.CustomIdentity">
+    <Position X="17" Y="9.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAAQgAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\CustomIdentity.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="WPF_Trello.Models.CustomPrincipal">
+    <Position X="13.75" Y="9.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAAAAAQAAAAAAAAEAAAAAAABA=</HashCode>
+      <FileName>Models\CustomPrincipal.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_identity" />
+      <Property Name="Identity" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="WPF_Trello.Models.User">
+    <Position X="15.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAiAAAASAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

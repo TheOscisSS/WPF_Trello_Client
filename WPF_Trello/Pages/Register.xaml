@@ -10,6 +10,27 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Register">
+    <Page.Resources>
+        <ControlTemplate x:Key="AuthErrorNotification">
+            <Border Background="#eb5a46"
+                    Name="AuthError"
+                    Margin="0 0 0 10"
+                    Padding="0 3"
+                    Height="Auto">
+                <TextBlock Text="{Binding ShowStatus, UpdateSourceTrigger=PropertyChanged}"
+                           HorizontalAlignment="Center"
+                           FontSize="14"
+                           Foreground="White"
+                           TextWrapping="Wrap"
+                            />
+            </Border>
+            <ControlTemplate.Triggers>
+                <DataTrigger Binding="{Binding isAuthError}" Value="false">
+                    <Setter TargetName="AuthError" Property="Visibility" Value="Collapsed" />
+                </DataTrigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Page.Resources>
 
     <Grid VerticalAlignment="Center">
         <Grid.RowDefinitions >
@@ -26,6 +47,7 @@
 
         <Grid Grid.Row="1" Margin="0 0 0 10">
             <StackPanel Orientation="Vertical" Margin="40 0" MaxWidth="350">
+                <ContentControl Template="{StaticResource AuthErrorNotification}"/>
                 <TextBox Margin="0 0 0 30"
                          FontSize="14"
                          FontWeight="Regular"
@@ -54,7 +76,7 @@
                          />
                 <Button Height="44" Background="#5AAC44" BorderBrush="Transparent" 
                         materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                        Command="{Binding SendCredentialsToServer}">
+                        Command="{Binding RegistrationButton}">
                     Create new account
                 </Button>
                 <TextBlock HorizontalAlignment="Center" Margin="0 25 0 0">

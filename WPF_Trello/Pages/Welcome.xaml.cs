@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace WPF_Trello.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для ListOfBoards.xaml
+    /// Логика взаимодействия для Welcome.xaml
     /// </summary>
-    public partial class ListOfBoards : Page
+    public partial class Welcome : Page
     {
-        public ListOfBoards()
+        public Welcome()
         {
             InitializeComponent();
         }
