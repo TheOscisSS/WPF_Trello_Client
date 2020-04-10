@@ -10,9 +10,9 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Welcome">
 
-    <Grid>
+    <Grid Background="#fafbfd">
         <StackPanel VerticalAlignment="Center" Margin="0 -100 0 0">
-            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="#5E6C84" FontSize="28"
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="#5E6C84" FontSize="28" TextAlignment="Center"
                         FontWeight="Bold" Margin="0 30 0 50" Text="{Binding DisplayMessage, UpdateSourceTrigger=PropertyChanged}"
             />
 

@@ -21,6 +21,11 @@ namespace WPF_Trello.Utils
             Token = token;
         }
 
+        public static bool isExist()
+        {
+            return File.Exists(AccessToken.FILENAME);
+        }
+
         public static async Task<string> Load()
         {
             using (StreamReader reader = new StreamReader(FILENAME))
@@ -29,6 +34,14 @@ namespace WPF_Trello.Utils
             }
 
             return Token;
+        }
+
+        public static void Remove()
+        {
+            if (File.Exists(FILENAME))
+            { 
+                File.Delete(FILENAME);
+            }
         }
     }
 }

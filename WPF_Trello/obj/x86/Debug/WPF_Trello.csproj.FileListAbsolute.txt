@@ -94,3 +94,5 @@ D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\WPF_Trello.exe
 D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\WPF_Trello.pdb
 D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Welcome.g.cs
 D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Welcome.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Board.g.cs
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Board.baml

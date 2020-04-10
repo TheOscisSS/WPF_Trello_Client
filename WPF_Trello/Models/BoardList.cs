@@ -8,5 +8,13 @@ namespace WPF_Trello.Models
 {
     public class BoardList
     {
+        public string Title { get; private set; }
+        public List<BoardCard> Cards { get; private set; }
+
+        public BoardList(string title, List<BoardCard> cards)
+        {
+            Title = title;
+            Cards = cards;
+        }
     }
 }

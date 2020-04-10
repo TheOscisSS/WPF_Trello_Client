@@ -11,7 +11,7 @@
       Title="Home">
 
     <Grid>
-        <ListBox ItemsSource="{Binding Boards}">
+        <ListBox ItemsSource="{Binding Boards}" SelectedItem="{Binding SelectedBoard}" Padding="20 10">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Horizontal" IsItemsHost="True" Cursor="Hand">
@@ -21,13 +21,19 @@
 
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Path=Name}" Foreground="White" FontSize="16" 
-                                           FontWeight="Bold" Padding="5" Width="180" Height="110"
-                                           TextWrapping="Wrap">
-                        <TextBlock.Background>
-                            <ImageBrush ImageSource="{Binding Path=Img}" Stretch="UniformToFill"/>
-                        </TextBlock.Background>
-                    </TextBlock>
+                    <Border CornerRadius="3" Background="LightGray">
+                        <Border CornerRadius="3">
+                            <Grid>
+                                <TextBlock Text="{Binding Path=Title}" Foreground="White" FontSize="16" 
+                                        FontWeight="Bold" Padding="7 3 5 3" Width="195" Height="96"
+                                        TextWrapping="Wrap">
+                                </TextBlock>
+                            </Grid>
+                            <Border.Background>
+                                <ImageBrush ImageSource="{Binding Path=Background}" Stretch="UniformToFill"/>
+                            </Border.Background>
+                        </Border>
+                    </Border>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

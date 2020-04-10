@@ -16,46 +16,22 @@ namespace WPF_Trello.Services
 {
     public class AuthenticationService
     {
-        //private class InternalUserData
-        //{
-        //    public string Username { get; private set; }
-        //    public string Password { get; private set; }
-        //    public string[] Roles { get; private set; }
-
-        //    public InternalUserData(string username, string password, string[] roles)
-        //    {
-        //        Username = username;
-        //        Password = password;
-        //        Roles = roles;
-        //    }
-        //}
-
         public async Task<User> GetCurrentUser()
         {
-            using (HttpClient client = new HttpClient())
+            HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Get, "user/me");
+
+            using (HttpContent content = response.Content)
             {
-                client.BaseAddress = new Uri("http://localhost:3000/");
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                client.DefaultRequestHeaders.Authorization
-                         = new AuthenticationHeaderValue("Bearer", await AccessToken.Load());
-                using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "user/me"))
+                string result = await content.ReadAsStringAsync();
+                var joResponse = JObject.Parse(result);
+
+                if (!response.IsSuccessStatusCode)
                 {
-                    HttpResponseMessage response = await client.SendAsync(request);
-
-                    using (HttpContent content = response.Content)
-                    {
-                        string result = await content.ReadAsStringAsync();
-                        var joResponse = JObject.Parse(result);
-
-                        if (!response.IsSuccessStatusCode)
-                        {
-                            var joMessage = (JValue)joResponse.SelectToken("message");
-                            throw new UnauthorizedAccessException(joMessage.ToString());
-                        }
-
-                        return HttpHelper.ParseJsonToUserCredentials(joResponse.ToString());
-                    }
+                    var joMessage = (JValue)joResponse.SelectToken("message");
+                    throw new UnauthorizedAccessException(joMessage.ToString());
                 }
+
+                return HttpHelper.ParseJsonToUserCredentials(joResponse.ToString());
             }
         }
         public void SetCustomPrincipal(User user)
@@ -73,36 +49,59 @@ namespace WPF_Trello.Services
         }
         public async Task<User> AuthenticateUser(string username, string password)
         {
-            using (HttpClient client = new HttpClient())
+            StringContent strContent 
+                = new StringContent("{\"username\":\""+ username +"\",\"password\":\""+ password +"\"}",
+                                    Encoding.UTF8,
+                                    "application/json");
+
+            HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Post, "user/signin", strContent);
+
+            using (HttpContent content = response.Content)
             {
-                client.BaseAddress = new Uri("http://localhost:3000/");
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "user/signin"))
+                string result = await content.ReadAsStringAsync();
+                var joResponse = JObject.Parse(result);
+
+                if (!response.IsSuccessStatusCode)
                 {
-                    request.Content = new StringContent("{\"username\":\""+ username +"\",\"password\":\""+ password +"\"}",
-                                                        Encoding.UTF8,
-                                                        "application/json");
-                    HttpResponseMessage response = await client.SendAsync(request);
-
-                    using (HttpContent content = response.Content)
-                    {
-                        string result = await content.ReadAsStringAsync();
-                        var joResponse = JObject.Parse(result);
-
-                        if (!response.IsSuccessStatusCode)
-                        {
-                            var joMessage = (JValue)joResponse.SelectToken("message");
-                            throw new UnauthorizedAccessException(joMessage.ToString());
-                        }
-                            
-                        var joToken = (JValue)joResponse.SelectToken("token");
-                        var joUser = (JObject)joResponse.SelectToken("user");
-
-                        AccessToken.Save(joToken.ToString());
-
-                        return HttpHelper.ParseJsonToUserCredentials(joUser.ToString());
-                    }
+                    var joMessage = (JValue)joResponse.SelectToken("message");
+                    throw new UnauthorizedAccessException(joMessage.ToString());
                 }
+
+                var joToken = (JValue)joResponse.SelectToken("token");
+                var joUser = (JObject)joResponse.SelectToken("user");
+
+                AccessToken.Save(joToken.ToString());
+
+                return HttpHelper.ParseJsonToUserCredentials(joUser.ToString());
+            }
+        }
+
+        public async Task<User> CreateUser(string username, string password)
+        {
+            StringContent strContent
+                = new StringContent("{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}",
+                                    Encoding.UTF8,
+                                    "application/json");
+
+            HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Post, "user/signup", strContent);
+
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+                var joResponse = JObject.Parse(result);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var joMessage = (JValue)joResponse.SelectToken("message");
+                    throw new UnauthorizedAccessException(joMessage.ToString());
+                }
+
+                var joToken = (JValue)joResponse.SelectToken("token");
+                var joUser = (JObject)joResponse.SelectToken("user");
+
+                AccessToken.Save(joToken.ToString());
+
+                return HttpHelper.ParseJsonToUserCredentials(joUser.ToString());
             }
         }
 

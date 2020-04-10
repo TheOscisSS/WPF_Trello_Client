@@ -10,6 +10,7 @@ using WPF_Trello.Pages;
 using WPF_Trello.Services;
 using WPF_Trello.Utils;
 using WPF_Trello.Messages;
+using WPF_Trello.Events;
 
 namespace WPF_Trello.ViewModels
 {
@@ -18,23 +19,36 @@ namespace WPF_Trello.ViewModels
         private readonly PageService _pageService;
         private readonly AuthenticationService _authenticationService;
         private readonly MessageBusService _messageBusService;
+        private readonly EventBusService _eventBusService;
+
         public Page PageSource { get; set; }
         private bool _isAuthenticated;
+        public char FirstChapterFromName { get; private set; }
         public bool IsAuthenticated {
             get => Thread.CurrentPrincipal.Identity.IsAuthenticated;
             set => _isAuthenticated = value;
         }
         
-        
-        public MainViewModel(PageService pageService, AuthenticationService authenticationService, MessageBusService messageBusService)
+        public MainViewModel(PageService pageService, AuthenticationService authenticationService, MessageBusService messageBusService,
+            EventBusService eventBusService)
         {
             _pageService = pageService;
             _authenticationService = authenticationService;
             _messageBusService = messageBusService;
+            _eventBusService = eventBusService;
 
             _pageService.OnPageChanged += (page) => PageSource = page;
             _authenticationService.OnStatusChanged += (status) => IsAuthenticated = status;
-            _authenticationService.ChangeStatus(Thread.CurrentPrincipal.Identity.IsAuthenticated);
+            _eventBusService.Subscribe<AuthorizatedEvent>(async _ =>
+            {
+                _authenticationService.ChangeStatus(Thread.CurrentPrincipal.Identity.IsAuthenticated);
+                FirstChapterFromName = Thread.CurrentPrincipal.Identity.Name[0];
+            });
+            _eventBusService.Subscribe<CreatedUserEvent>(async _ =>
+            {
+                _authenticationService.ChangeStatus(Thread.CurrentPrincipal.Identity.IsAuthenticated);
+                FirstChapterFromName = Thread.CurrentPrincipal.Identity.Name[0];
+            });
 
             VerificyUserToken();
         }
@@ -42,11 +56,15 @@ namespace WPF_Trello.ViewModels
         {
             try
             {
-                if (File.Exists(AccessToken.FILENAME))
+                if (AccessToken.isExist())
                 {
                     User user = await _authenticationService.GetCurrentUser();
 
                     _authenticationService.SetCustomPrincipal(user);
+
+                    await _messageBusService.SendTo<WelcomeViewModel>(new TextMessage("Welcome back " + user.Username));
+
+                    FirstChapterFromName = Thread.CurrentPrincipal.Identity.Name[0];
 
                     _pageService.ChangePage(new Welcome());
                 }
@@ -60,7 +78,6 @@ namespace WPF_Trello.ViewModels
                 Debug.WriteLine(e.Message);
                 await _messageBusService.SendTo<WelcomeViewModel>(new TextMessage(e.Message));
                 _pageService.ChangePage(new Welcome());
-                //_pageService.ChangePage(new Login());
             }
             catch (Exception ex)
             {
@@ -75,7 +92,13 @@ namespace WPF_Trello.ViewModels
                 customPrincipal.Identity = new AnonymousIdentity();
                 _pageService.ChangePage(new Login());
             }
+            AccessToken.Remove();
         }
+
+        public ICommand ToHomePageButton => new AsyncCommand(async () =>
+        {
+            _pageService.ChangePage(new Home());
+        });
 
         public ICommand LogoutButton => new AsyncCommand(async () =>
         {

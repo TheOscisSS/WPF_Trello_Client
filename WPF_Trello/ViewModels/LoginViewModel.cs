@@ -55,9 +55,11 @@ namespace WPF_Trello.ViewModels
                 _pageService.ChangePage(new Home());
 
                 await _eventBusService.Publish(new AuthorizatedEvent());
+                await _eventBusService.Publish(new GetBoardsEvent());
             }
             catch (UnauthorizedAccessException e)
             {
+                Debug.WriteLine(e.Message);
                 ShowStatus = e.Message;
             }
             catch (Exception ex)
@@ -74,6 +76,8 @@ namespace WPF_Trello.ViewModels
         public ICommand LoginButton => new AsyncCommand(async () =>
         {
             await Login();
+            _authenticationService.ChangeStatus(Thread.CurrentPrincipal.Identity.IsAuthenticated);
+
         });
         public ICommand SendCredentialsToServer => new AsyncCommand(async () =>
         {

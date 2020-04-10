@@ -10,9 +10,35 @@ namespace WPF_Trello.Models
     public class Board : BindableBase
     {
         public Board(
+            string id,
+            string title,
+            string description,
+            string background,
+            DateTime createdAt,
+            DateTime updatedAt)
+        {
+            ID = id;
+            Title = title;
+            Description = description;
+            Background = background;
+            CreatedAt = createdAt;
+            UpdatedAt = updatedAt;
+        }
+
+        public Board(
+             User owner,
+             List<User> members,
+             List<BoardList> lists)
+        {
+            Members = members;
+            Lists = lists;
+        }
+
+        public Board(
            string id,
            string title,
            string description,
+           string background,
            User owner,
            List<User> members,
            DateTime createdAt,
@@ -22,19 +48,21 @@ namespace WPF_Trello.Models
             ID = id;
             Title = title;
             Description = description;
+            Background = background;
             Owner = owner;
             Members = members;
             CreatedAt = createdAt;
             UpdatedAt = updatedAt;
             Lists = lists;
         }
-        public string ID { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public User Owner { get; set; }
-        public List<User> Members { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
-        public List<BoardList> Lists { get; set; }
+        public string ID { get; private set; }
+        public string Title { get; private set; }
+        public string Description { get; private set; }
+        public string Background { get; private set; }
+        public User Owner { get; private set; }
+        public List<User> Members { get; private set; }
+        public DateTime CreatedAt { get; private set; }
+        public DateTime UpdatedAt { get; private set; }
+        public List<BoardList> Lists { get; private set; }
     }
 }

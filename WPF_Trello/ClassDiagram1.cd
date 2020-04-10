@@ -43,7 +43,7 @@
   <Class Name="WPF_Trello.ViewModels.RegisterViewModel">
     <Position X="3.75" Y="8.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AABIgAAAAAAAEAAAIAAQgAAEAAAIAAAAAAAAAAAEAAA=</HashCode>
+      <HashCode>AABIgAAAAAAAEAEAIAAQgAAEAAAIAAAAAAAAAAAEAAA=</HashCode>
       <FileName>ViewModels\RegisterViewModel.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -75,7 +75,7 @@
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAACAAAAAAAACAAAAAAAAAAAAQCAAAAAAAgAAAAAAA=</HashCode>
+      <HashCode>AAAACAAAAQAAACAAAAAAAAAAAAQCAAAAAAAgAAAAAAA=</HashCode>
       <FileName>Services\AuthenticationService.cs</FileName>
     </TypeIdentifier>
   </Class>
