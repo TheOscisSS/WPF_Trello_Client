@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using WPF_Trello.Models;
 
 namespace WPF_Trello
 {
@@ -15,6 +16,9 @@ namespace WPF_Trello
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+            CustomPrincipal customPrincipal = new CustomPrincipal();
+            AppDomain.CurrentDomain.SetThreadPrincipal(customPrincipal);
+
             ViewModelLocator.Init();
 
             base.OnStartup(e);

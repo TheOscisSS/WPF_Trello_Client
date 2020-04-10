@@ -3,11 +3,127 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:WPF_Trello"
         mc:Ignorable="d"
         DataContext="{Binding MainViewModel, Source={StaticResource ViewModelLocator}}"
-        Title="MainWindow" Height="500" Width="800">
+        Title="MainWindow" Height="550" Width="800">
+    <Window.Resources>
+        <ControlTemplate x:Key="HeaderTemplate">
+            <Grid Grid.Row="0" Background="#026aa7" Name="Header">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Margin="5 0 0 0" HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="#4d98c3" Margin="0 3 0 3" 
+                            BorderThickness="1" CornerRadius="3,3,3,3">
+                            <Button
+                            Height="26"
+                            Width="28"
+                            Padding="0"
+                            Command="{Binding ToHomePageButton}"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            ToolTip="MaterialDesignFlatButton">
+                                <materialDesign:PackIcon
+                                Kind="Home"
+                                Height="24"
+                                Width="24" />
+                            </Button>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Foreground="White" FontSize="20" FontWeight="Bold">
+                    Trello
+                    </TextBlock>
+                </Grid>
+
+                <Grid Grid.Column="2" Margin="0 0 5 0" HorizontalAlignment="Right">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="#4d98c3" Margin="0 3 0 3" 
+                            BorderThickness="1" CornerRadius="3,3,3,3">
+                            <Button
+                            Height="26"
+                            Width="28"
+                            Padding="0"
+                          
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            ToolTip="MaterialDesignFlatButton">
+                                <materialDesign:PackIcon
+                                Kind="Plus"
+                                Height="24"
+                                Width="24" />
+                            </Button>
+                        </Border>
+
+                        <Border Background="#4d98c3" Margin="0 3 0 3" 
+                            BorderThickness="1" CornerRadius="3,3,3,3">
+                            <Button
+                            Height="26"
+                            Width="28"
+                            Padding="0"
+                          
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            ToolTip="MaterialDesignFlatButton">
+                                <materialDesign:PackIcon
+                                Kind="InfoOutline"
+                                Height="24"
+                                Width="24" />
+                            </Button>
+                        </Border>
+
+                        <Border Background="#4d98c3" Margin="0 3 0 3" 
+                            BorderThickness="1" CornerRadius="3,3,3,3">
+                            <Button
+                            Height="26"
+                            Width="28"
+                            Padding="0"
+                          
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            ToolTip="MaterialDesignFlatButton">
+                                <materialDesign:PackIcon
+                                Kind="NotificationsNone"
+                                Height="24"
+                                Width="24" />
+                            </Button>
+                        </Border>
+                        <Button
+                            Style="{StaticResource MaterialDesignIconButton}"
+                            ToolTip="MaterialDesignIconButton"
+                            Height="28"
+                            Width="28"
+                            Margin="3 0 0 0"
+                            Background="#dfe1e6">
+                            <TextBlock FontSize="18" Text="{Binding FirstChapterFromName}"/>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <DataTrigger Binding="{Binding IsAuthenticated, UpdateSourceTrigger=PropertyChanged}" Value="false">
+                    <Setter TargetName="Header" Property="Visibility" Value="Collapsed" />
+                </DataTrigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Window.Resources>
     <Grid>
-        <Frame Content="{Binding PageSource}" NavigationUIVisibility="Hidden"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Background="#fafbfd">
+            <ContentControl Grid.Column="0" Template="{StaticResource HeaderTemplate}"/>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Frame Content="{Binding PageSource}" NavigationUIVisibility="Hidden" Grid.ColumnSpan="2" Margin="0,0,-0.4,-0.4"/>
+        </Grid>
     </Grid>
 </Window>

@@ -43,7 +43,56 @@ D:\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Register.baml
 D:\WPF_Trello\WPF_Trello\bin\x86\Debug\websocket-sharp.dll
 D:\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Home.g.cs
 D:\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Home.baml
-D:\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Boards.g.cs
-D:\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Boards.baml
 D:\WPF_Trello\WPF_Trello\bin\x86\Debug\Newtonsoft.Json.dll
 D:\WPF_Trello\WPF_Trello\bin\x86\Debug\Newtonsoft.Json.xml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\WPF_Trello.exe.config
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\WPF_Trello.exe
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\WPF_Trello.pdb
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\DevExpress.Mvvm.dll
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\DevExpress.Mvvm.UI.dll
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\MaterialDesignColors.dll
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\MaterialDesignThemes.Wpf.dll
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\Microsoft.Bcl.AsyncInterfaces.dll
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\Microsoft.Extensions.DependencyInjection.dll
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\Newtonsoft.Json.dll
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\System.Runtime.CompilerServices.Unsafe.dll
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\System.Threading.Tasks.Extensions.dll
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\websocket-sharp.dll
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\DevExpress.Mvvm.pdb
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\DevExpress.Mvvm.UI.pdb
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\MaterialDesignColors.pdb
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\MaterialDesignThemes.Wpf.pdb
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\MaterialDesignThemes.Wpf.xml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\Microsoft.Bcl.AsyncInterfaces.xml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\Microsoft.Extensions.DependencyInjection.xml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.xml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\Newtonsoft.Json.xml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\System.Runtime.CompilerServices.Unsafe.xml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\System.Threading.Tasks.Extensions.xml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\WPF_Trello.csprojAssemblyReference.cache
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\MainWindow.g.cs
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Home.g.cs
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Login.g.cs
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Register.g.cs
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\App.g.cs
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\WPF_Trello_MarkupCompile.cache
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\WPF_Trello_MarkupCompile.lref
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\App.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\MainWindow.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Home.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Login.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Register.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\WPF_Trello.g.resources
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\WPF_Trello.Properties.Resources.resources
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\WPF_Trello.csproj.GenerateResource.cache
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\WPF_Trello.csproj.CoreCompileInputs.cache
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\WPF_Trello.csproj.Fody.CopyLocal.cache
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\WPF_Trello.csproj.CopyComplete
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\WPF_Trello.exe
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\WPF_Trello.pdb
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Welcome.g.cs
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Welcome.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Board.g.cs
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Board.baml

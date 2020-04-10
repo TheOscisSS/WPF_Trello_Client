@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\WPF_Trello\WPF_Trello\obj\x86\Debug\
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\
 WPF_Trello
 none
 false
 DEBUG;TRACE
-D:\WPF_Trello\WPF_Trello\App.xaml
-5478669605
+D:\Курсовой C#\WPF_Trello\WPF_Trello\App.xaml
+61215642097
 
-18-617006891
-1291093136916
-MainWindow.xaml;Pages\Boards.xaml;Pages\Home.xaml;Pages\Login.xaml;Pages\Register.xaml;
+411214069023
+129-1830686142
+MainWindow.xaml;Pages\Board.xaml;Pages\Home.xaml;Pages\Login.xaml;Pages\Register.xaml;Pages\Welcome.xaml;
 
-True
+False
 
