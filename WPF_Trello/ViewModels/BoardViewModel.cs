@@ -27,7 +27,7 @@ namespace WPF_Trello.ViewModels
 
         public string NewListTitle { get; set; }
         public Board CurrentBoard { get; private set; }
-        //public ObservableCollection<BoardList> ListsSource { get; set; }
+        public ObservableCollection<User> BoardMembers { get; private set; }
         public BoardList SelectedList { get; set; }
         public bool IsAddListTrigger { get; private set; }
 
@@ -46,6 +46,7 @@ namespace WPF_Trello.ViewModels
             _messageBusService.Receive<BoardPreloadMessage>(this, async message =>
             {
                 CurrentBoard = new Board(message.ID, message.Title, message.Description, message.Background, message.CreatedAt, message.UpdatedAt);
+                BoardMembers = new ObservableCollection<User>();
                 RenderBoard(message.ID);
             });
         }
@@ -56,7 +57,11 @@ namespace WPF_Trello.ViewModels
                 IsAddListTrigger = false;
                 NewListTitle = string.Empty;
                 CurrentBoard = await _boardService.GetBoardById(id);
-                //ListsSource = CurrentBoard.Lists;
+                BoardMembers.Add(CurrentBoard.Owner);
+                foreach(User member in CurrentBoard.Members)
+                {
+                    BoardMembers.Add(member);
+                }
             }
             catch (UnauthorizedAccessException e)
             {

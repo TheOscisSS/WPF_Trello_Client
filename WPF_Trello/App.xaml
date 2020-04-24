@@ -24,7 +24,9 @@
                     <SolidColorBrush x:Key="SecondaryAccentBrush" Color="#ebecf0"/>
                     <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="#172b4d"/>
                 </ResourceDictionary>
+                <ResourceDictionary Source="Styles/BoardCardItems.xaml"/>
                 <ResourceDictionary Source="Styles/BoardListItems.xaml"/>
+                <ResourceDictionary Source="Styles/BoardMemberItems.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

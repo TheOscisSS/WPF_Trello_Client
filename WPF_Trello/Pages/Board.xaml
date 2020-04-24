@@ -91,7 +91,7 @@
                     </Separator.LayoutTransform>
                 </Separator>
 
-                <ItemsControl ItemsSource="{Binding CurrentBoard.Members}">
+                <!--<ItemsControl ItemsSource="{Binding BoardMembers}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0 0 0 20"/>
@@ -105,11 +105,29 @@
                                 Height="32"
                                 Width="32"
                                 Background="#dfe1e6">
-                                <TextBlock FontSize="18" Text="{Binding FirstNameCharacter}"/>
+                                <TextBlock FontSize="18" Text="f"/>
                             </Button>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                </ItemsControl>-->
+
+                <ListBox ItemsSource="{Binding BoardMembers}"  
+                        Name="ContainerForMembers"
+                        HorizontalAlignment="Left"
+                        ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        ScrollViewer.CanContentScroll="False">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Template" Value="{StaticResource BoardMemberItems}" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Margin="5 0 0 3" Orientation="Horizontal" VerticalAlignment="Center"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
 
                 <Border Background="Transparent" Margin="5 3 0 3" 
                             BorderThickness="1" CornerRadius="3,3,3,3">
@@ -133,13 +151,11 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="0">
                         <ListBox ItemsSource="{Binding CurrentBoard.Lists}"
                                 SelectedItem="{Binding SelectedList}"     
                                 Name="ContainerForLists"
-                                DockPanel.Dock="Left"
                                 HorizontalAlignment="Left"
                                 ScrollViewer.VerticalScrollBarVisibility="Disabled" 
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -158,7 +174,6 @@
                         </ListBox>
                     </Grid>
                 </Grid>
-
 
                 <ContentControl DockPanel.Dock="Right" Template="{StaticResource AddListTemplate}"/>
 

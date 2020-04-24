@@ -4,7 +4,7 @@
                     xmlns:local="clr-namespace:WPF_Trello.Styles">
 
     <ControlTemplate x:Key="BoardListItems" TargetType="ListBoxItem">
-        <Border Name="ListBoard" CornerRadius="3" Width="272" MinHeight="78" VerticalAlignment="Top" HorizontalAlignment="Left" Background="#ebecf0" Margin="8 0 4 0">
+        <Border Name="ListBoard" CornerRadius="3" Width="272" MinHeight="78" VerticalAlignment="Top" HorizontalAlignment="Left" Background="#ebecf0" Margin="8 0 4 0" Cursor="Hand">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -19,31 +19,23 @@
 
                 <Grid Grid.Row="1">
                     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                        <ItemsControl ItemsSource="{Binding Cards}">
-                            <ItemsControl.ItemsPanel>
+                        <ListBox ItemsSource="{Binding Cards}" 
+                                Name="ContainerForCards"
+                                HorizontalAlignment="Stretch"
+                                ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                ScrollViewer.CanContentScroll="False">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Template" Value="{StaticResource BoardCardItems}" />
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                            <ListBox.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel Orientation="Vertical" VerticalAlignment="Top" />
                                 </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border CornerRadius="3" MinHeight="44" Background="White" Margin="8 0 8 8" Padding="8 6 8 2">
-                                        <Border.Effect>
-                                            <DropShadowEffect BlurRadius="1.5" Color="LightGray" Direction="-90" RenderingBias="Quality" ShadowDepth="1"/>
-                                        </Border.Effect>
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="auto"/>
-                                            </Grid.RowDefinitions>
-
-                                            <Grid Grid.Row="0">
-                                                <TextBlock Text="{Binding Title}" TextWrapping="Wrap" Foreground="#172b4d" FontSize="14" Margin="0 0 0 4"/>
-                                            </Grid>
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                            </ListBox.ItemsPanel>
+                        </ListBox>
                     </ScrollViewer>
                 </Grid>
 
@@ -100,7 +92,6 @@
         <ControlTemplate.Triggers>
             <DataTrigger Binding="{Binding IsAddCardTrigger}" Value="false">
                 <!--Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.IsAddCardTrigger}" Value="false">-->
-
                 <Setter TargetName="AddCardButton_false" Property="Visibility" Value="Visible" />
                 <Setter TargetName="AddCardButton_true" Property="Visibility" Value="Collapsed" />
             </DataTrigger>
