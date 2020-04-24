@@ -24,10 +24,7 @@
                     <SolidColorBrush x:Key="SecondaryAccentBrush" Color="#ebecf0"/>
                     <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="#172b4d"/>
                 </ResourceDictionary>
-                <ResourceDictionary>
-                    <system:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">7</system:Double>
-                    <system:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarHeightKey}">9</system:Double>
-                </ResourceDictionary>
+                <ResourceDictionary Source="Styles/BoardListItems.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
