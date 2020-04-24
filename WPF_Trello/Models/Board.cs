@@ -1,6 +1,7 @@
 ﻿using DevExpress.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,8 +28,8 @@ namespace WPF_Trello.Models
 
         public Board(
              User owner,
-             List<User> members,
-             List<BoardList> lists)
+             ObservableCollection<User> members,
+             ObservableCollection<BoardList> lists)
         {
             Members = members;
             Lists = lists;
@@ -40,10 +41,10 @@ namespace WPF_Trello.Models
            string description,
            string background,
            User owner,
-           List<User> members,
+           ObservableCollection<User> members,
            DateTime createdAt,
            DateTime updatedAt,
-           List<BoardList> lists)
+           ObservableCollection<BoardList> lists)
         {
             ID = id;
             Title = title;
@@ -60,9 +61,14 @@ namespace WPF_Trello.Models
         public string Description { get; private set; }
         public string Background { get; private set; }
         public User Owner { get; private set; }
-        public List<User> Members { get; private set; }
+        public ObservableCollection<User> Members { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
-        public List<BoardList> Lists { get; private set; }
+        public ObservableCollection<BoardList> Lists { get; private set; }
+
+        public void AddNewList(BoardList newList)
+        {
+            Lists.Add(newList);
+        }
     }
 }

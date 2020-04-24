@@ -57,6 +57,7 @@ namespace WPF_Trello.ViewModels
             _eventBusService.Subscribe<AuthorizatedEvent>(async _ => Debug.WriteLine("Authorizated"));
             _eventBusService.Subscribe<CreatedUserEvent>(async _ => Debug.WriteLine("Create new account"));
             _eventBusService.Subscribe<GetBoardsEvent>(async _ => RenderBoards());
+            _eventBusService.Subscribe<GoToHomeEvent>(async _ => _selectedBoard = null);
         }
 
         private async void SendToBoardPreloadData()

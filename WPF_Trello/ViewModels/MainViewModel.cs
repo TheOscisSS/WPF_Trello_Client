@@ -97,6 +97,7 @@ namespace WPF_Trello.ViewModels
 
         public ICommand ToHomePageButton => new AsyncCommand(async () =>
         {
+            await _eventBusService.Publish(new GoToHomeEvent());
             _pageService.ChangePage(new Home());
         });
 

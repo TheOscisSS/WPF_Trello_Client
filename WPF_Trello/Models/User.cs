@@ -25,6 +25,12 @@ namespace WPF_Trello.Models
             CreatedAt = createdAt;
             UpdatedAt = updatedAt;
         }
+
+        public char FirstNameCharacter
+        {
+            get => Username[0];
+        }
+
         public string ID { get; private set; }
         public string Username { get; private set; }
         public DateTime CreatedAt { get; private set; }
