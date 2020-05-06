@@ -52,7 +52,7 @@
                             Height="26"
                             Width="28"
                             Padding="0"
-                          
+                            Command="{Binding ShowCreateNewBoardCommand}"
                             Style="{StaticResource MaterialDesignFlatButton}"
                             ToolTip="MaterialDesignFlatButton">
                                 <materialDesign:PackIcon
@@ -113,17 +113,22 @@
         </ControlTemplate>
     </Window.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="35"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <ContentControl Panel.ZIndex="2" Template="{StaticResource CreateNewBoardTemplate}"/>
 
-        <Border Background="#fafbfd">
-            <ContentControl Grid.Column="0" Template="{StaticResource HeaderTemplate}"/>
-        </Border>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <Grid Grid.Row="1">
-            <Frame Content="{Binding PageSource}" NavigationUIVisibility="Hidden" Grid.ColumnSpan="2" Margin="0,0,-0.4,-0.4"/>
+            <Border Background="#fafbfd">
+                <ContentControl Grid.Column="0" Template="{StaticResource HeaderTemplate}"/>
+            </Border>
+
+            <Grid Grid.Row="1" >
+                <Frame Panel.ZIndex="1" Content="{Binding PageSource}" NavigationUIVisibility="Hidden" Grid.ColumnSpan="2" Margin="0,0,-0.4,-0.4"/>
+            </Grid>
         </Grid>
     </Grid>
+    
 </Window>

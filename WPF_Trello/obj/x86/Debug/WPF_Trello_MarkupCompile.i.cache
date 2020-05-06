@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 D:\Курсовой C#\WPF_Trello\WPF_Trello\App.xaml
-9-742474835
+17318561775
 
-43-1070559490
+49125728780
 129-1830686142
-MainWindow.xaml;Pages\Board.xaml;Pages\Home.xaml;Pages\Login.xaml;Pages\Register.xaml;Pages\Welcome.xaml;Styles\BoardCardItems.xaml;Styles\BoardListItems.xaml;Styles\BoardMemberItems.xaml;
+MainWindow.xaml;Pages\Board.xaml;Pages\Home.xaml;Pages\Login.xaml;Pages\Register.xaml;Pages\Welcome.xaml;Templates\AddListButtonTemplate.xaml;Templates\BoardActivityTemplate.xaml;Templates\BoardCardTemplate.xaml;Templates\BoardCollectionTemplate.xaml;Templates\BoardInviteMemberTemplate.xaml;Templates\BoardListTemplate.xaml;Templates\BoardMemberTemplate.xaml;Templates\BoardMenuTemplate.xaml;Templates\CreateNewBoardTemplate.xaml;Templates\RandomPictureCollectionTemplate.xaml;Templates\ShowMenuButtonTemplate.xaml;
 
 True
 

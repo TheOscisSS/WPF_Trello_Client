@@ -24,9 +24,17 @@
                     <SolidColorBrush x:Key="SecondaryAccentBrush" Color="#ebecf0"/>
                     <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="#172b4d"/>
                 </ResourceDictionary>
-                <ResourceDictionary Source="Styles/BoardCardItems.xaml"/>
-                <ResourceDictionary Source="Styles/BoardListItems.xaml"/>
-                <ResourceDictionary Source="Styles/BoardMemberItems.xaml"/>
+                <ResourceDictionary Source="Templates/BoardActivityTemplate.xaml"/>
+                <ResourceDictionary Source="Templates/BoardCardTemplate.xaml"/>
+                <ResourceDictionary Source="Templates/BoardListTemplate.xaml"/>
+                <ResourceDictionary Source="Templates/BoardMemberTemplate.xaml"/>
+                <ResourceDictionary Source="Templates/BoardMenuTemplate.xaml"/>
+                <ResourceDictionary Source="Templates/AddListButtonTemplate.xaml"/>
+                <ResourceDictionary Source="Templates/ShowMenuButtonTemplate.xaml"/>
+                <ResourceDictionary Source="Templates/BoardInviteMemberTemplate.xaml"/>
+                <ResourceDictionary Source="Templates/BoardCollectionTemplate.xaml"/>
+                <ResourceDictionary Source="Templates/RandomPictureCollectionTemplate.xaml"/>
+                <ResourceDictionary Source="Templates/CreateNewBoardTemplate.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

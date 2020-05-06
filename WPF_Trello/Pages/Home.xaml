@@ -6,22 +6,33 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       DataContext="{Binding HomeViewModel, Source={StaticResource ViewModelLocator}}"
       xmlns:local="clr-namespace:WPF_Trello.Pages"
+      xmlns:behaviours="clr-namespace:WPF_Trello"
+      xmlns:models="clr-namespace:WPF_Trello.Models"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Home">
 
     <Grid>
-        <ListBox ItemsSource="{Binding Boards}" SelectedItem="{Binding SelectedBoard}" Padding="20 10">
+        <ListBox ItemsSource="{Binding Boards}" SelectedItem="{Binding SelectedBoard}" Padding="10 10">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Horizontal" IsItemsHost="True" Cursor="Hand">
                     </WrapPanel>
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Template" Value="{StaticResource BoardCollectionTemplate}" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
 
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Border CornerRadius="3" Background="LightGray">
+        <!--<ListBox>
+            <ListBox.Resources>
+                <CollectionViewSource x:Key="BoardCollection" Source="{Binding Boards}"/>
+                <behaviours:BindingProxy x:Key="Proxy" DataContext="{Binding}"/>
+                <DataTemplate DataType="{x:Type models:Board}">
+                    <Border CornerRadius="3" Background="#e7e9ed">
                         <Border CornerRadius="3">
                             <Grid>
                                 <TextBlock Text="{Binding Path=Title}" Foreground="White" FontSize="16" 
@@ -35,7 +46,25 @@
                         </Border>
                     </Border>
                 </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+            </ListBox.Resources>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" IsItemsHost="True" Cursor="Hand"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemsSource>
+                <CompositeCollection>
+                    <CollectionContainer Collection="{Binding Source={StaticResource BoardCollection}}"/>
+                    <Border CornerRadius="3" Background="#e7e9ed" Width="195" Height="96">
+                        <Grid>
+                            <TextBlock Text="Create new board" Foreground="#172b4d" 
+                                    FontWeight="DemiBold" VerticalAlignment="Center"
+                                    HorizontalAlignment="Center" TextWrapping="Wrap">
+                            </TextBlock>
+                        </Grid>
+                    </Border>
+                </CompositeCollection>
+            </ListBox.ItemsSource>
+        </ListBox>-->
     </Grid>
 </Page>

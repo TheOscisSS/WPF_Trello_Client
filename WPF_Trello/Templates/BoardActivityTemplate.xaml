@@ -1,0 +1,23 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:WPF_Trello.Templates">
+    <ControlTemplate x:Key="BoardActivityTemplate" TargetType="ListBoxItem">
+        <StackPanel Orientation="Horizontal">
+            <Button
+                Style="{StaticResource MaterialDesignIconButton}"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Left"
+                ToolTip="MaterialDesignIconButton"
+                Height="32"
+                Width="32"
+                Background="#eaecf0">
+                <TextBlock FontSize="12" Text="{Binding Sender.FirstNameCharacter}"/>
+            </Button>
+            <StackPanel Orientation="Vertical" Margin="10 0 0 0" VerticalAlignment="Top">
+                <TextBlock Text="{Binding FormattedMessage}" FontSize="14" Foreground="#172b4d" 
+                           FontWeight="DemiBold" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding CreatedAt}"/>
+            </StackPanel>
+        </StackPanel>
+    </ControlTemplate>
+</ResourceDictionary>

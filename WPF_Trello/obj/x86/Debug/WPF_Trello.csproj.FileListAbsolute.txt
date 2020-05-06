@@ -96,6 +96,14 @@ D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Welcome.g.cs
 D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Welcome.baml
 D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Board.g.cs
 D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Pages\Board.baml
-D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Styles\BoardCardItems.baml
-D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Styles\BoardListItems.baml
-D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Styles\BoardMemberItems.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\BoardMenuTemplate.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\AddListButtonTemplate.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\BoardCardTemplate.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\BoardListTemplate.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\BoardMemberTemplate.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\ShowMenuButtonTemplate.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\BoardInviteMemberTemplate.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\BoardCollectionTemplate.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\CreateNewBoardTemplate.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\RandomPictureCollectionTemplate.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\BoardActivityTemplate.baml

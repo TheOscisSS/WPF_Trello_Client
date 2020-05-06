@@ -24,6 +24,7 @@ namespace WPF_Trello
             services.AddSingleton<EventBusService>();
             services.AddSingleton<MessageBusService>();
             services.AddSingleton<BoardService>();
+            services.AddSingleton<WebSocketService>();
 
             _provider = services.BuildServiceProvider();
 

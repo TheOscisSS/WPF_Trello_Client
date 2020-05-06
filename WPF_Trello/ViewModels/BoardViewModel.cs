@@ -26,10 +26,13 @@ namespace WPF_Trello.ViewModels
         private readonly MessageBusService _messageBusService;
 
         public string NewListTitle { get; set; }
+        public string InviteMemberName { get; set; }
         public Board CurrentBoard { get; private set; }
         public ObservableCollection<User> BoardMembers { get; private set; }
         public BoardList SelectedList { get; set; }
         public bool IsAddListTrigger { get; private set; }
+        public bool IsMenuTrigger { get; private set; }
+        public bool IsInviteMemberTrigger { get; private set; }
 
         public BoardViewModel(PageService pageService, AuthenticationService authenticationService, EventBusService eventBusService,
                 BoardService boardService, MessageBusService messageBusService)
@@ -41,7 +44,10 @@ namespace WPF_Trello.ViewModels
             _messageBusService = messageBusService;
 
             IsAddListTrigger = false;
+            IsMenuTrigger = false;
+            IsInviteMemberTrigger = false;
             NewListTitle = string.Empty;
+            InviteMemberName = string.Empty;
 
             _messageBusService.Receive<BoardPreloadMessage>(this, async message =>
             {
@@ -55,7 +61,9 @@ namespace WPF_Trello.ViewModels
             try
             {
                 IsAddListTrigger = false;
+                IsInviteMemberTrigger = false;
                 NewListTitle = string.Empty;
+                InviteMemberName = string.Empty;
                 CurrentBoard = await _boardService.GetBoardById(id);
                 BoardMembers.Add(CurrentBoard.Owner);
                 foreach(User member in CurrentBoard.Members)
@@ -81,16 +89,30 @@ namespace WPF_Trello.ViewModels
         {
             IsAddListTrigger = false;
         });
+        public ICommand ShowMenu => new AsyncCommand(async () =>
+        {
+            IsMenuTrigger = true;
+        });
+        public ICommand HideMenu => new AsyncCommand(async () =>
+        {
+            IsMenuTrigger = false;
+        });
         public ICommand ShowAddCardButton => new AsyncCommand(async () =>
         {
-            Debug.WriteLine(SelectedList.Title);
             SelectedList.IsAddCardTrigger = true;
         });
         public ICommand HideAddCardButton => new AsyncCommand(async () =>
         {
             SelectedList.IsAddCardTrigger = false;
         });
-
+        public ICommand ShowInviteButton => new AsyncCommand(async () =>
+        {
+            IsInviteMemberTrigger = true;
+        });
+        public ICommand HideInviteButton => new AsyncCommand(async () =>
+        {
+            IsInviteMemberTrigger = false;
+        });
         public ICommand AddAnotherListCommand => new AsyncCommand(async () =>
         {
             try
@@ -98,7 +120,6 @@ namespace WPF_Trello.ViewModels
                 BoardList newList = await _boardService.CreateNewList(CurrentBoard.ID, NewListTitle);
 
                 NewListTitle = string.Empty;
-                //IsAddListTrigger = false;
                 CurrentBoard.AddNewList(newList);
             }
             catch (Exception ex)
@@ -106,7 +127,6 @@ namespace WPF_Trello.ViewModels
                 Debug.WriteLine(ex.Message);
             }
         });
-
         public ICommand AddAnotherCardCommand => new AsyncCommand(async () =>
         {
             try
@@ -114,8 +134,22 @@ namespace WPF_Trello.ViewModels
                 BoardCard newCard = await _boardService.CreateNewCard(SelectedList.ID, SelectedList.NewCardTitle);
 
                 SelectedList.NewCardTitle = string.Empty;
-                //SelectedList.IsAddCardTrigger = false;
                 SelectedList.AddNewCard(newCard);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        });
+        public ICommand InviteMemberCommand => new AsyncCommand(async () =>
+        {
+            try
+            {
+                User newMember = await _boardService.InviteNewMember(CurrentBoard.ID, InviteMemberName);
+
+                InviteMemberName = string.Empty;
+                BoardMembers.Add(newMember);
+                
             }
             catch (Exception ex)
             {

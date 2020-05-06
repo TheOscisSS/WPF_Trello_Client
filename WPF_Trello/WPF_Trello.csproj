@@ -17,6 +17,21 @@
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -114,21 +129,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BindingProxy.cs" />
     <Compile Include="Events\AuthorizatedEvent.cs" />
     <Compile Include="Events\CreatedUserEvent.cs" />
     <Compile Include="Events\GetBoardsEvent.cs" />
     <Compile Include="Events\GoToHomeEvent.cs" />
     <Compile Include="Events\IEvent.cs" />
     <Compile Include="Messages\BoardPreloadMessage.cs" />
+    <Compile Include="Messages\CreateBoardMessage.cs" />
+    <Compile Include="Messages\NewBoardResponseMessage.cs" />
     <Compile Include="Messages\TextMessage.cs" />
     <Compile Include="Messages\IMessage.cs" />
     <Compile Include="Models\AnonymousIdentity.cs" />
     <Compile Include="Models\Board.cs" />
+    <Compile Include="Models\BoardActivity.cs" />
     <Compile Include="Models\BoardCard.cs" />
     <Compile Include="Models\BoardList.cs" />
     <Compile Include="Models\CardLabel.cs" />
     <Compile Include="Models\CustomIdentity.cs" />
     <Compile Include="Models\CustomPrincipal.cs" />
+    <Compile Include="Models\PictureExample.cs" />
     <Compile Include="Models\Subscribers.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Pages\Board.xaml.cs">
@@ -152,6 +172,7 @@
     <Compile Include="Services\EventBusService.cs" />
     <Compile Include="Services\MessageBusService.cs" />
     <Compile Include="Services\PageService.cs" />
+    <Compile Include="Services\WebSocketService.cs" />
     <Compile Include="Utils\AccessToken.cs" />
     <Compile Include="Utils\HttpHelper.cs" />
     <Compile Include="ViewModelLocator.cs" />
@@ -193,15 +214,47 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\BoardCardItems.xaml">
+    <Page Include="Templates\AddListButtonTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\BoardListItems.xaml">
+    <Page Include="Templates\BoardActivityTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\BoardMemberItems.xaml">
+    <Page Include="Templates\BoardCardTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates\BoardCollectionTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates\BoardInviteMemberTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates\BoardListTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates\BoardMemberTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates\BoardMenuTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates\CreateNewBoardTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates\RandomPictureCollectionTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates\ShowMenuButtonTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -240,7 +293,18 @@
   <ItemGroup>
     <Resource Include="FodyWeavers.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 и x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

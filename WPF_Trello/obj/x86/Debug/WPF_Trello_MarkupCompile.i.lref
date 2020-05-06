@@ -1,12 +1,5 @@
-﻿D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\GeneratedInternalTypeHelper.g.i.cs
-FD:\Курсовой C#\WPF_Trello\WPF_Trello\App.xaml;;
-FD:\Курсовой C#\WPF_Trello\WPF_Trello\MainWindow.xaml;;
-FD:\Курсовой C#\WPF_Trello\WPF_Trello\Pages\Board.xaml;;
-FD:\Курсовой C#\WPF_Trello\WPF_Trello\Pages\Home.xaml;;
-FD:\Курсовой C#\WPF_Trello\WPF_Trello\Pages\Login.xaml;;
-FD:\Курсовой C#\WPF_Trello\WPF_Trello\Pages\Register.xaml;;
-FD:\Курсовой C#\WPF_Trello\WPF_Trello\Pages\Welcome.xaml;;
-FD:\Курсовой C#\WPF_Trello\WPF_Trello\Styles\BoardCardItems.xaml;;
-FD:\Курсовой C#\WPF_Trello\WPF_Trello\Styles\BoardListItems.xaml;;
-FD:\Курсовой C#\WPF_Trello\WPF_Trello\Styles\BoardMemberItems.xaml;;
+﻿
+
+FD:\Курсовой C#\WPF_Trello\WPF_Trello\Templates\BoardActivityTemplate.xaml;;
+FD:\Курсовой C#\WPF_Trello\WPF_Trello\Templates\BoardMenuTemplate.xaml;;
 

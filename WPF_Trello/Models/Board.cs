@@ -42,6 +42,7 @@ namespace WPF_Trello.Models
            string background,
            User owner,
            ObservableCollection<User> members,
+           ObservableCollection<BoardActivity> activities,
            DateTime createdAt,
            DateTime updatedAt,
            ObservableCollection<BoardList> lists)
@@ -52,6 +53,7 @@ namespace WPF_Trello.Models
             Background = background;
             Owner = owner;
             Members = members;
+            Activities = activities;
             CreatedAt = createdAt;
             UpdatedAt = updatedAt;
             Lists = lists;
@@ -62,6 +64,7 @@ namespace WPF_Trello.Models
         public string Background { get; private set; }
         public User Owner { get; private set; }
         public ObservableCollection<User> Members { get; private set; }
+        public ObservableCollection<BoardActivity> Activities { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
         public ObservableCollection<BoardList> Lists { get; private set; }
@@ -69,6 +72,10 @@ namespace WPF_Trello.Models
         public void AddNewList(BoardList newList)
         {
             Lists.Add(newList);
+        }
+        public void AddNewMember(User newMember)
+        {
+            Members.Add(newMember);
         }
     }
 }

@@ -11,6 +11,7 @@ using WPF_Trello.Services;
 using WPF_Trello.Utils;
 using WPF_Trello.Messages;
 using WPF_Trello.Events;
+using System.Collections.ObjectModel;
 
 namespace WPF_Trello.ViewModels
 {
@@ -20,22 +21,27 @@ namespace WPF_Trello.ViewModels
         private readonly AuthenticationService _authenticationService;
         private readonly MessageBusService _messageBusService;
         private readonly EventBusService _eventBusService;
+        private readonly BoardService _boardService;
+
+        private bool _isAuthenticated;
+        private PictureExample _selectedPicture;
 
         public Page PageSource { get; set; }
-        private bool _isAuthenticated;
-        public char FirstChapterFromName { get; private set; }
-        public bool IsAuthenticated {
-            get => Thread.CurrentPrincipal.Identity.IsAuthenticated;
-            set => _isAuthenticated = value;
-        }
+        public ObservableCollection<PictureExample> RandomPictureCollection { get; set; }
+        
         
         public MainViewModel(PageService pageService, AuthenticationService authenticationService, MessageBusService messageBusService,
-            EventBusService eventBusService)
+            EventBusService eventBusService, BoardService boardService)
         {
             _pageService = pageService;
             _authenticationService = authenticationService;
             _messageBusService = messageBusService;
             _eventBusService = eventBusService;
+            _boardService = boardService;
+
+            IsAddBoardTrigger = false;
+            NewBoardTitle = string.Empty;
+            SelectedPicture = null;
 
             _pageService.OnPageChanged += (page) => PageSource = page;
             _authenticationService.OnStatusChanged += (status) => IsAuthenticated = status;
@@ -50,7 +56,33 @@ namespace WPF_Trello.ViewModels
                 FirstChapterFromName = Thread.CurrentPrincipal.Identity.Name[0];
             });
 
+            _messageBusService.Receive<NewBoardResponseMessage>(this, async message =>
+            {
+                if (!message.Status)
+                {
+                    Debug.WriteLine(message.ResponseMessage);
+                }
+                else
+                {
+                    IsAddBoardTrigger = false;
+                    NewBoardTitle = string.Empty;
+                    SelectedPicture = null;
+                }
+            });
+
             VerificyUserToken();
+        }
+        private async void GetPictureExamples()
+        {
+            try
+            {
+                RandomPictureCollection = await _boardService.GetRandomPicture();
+            }
+            catch (Exception ex)
+            {
+                RandomPictureCollection = new ObservableCollection<PictureExample>();
+                Debug.WriteLine(ex.Message);
+            }
         }
         private async void VerificyUserToken()
         {
@@ -106,5 +138,66 @@ namespace WPF_Trello.ViewModels
             Logout();
             _authenticationService.ChangeStatus(Thread.CurrentPrincipal.Identity.IsAuthenticated);
         });
+
+        public ICommand ShowCreateNewBoardCommand => new AsyncCommand(async () =>
+        {
+            if (RandomPictureCollection == null)
+            {
+                GetPictureExamples();
+            }
+            IsAddBoardTrigger = true;
+        });
+        public ICommand HideCreateNewBoardCommand => new AsyncCommand(async () =>
+        {
+            IsAddBoardTrigger = false;
+        });
+        public ICommand CreateNewBoard => new AsyncCommand(async () =>
+        {
+            if (RandomPictureCollection == null)
+            {
+                GetPictureExamples();
+            }
+            IsAddBoardTrigger = true;
+        });
+        public ICommand RefreshPictureCommand => new AsyncCommand(async () =>
+        {
+            SelectedPicture = null;
+            GetPictureExamples();
+        });
+        public ICommand AddNewBoardCommand => new AsyncCommand(async () =>
+        {
+            if (Uri.IsWellFormedUriString(BoardBackgrounPicture, UriKind.Absolute))
+            {
+                await _messageBusService.SendTo<HomeViewModel>(new CreateBoardMessage(NewBoardTitle, BoardBackgrounPicture));
+            }
+            else
+            {
+                Debug.WriteLine("URL has the wrong format");
+                //TODO: Add error handler
+            }
+        });
+        public char FirstChapterFromName { get; private set; }
+        public bool IsAddBoardTrigger { get; private set; }
+        public string BoardBackgrounPicture { get; set; }
+        public string NewBoardTitle { get; set; }
+        public PictureExample SelectedPicture
+        {
+            get => _selectedPicture;
+            set
+            {
+                _selectedPicture = value;
+                if(_selectedPicture != null)
+                {
+                    BoardBackgrounPicture = _selectedPicture.Regular;
+                    RaisePropertiesChanged("SelectedPicture");
+                    RaisePropertiesChanged("BoardBackgrounPicture");
+                }
+            }
+        }
+        public bool IsAuthenticated
+        {
+            get => Thread.CurrentPrincipal.Identity.IsAuthenticated;
+            set => _isAuthenticated = value;
+        }
     }
 }

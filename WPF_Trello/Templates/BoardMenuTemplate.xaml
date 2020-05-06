@@ -1,0 +1,130 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:local="clr-namespace:WPF_Trello.Templates">
+    <ControlTemplate x:Key="BoardMenuTemplate">
+
+        <Grid x:Name="BoardMenuContainer" Width="330" Grid.Column="1" Background="#f4f5f7">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="12 0 6 12">
+                <StackPanel>
+                    <Grid Margin="0 9 0 9">
+                        <TextBlock HorizontalAlignment="Center" FontWeight="DemiBold"
+                               FontSize="17" Foreground="#172b4d">
+                                Menu
+                        </TextBlock>
+                        <Button
+                            Height="26"
+                            Width="28"
+                            Padding="0"
+                            Margin="0 0 5 0"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Command="{Binding HideMenu}"
+                            ToolTip="MaterialDesignFlatButton">
+                            <materialDesign:PackIcon
+                                Kind="Close"
+                                Height="24"
+                                Foreground="#172b4d"
+                                Width="24" />
+                        </Button>
+                    </Grid>
+                    <Separator Background="#d5d9e0"/>
+                    <Grid VerticalAlignment="Center" Margin="0 7 0 0">
+                        <StackPanel>
+                            <Grid>
+                                <materialDesign:PackIcon Kind="AccountOutline" Foreground="#172b4d" Margin="3 0 0 0"
+                                                 Width="25" Height="25" HorizontalAlignment="Left"/>
+                                <TextBlock Foreground="#172b4d" FontWeight="DemiBold"
+                                    FontSize="16" Margin="45 0 0 0">
+                                    Made by
+                                </TextBlock>
+                            </Grid>
+                            <Grid VerticalAlignment="Center" Margin="4 15 4 8">
+                                <Button
+                                    Style="{StaticResource MaterialDesignIconButton}"
+                                    HorizontalAlignment="Left"
+                                    ToolTip="MaterialDesignIconButton"
+                                    Height="50"
+                                    Width="50"
+                                    Background="#eaecf0">
+                                    <TextBlock FontSize="18" Text="{Binding CurrentBoard.Owner.FirstNameCharacter}"/>
+                                </Button>
+                                <StackPanel VerticalAlignment="Top">
+                                    <TextBlock Foreground="#172b4d" FontWeight="DemiBold" Margin="70 0 0 0"
+                                   FontSize="17" Text="{Binding CurrentBoard.Owner.Username}"/>
+                                    <TextBlock Foreground="#172b4d" Margin="70 0 0 0"
+                                   FontSize="13">
+                                Owner
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                    <Grid VerticalAlignment="Center" Margin="0 10 0 20">
+                        <StackPanel>
+                            <Grid>
+                                <materialDesign:PackIcon Kind="TextSubject" Foreground="#172b4d" Margin="3 0 0 0"
+                                                 Width="25" Height="25" HorizontalAlignment="Left"/>
+                                <TextBlock Foreground="#172b4d" FontWeight="DemiBold"
+                                   FontSize="16" Margin="45 0 0 0">
+                            Description
+                                </TextBlock>
+                            </Grid>
+                            <Grid Margin="0 10 0 0">
+                                <Border Padding="12 8" Background="#eaecf0" CornerRadius="3" Margin="5 0 7 0">
+                                    <TextBlock Foreground="#172b4d" TextWrapping="Wrap" Text="{Binding CurrentBoard.Description}"/>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                    <Separator Background="#d5d9e0"/>
+                    <Grid Margin="0 20 0 20">
+                        <StackPanel>
+                            <Grid Margin="0 0 0 5">
+                                <materialDesign:PackIcon Kind="PlaylistCheck" Foreground="#172b4d" Margin="5 0 0 0"
+                                                 Width="25" Height="25" HorizontalAlignment="Left"/>
+                                <TextBlock Foreground="#172b4d" FontWeight="DemiBold"
+                                   FontSize="16" Margin="45 0 0 0">
+                                    Activity
+                                </TextBlock>
+                            </Grid>
+                            <ScrollViewer Margin="0 10 0 0"
+                                HorizontalScrollBarVisibility="Disabled" 
+                                VerticalScrollBarVisibility="Auto">
+                                <ListBox ItemsSource="{Binding CurrentBoard.Activities}" 
+                                    Name="ContainerForActivities"
+                                    HorizontalAlignment="Stretch"
+                                    ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                    ScrollViewer.CanContentScroll="False">
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem">
+                                            <Setter Property="Template" Value="{StaticResource BoardActivityTemplate}" />
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" VerticalAlignment="Top" />
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+                                </ListBox>
+                            </ScrollViewer>
+                        </StackPanel>
+
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsMenuTrigger, UpdateSourceTrigger=PropertyChanged}" Value="false">
+                <Setter TargetName="BoardMenuContainer" Property="Visibility" Value="Collapsed" />
+            </DataTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+</ResourceDictionary>

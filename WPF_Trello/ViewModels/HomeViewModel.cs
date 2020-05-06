@@ -58,6 +58,11 @@ namespace WPF_Trello.ViewModels
             _eventBusService.Subscribe<CreatedUserEvent>(async _ => Debug.WriteLine("Create new account"));
             _eventBusService.Subscribe<GetBoardsEvent>(async _ => RenderBoards());
             _eventBusService.Subscribe<GoToHomeEvent>(async _ => _selectedBoard = null);
+
+            _messageBusService.Receive<CreateBoardMessage>(this, async message =>
+            {
+                AddNewBoard(message.Title, message.Background);
+            });
         }
 
         private async void SendToBoardPreloadData()
@@ -69,6 +74,28 @@ namespace WPF_Trello.ViewModels
             _pageService.ChangePage(new Pages.Board());
         }
 
+        private async void AddNewBoard(string title, string background)
+        {
+            try
+            {
+                var newBoardItem = await _boardService.CreateNewBoard(title, background);
+                Boards.Add(newBoardItem);
+
+                await _messageBusService.SendTo<MainViewModel>(new NewBoardResponseMessage(true, string.Empty));
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                //TODO: Add error handler
+                Debug.WriteLine(e.Message);
+                await _messageBusService.SendTo<MainViewModel>(new NewBoardResponseMessage(false, e.Message));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                await _messageBusService.SendTo<MainViewModel>(new NewBoardResponseMessage(false, "Something was wrong"));
+            }
+        }
+
         private async void RenderBoards()
         {
             try
@@ -77,8 +104,8 @@ namespace WPF_Trello.ViewModels
             }
             catch (UnauthorizedAccessException e)
             {
+                //TODO: Add error handler
                 Debug.WriteLine(e.Message);
-                //ShowStatus = e.Message;
             }
             catch (Exception ex)
             {

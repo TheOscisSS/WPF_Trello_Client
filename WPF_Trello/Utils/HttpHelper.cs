@@ -13,7 +13,9 @@ namespace WPF_Trello.Utils
 {
     public class HttpHelper
     {
+        private const string ACCESS_KEY = "p_7Ur9RvtASiNnAupH2QqQ9LfWR1NMmV35uBi3uJfL8";
         private const string URI = "http://localhost:3000/";
+        private const string URI_UNSPLASH = "https://api.unsplash.com/";
         public static User ParseJsonToUserCredentials(string data)
         {
             var joUser = JObject.Parse(data);
@@ -31,6 +33,38 @@ namespace WPF_Trello.Utils
                 DateTime.Parse(joUpdatedAt.ToString()),
                 new string[] { }
                 );
+        }
+        public static BoardActivity ParseJsonToBoardActivity(string data)
+        {
+            var joActivity = JObject.Parse(data);
+            var joSender = (JObject)joActivity.SelectToken("sender");
+
+            var joId = (JValue)joActivity.SelectToken("_id");
+            var joMessage = (JValue)joActivity.SelectToken("message");
+            var joCreatedAt = (JValue)joActivity.SelectToken("createdAt");
+            var joUpdatedAt = (JValue)joActivity.SelectToken("updatedAt");
+
+            User Sender = ParseJsonToUserCredentials(joSender.ToString());
+
+            return new BoardActivity(
+                joId.ToString(),
+                joMessage.ToString(),
+                Sender,
+                DateTime.Parse(joCreatedAt.ToString()),
+                DateTime.Parse(joUpdatedAt.ToString())
+                );
+        }
+        public static ObservableCollection<BoardActivity> ParseJsonToBoardActivities(string data)
+        {
+            var activities = new ObservableCollection<BoardActivity>();
+            var jaActivities = JArray.Parse(data);
+
+            for(int i = 0; i < jaActivities.Count; i++)
+            {
+                activities.Add(ParseJsonToBoardActivity(jaActivities[i].ToString()));
+            }
+
+            return activities;
         }
         public static ObservableCollection<User> ParseJsonToUsersCredentials(string data)
         {
@@ -112,6 +146,7 @@ namespace WPF_Trello.Utils
             var joOwner = (JObject)joBoard.SelectToken("owner");
 
             var jaMembers = (JArray)joBoard.SelectToken("members");
+            var jaActivities = (JArray)joBoard.SelectToken("activities");
             var jaLists = (JArray)joBoard.SelectToken("lists");
 
             var joId = (JValue)joBoard.SelectToken("_id");
@@ -123,6 +158,7 @@ namespace WPF_Trello.Utils
 
             User Owner = ParseJsonToUserCredentials(joOwner.ToString());
             ObservableCollection<User> Members = ParseJsonToUsersCredentials(jaMembers.ToString());
+            ObservableCollection<BoardActivity> Activities = ParseJsonToBoardActivities(jaActivities.ToString());
             ObservableCollection<BoardList> BoardLists = ParseJsonToBoardLists(jaLists.ToString());
 
             return new Board(
@@ -132,6 +168,7 @@ namespace WPF_Trello.Utils
                 joBackground.ToString(),
                 Owner,
                 Members,
+                Activities,
                 DateTime.Parse(joCreatedAt.ToString()),
                 DateTime.Parse(joUpdatedAt.ToString()),
                 BoardLists
@@ -170,6 +207,44 @@ namespace WPF_Trello.Utils
             }
 
             return boards;
+        }
+        public static PictureExample ParseJsonToPictureUrl(string data)
+        {
+            var joObject = JObject.Parse(data);
+            var joUrls = (JObject)joObject.SelectToken("urls");
+            
+            var joRegular = (JValue)joUrls.SelectToken("regular");
+            var joSmall = (JValue)joUrls.SelectToken("small");
+            var joThumb = (JValue)joUrls.SelectToken("thumb");
+
+            return new PictureExample(joRegular.ToString(), joSmall.ToString(), joThumb.ToString());
+        }
+        public static ObservableCollection<PictureExample> ParseJsonToPicturesUrl(string data)
+        {
+            var PictureCollection = new ObservableCollection<PictureExample>();
+            var jaPicruteCollection = JArray.Parse(data);
+
+            for (int i = 0; i < jaPicruteCollection.Count; i++)
+            {
+                PictureCollection.Add(ParseJsonToPictureUrl(jaPicruteCollection[i].ToString()));
+            }
+
+            return PictureCollection;
+
+        }
+        public async static Task<HttpResponseMessage> HttpRequestForUnsplash(HttpMethod method, string requestURI)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(URI_UNSPLASH);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Authorization
+                    = new AuthenticationHeaderValue("Client-ID", ACCESS_KEY);
+                using (HttpRequestMessage request = new HttpRequestMessage(method, requestURI))
+                {
+                    return await client.SendAsync(request);
+                }
+            }
         }
         public async static Task<HttpResponseMessage> HttpRequest(HttpMethod method, string requestURI)
         {
