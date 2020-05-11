@@ -3,7 +3,7 @@
                     xmlns:local="clr-namespace:WPF_Trello.Styles">
 
     <ControlTemplate x:Key="BoardMemberTemplate" TargetType="ListBoxItem">
-        <Button
+        <Button Name="MemberButton"
             Style="{StaticResource MaterialDesignIconButton}"
             ToolTip="MaterialDesignIconButton"
             Margin="-5 0 0 0"
@@ -12,6 +12,13 @@
             Background="#dfe1e6">
             <TextBlock FontSize="18" Text="{Binding FirstNameCharacter}"/>
         </Button>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsSelected" Value="true">
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="IsSelected" Value="True"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
     </ControlTemplate>
 
 </ResourceDictionary>

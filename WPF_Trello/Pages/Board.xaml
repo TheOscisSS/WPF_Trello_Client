@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       DataContext="{Binding BoardViewModel, Source={StaticResource ViewModelLocator}}"
       xmlns:local="clr-namespace:WPF_Trello.Pages"
@@ -12,104 +13,113 @@
 
     <Grid>
         <Grid.Background>
-            <ImageBrush ImageSource="{Binding CurrentBoard.Background}" Stretch="UniformToFill" />
+            <SolidColorBrush Color="LightGray"/>
         </Grid.Background>
+        <Grid>
+            <Grid.Background>
+                <ImageBrush ImageSource="{Binding CurrentBoard.Background}" Stretch="UniformToFill" />
+            </Grid.Background>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <Grid Grid.Row="0" Margin="12 7">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <WrapPanel VerticalAlignment="Center" Grid.Column="0">
-                    <TextBlock Text="{Binding CurrentBoard.Title}" Foreground="White" 
+                <Grid Grid.Row="0" Margin="12 7">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <WrapPanel VerticalAlignment="Center" Grid.Column="0">
+                        <TextBlock Text="{Binding CurrentBoard.Title}" Foreground="White" 
                            FontSize="18" FontWeight="Bold" 
                            VerticalAlignment="Center"/>
 
-                    <Separator Background="White" Margin="12 7 12 7">
-                        <Separator.LayoutTransform>
-                            <RotateTransform Angle="90" />
-                        </Separator.LayoutTransform>
-                    </Separator>
+                        <Separator Background="White" Margin="12 7 12 7">
+                            <Separator.LayoutTransform>
+                                <RotateTransform Angle="90" />
+                            </Separator.LayoutTransform>
+                        </Separator>
 
-                    <ListBox ItemsSource="{Binding BoardMembers, UpdateSourceTrigger=PropertyChanged}"  
-                        Name="ContainerForMembers"
-                        HorizontalAlignment="Left"
-                        ScrollViewer.VerticalScrollBarVisibility="Disabled" 
-                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                        ScrollViewer.CanContentScroll="False">
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
-                                <Setter Property="Template" Value="{StaticResource BoardMemberTemplate}" />
-                            </Style>
-                        </ListBox.ItemContainerStyle>
-                        <ListBox.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Margin="5 0 0 3" Orientation="Horizontal" VerticalAlignment="Center"/>
-                            </ItemsPanelTemplate>
-                        </ListBox.ItemsPanel>
-                    </ListBox>
+                        <ListBox ItemsSource="{Binding BoardMembers}"  
+                            SelectedItem="{Binding SelectedMember}"
+                            Name="ContainerForMembers"
+                            HorizontalAlignment="Left"
+                            ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                            ScrollViewer.CanContentScroll="False">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseDoubleClick">
+                                    <i:InvokeCommandAction Command="{Binding DeleteMemberCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Template" Value="{StaticResource BoardMemberTemplate}" />
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Margin="5 0 0 3" Orientation="Horizontal" VerticalAlignment="Center"/>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                        </ListBox>
 
-                    <ContentControl Template="{StaticResource BoardInviteMemberTemplate}"/>
-                </WrapPanel>
-                <Grid Grid.Column="1">
-                    <ContentControl Template="{StaticResource ShowMenuButtonTemplate}"/>
+                        <ContentControl Template="{StaticResource BoardInviteMemberTemplate}"/>
+                    </WrapPanel>
+                    <Grid Grid.Column="1">
+                        <ContentControl Template="{StaticResource ShowMenuButtonTemplate}"/>
+                    </Grid>
                 </Grid>
-            </Grid>
 
-            <Grid Grid.Row="1" Margin="0 0 4 0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+                <Grid Grid.Row="1" Margin="0 0 4 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                <Grid Grid.Column="0">
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="0 0 0 5">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="0">
-                                    <ListBox ItemsSource="{Binding CurrentBoard.Lists}"
+                    <Grid Grid.Column="0">
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="0 0 0 5">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="0">
+                                        <ListBox ItemsSource="{Binding CurrentBoard.Lists}"
                                         SelectedItem="{Binding SelectedList}"     
                                         Name="ContainerForLists"
                                         HorizontalAlignment="Left"
                                         ScrollViewer.VerticalScrollBarVisibility="Disabled" 
                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                         ScrollViewer.CanContentScroll="False">
-                                        <ListBox.ItemContainerStyle>
-                                            <Style TargetType="ListBoxItem">
-                                                <Setter Property="Template" Value="{StaticResource BoardListTemplate}" />
-                                            </Style>
-                                        </ListBox.ItemContainerStyle>
-                                        <ListBox.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0 0 0 20">
-                                                </StackPanel>
-                                            </ItemsPanelTemplate>
-                                        </ListBox.ItemsPanel>
-                                    </ListBox>
+                                            <ListBox.ItemContainerStyle>
+                                                <Style TargetType="ListBoxItem">
+                                                    <Setter Property="Template" Value="{StaticResource BoardListTemplate}" />
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
+                                            <ListBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0 0 0 20">
+                                                    </StackPanel>
+                                                </ItemsPanelTemplate>
+                                            </ListBox.ItemsPanel>
+                                        </ListBox>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
-                            <ContentControl DockPanel.Dock="Right" Template="{StaticResource AddListButtonTemplate}"/>
-                        </StackPanel>
-                    </ScrollViewer>
+                                <ContentControl DockPanel.Dock="Right" Template="{StaticResource AddListButtonTemplate}"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
                 </Grid>
             </Grid>
+
+            <ContentControl Grid.Column="1" Template="{StaticResource BoardMenuTemplate}"/>
         </Grid>
-
-        <ContentControl Grid.Column="1" Template="{StaticResource BoardMenuTemplate}"/>
-
     </Grid>
 </Page>

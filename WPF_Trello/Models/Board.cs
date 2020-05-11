@@ -73,6 +73,10 @@ namespace WPF_Trello.Models
         {
             Lists.Add(newList);
         }
+        public void AddNewActivity(BoardActivity newActivity)
+        {
+            Activities.Insert(0, newActivity);
+        }
         public void AddNewMember(User newMember)
         {
             Members.Add(newMember);

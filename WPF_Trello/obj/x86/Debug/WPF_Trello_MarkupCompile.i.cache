@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 D:\Курсовой C#\WPF_Trello\WPF_Trello\App.xaml
-17318561775
+19350075743
 
-49125728780
-129-1830686142
-MainWindow.xaml;Pages\Board.xaml;Pages\Home.xaml;Pages\Login.xaml;Pages\Register.xaml;Pages\Welcome.xaml;Templates\AddListButtonTemplate.xaml;Templates\BoardActivityTemplate.xaml;Templates\BoardCardTemplate.xaml;Templates\BoardCollectionTemplate.xaml;Templates\BoardInviteMemberTemplate.xaml;Templates\BoardListTemplate.xaml;Templates\BoardMemberTemplate.xaml;Templates\BoardMenuTemplate.xaml;Templates\CreateNewBoardTemplate.xaml;Templates\RandomPictureCollectionTemplate.xaml;Templates\ShowMenuButtonTemplate.xaml;
+581165009346
+13474404454
+MainWindow.xaml;Pages\Board.xaml;Pages\Home.xaml;Pages\Login.xaml;Pages\Register.xaml;Pages\Welcome.xaml;Templates\AddListButtonTemplate.xaml;Templates\BoardActivityTemplate.xaml;Templates\BoardCardTemplate.xaml;Templates\BoardCollectionTemplate.xaml;Templates\BoardInviteMemberTemplate.xaml;Templates\BoardListTemplate.xaml;Templates\BoardMemberTemplate.xaml;Templates\BoardMenuTemplate.xaml;Templates\CreateNewBoardTemplate.xaml;Templates\NotificationTemplate.xaml;Templates\RandomPictureCollectionTemplate.xaml;Templates\ShowMenuButtonTemplate.xaml;Templates\UserNotificationTemplate.xaml;
 
-True
+False
 

@@ -16,6 +16,7 @@ namespace WPF_Trello.Services
 {
     public class AuthenticationService
     {
+        public User CurrentUser { get; private set; }
         public async Task<User> GetCurrentUser()
         {
             HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Get, "user/me");
@@ -31,7 +32,8 @@ namespace WPF_Trello.Services
                     throw new UnauthorizedAccessException(joMessage.ToString());
                 }
 
-                return HttpHelper.ParseJsonToUserCredentials(joResponse.ToString());
+                CurrentUser = HttpHelper.ParseJsonToUserCredentials(joResponse.ToString());
+                return CurrentUser;
             }
         }
         public void SetCustomPrincipal(User user)
@@ -71,15 +73,16 @@ namespace WPF_Trello.Services
                 var joUser = (JObject)joResponse.SelectToken("user");
 
                 AccessToken.Save(joToken.ToString());
-
-                return HttpHelper.ParseJsonToUserCredentials(joUser.ToString());
+                
+                CurrentUser = HttpHelper.ParseJsonToUserCredentials(joUser.ToString());
+                return CurrentUser;
             }
         }
 
-        public async Task<User> CreateUser(string username, string password)
+        public async Task<User> CreateUser(string username, string password, string confirmPassword)
         {
             StringContent strContent
-                = new StringContent("{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}",
+                = new StringContent("{\"username\":\"" + username + "\",\"password\":\"" + password + "\",\"confirmPassword\":\"" + confirmPassword + "\"}",
                                     Encoding.UTF8,
                                     "application/json");
 
@@ -101,45 +104,14 @@ namespace WPF_Trello.Services
 
                 AccessToken.Save(joToken.ToString());
 
-                return HttpHelper.ParseJsonToUserCredentials(joUser.ToString());
+
+                CurrentUser = HttpHelper.ParseJsonToUserCredentials(joUser.ToString());
+                return CurrentUser;
             }
         }
 
         public event Action<bool> OnStatusChanged;
 
-
-
-        //private static List<InternalUserData> _users = new List<InternalUserData>()
-        //{
-        //    new InternalUserData("Dima", "123", new string[] { }),
-        //};
-
-        //public User AuthenticateUser(string username, string password)
-        //{
-        //    InternalUserData userData = _users.FirstOrDefault(data => data.Username.Equals(username)
-        //        && data.Password.Equals(password));
-
-        //    if (userData == null)
-        //    {
-        //        throw new UnauthorizedAccessException("Please enter a valid data");
-        //    }
-
-        //    return new User(userData.Username, userData.Roles);
-        //}
-
-        //public User CreateNewUser(string username, string password)
-        //{
-        //    InternalUserData userData = _users.FirstOrDefault(data => data.Username.Equals(username));
-
-        //    if (userData != null)
-        //    {
-        //        throw new RegistrationException("Already exist user with the same name");
-        //    }
-
-        //    _users.Add(new InternalUserData(username, password, new string[] { }));
-
-        //    return new User(username, new string[] { });
-        //}
         public void ChangeStatus(bool status) => OnStatusChanged?.Invoke(status);
     }
 

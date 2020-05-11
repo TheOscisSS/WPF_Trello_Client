@@ -66,6 +66,37 @@ namespace WPF_Trello.Utils
 
             return activities;
         }
+        public static UserNotification ParseJsonToUserNotification(string data)
+        {
+            var joNotification = JObject.Parse(data);
+
+            var joId = (JValue)joNotification.SelectToken("_id");
+            var joMessage = (JValue)joNotification.SelectToken("message");
+            var joIsReaded = (JValue)joNotification.SelectToken("isReaded");
+            var joCreatedAt = (JValue)joNotification.SelectToken("createdAt");
+            var joUpdatedAt = (JValue)joNotification.SelectToken("updatedAt");
+
+            return new UserNotification(
+                joId.ToString(),
+                joMessage.ToString(),
+                (bool)joIsReaded,
+                DateTime.Parse(joCreatedAt.ToString()),
+                DateTime.Parse(joUpdatedAt.ToString())
+                );
+        }
+        public static ObservableCollection<UserNotification> ParseJsonToUserNotifications(string data)
+        {
+            var notifications = new ObservableCollection<UserNotification>();
+            var joObject = JObject.Parse(data);
+            var jaNotifications = (JArray)joObject.SelectToken("notifications");
+
+            for(int i = 0; i < jaNotifications.Count; i++)
+            {
+                notifications.Add(ParseJsonToUserNotification(jaNotifications[i].ToString()));
+            }
+
+            return notifications;
+        }
         public static ObservableCollection<User> ParseJsonToUsersCredentials(string data)
         {
             var users = new ObservableCollection<User>();

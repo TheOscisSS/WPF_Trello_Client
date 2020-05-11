@@ -12,6 +12,8 @@ using WPF_Trello.Utils;
 using WPF_Trello.Messages;
 using WPF_Trello.Events;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace WPF_Trello.ViewModels
 {
@@ -22,24 +24,32 @@ namespace WPF_Trello.ViewModels
         private readonly MessageBusService _messageBusService;
         private readonly EventBusService _eventBusService;
         private readonly BoardService _boardService;
+        private readonly WebSocketService _webSocketService;
 
         private bool _isAuthenticated;
         private PictureExample _selectedPicture;
 
         public Page PageSource { get; set; }
         public ObservableCollection<PictureExample> RandomPictureCollection { get; set; }
-        
+        public ObservableCollection<UserNotification> UserNotificationCollection { get; set; }
+        public UserNotification SelectedUserNotification { get; set; }
         
         public MainViewModel(PageService pageService, AuthenticationService authenticationService, MessageBusService messageBusService,
-            EventBusService eventBusService, BoardService boardService)
+            EventBusService eventBusService, BoardService boardService, WebSocketService webSocketService)
         {
             _pageService = pageService;
             _authenticationService = authenticationService;
             _messageBusService = messageBusService;
             _eventBusService = eventBusService;
             _boardService = boardService;
+            _webSocketService = webSocketService;
 
+            SelectedUserNotification = null;
+            UserNotificationCollection = new ObservableCollection<UserNotification>();
+            IsExistUnreadNotification = false;
             IsAddBoardTrigger = false;
+            IsOpenNotificationsTrigger = false;
+            IsShowAllNotifications = false;
             NewBoardTitle = string.Empty;
             SelectedPicture = null;
 
@@ -69,6 +79,11 @@ namespace WPF_Trello.ViewModels
                     SelectedPicture = null;
                 }
             });
+            _messageBusService.Receive<AddNewNotificationMessage>(this, async message =>
+            {
+                UserNotificationCollection.Add(message.UserNotification);
+                CheckIsUnreadNotificationExist();
+            });
 
             VerificyUserToken();
         }
@@ -91,12 +106,12 @@ namespace WPF_Trello.ViewModels
                 if (AccessToken.isExist())
                 {
                     User user = await _authenticationService.GetCurrentUser();
-
+                    _webSocketService.JoinIntoAccount(user);
                     _authenticationService.SetCustomPrincipal(user);
-
                     await _messageBusService.SendTo<WelcomeViewModel>(new TextMessage("Welcome back " + user.Username));
-
                     FirstChapterFromName = Thread.CurrentPrincipal.Identity.Name[0];
+
+                    GetUserNotificatons();
 
                     _pageService.ChangePage(new Welcome());
                 }
@@ -114,6 +129,34 @@ namespace WPF_Trello.ViewModels
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
+            }
+        }
+        private async void GetUserNotificatons()
+        {
+            try
+            {
+                UserNotificationCollection = await _boardService.GetAllUserNotifications();
+                RaisePropertiesChanged("UserNotificationCollection");
+                CheckIsUnreadNotificationExist();
+            }
+            catch (Exception ex)
+            {
+                //TODO: add error handler
+                Debug.WriteLine(ex.Message);
+            }
+        }
+        private void CheckIsUnreadNotificationExist()
+        {
+            var UnreadNotifications = UserNotificationCollection
+                .Where(notification => notification.IsReaded == false)
+                .Select(notification => notification);
+            if (UnreadNotifications.Count() > 0)
+            {
+                IsExistUnreadNotification = true;
+            }
+            else
+            {
+                IsExistUnreadNotification = false;
             }
         }
         private void Logout()
@@ -176,8 +219,45 @@ namespace WPF_Trello.ViewModels
                 //TODO: Add error handler
             }
         });
+
+        public ICommand ShowNotificationsCommand => new AsyncCommand(async () =>
+        {
+
+            IsOpenNotificationsTrigger = true;
+        });
+        public ICommand HideNotificationsCommand => new AsyncCommand(async () =>
+        {
+            IsOpenNotificationsTrigger = false;
+        });
+        public ICommand ShowAllNotificationsCommand => new AsyncCommand(async () =>
+        {
+
+            IsShowAllNotifications = true;
+        });
+        public ICommand ShowOnlyUnreadNotificationsCommand => new AsyncCommand(async () =>
+        {
+            IsShowAllNotifications = false;
+        });
+        public ICommand ReadNotificationCommand => new AsyncCommand(async () =>
+        {
+            try
+            {
+                _boardService.ReadNotificationById(string.Copy(SelectedUserNotification.ID));
+                SelectedUserNotification.ReadNotification();
+                CheckIsUnreadNotificationExist();
+            }
+            catch (Exception ex)
+            {
+                //TODO: add error handler
+                Debug.WriteLine(ex.Message);
+            }
+        });
+
         public char FirstChapterFromName { get; private set; }
         public bool IsAddBoardTrigger { get; private set; }
+        public bool IsOpenNotificationsTrigger { get; private set; }
+        public bool IsShowAllNotifications { get; private set; }
+        public bool IsExistUnreadNotification { get; private set; }
         public string BoardBackgrounPicture { get; set; }
         public string NewBoardTitle { get; set; }
         public PictureExample SelectedPicture

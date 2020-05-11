@@ -6,8 +6,8 @@
             <Border CornerRadius="3">
                 <Grid>
                     <TextBlock Text="{Binding Path=Title}" Foreground="White" FontSize="16" 
-                                        FontWeight="Bold" Padding="7 3 5 3" Width="195" Height="96"
-                                        TextWrapping="Wrap">
+                        FontWeight="Bold" Padding="7 3 5 3" Width="195" Height="96"
+                        TextWrapping="Wrap">
                     </TextBlock>
                 </Grid>
                 <Border.Background>
@@ -16,9 +16,6 @@
             </Border>
         </Border>
         <ControlTemplate.Triggers>
-            <!--<Trigger Property="IsSelected" Value="true">
-                
-            </Trigger>-->
             <Trigger Property="IsMouseOver" Value="true">
                 <Setter TargetName="BoardBorder" Property="Opacity" Value="0.9" />
             </Trigger>

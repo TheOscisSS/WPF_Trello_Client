@@ -21,17 +21,19 @@ namespace WPF_Trello.ViewModels
         private readonly AuthenticationService _authenticationService;
         private readonly MessageBusService _messageBusService;
         private readonly EventBusService _eventBusService;
+        private readonly WebSocketService _webSocketService;
 
         public string DisplayMessage { get; set; }
         public Page PageSource { get; set; }
 
         public WelcomeViewModel(PageService pageService, AuthenticationService authenticationService, MessageBusService messageBusService,
-            EventBusService eventBusService)
+            EventBusService eventBusService, WebSocketService webSocketService)
         {
             _pageService = pageService;
             _authenticationService = authenticationService;
             _messageBusService = messageBusService;
             _eventBusService = eventBusService;
+            _webSocketService = webSocketService;
 
             _pageService.OnPageChanged += (page) => PageSource = page;
 
@@ -51,6 +53,7 @@ namespace WPF_Trello.ViewModels
             }
 
             _authenticationService.ChangeStatus(Thread.CurrentPrincipal.Identity.IsAuthenticated);
+
             _pageService.ChangePage(new Home());
             //_pageService.ChangePage(new Pages.Board());
 

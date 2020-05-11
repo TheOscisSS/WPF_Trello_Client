@@ -25,6 +25,7 @@
                     <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="#172b4d"/>
                 </ResourceDictionary>
                 <ResourceDictionary Source="Templates/BoardActivityTemplate.xaml"/>
+                <ResourceDictionary Source="Templates/NotificationTemplate.xaml"/>
                 <ResourceDictionary Source="Templates/BoardCardTemplate.xaml"/>
                 <ResourceDictionary Source="Templates/BoardListTemplate.xaml"/>
                 <ResourceDictionary Source="Templates/BoardMemberTemplate.xaml"/>
@@ -35,6 +36,7 @@
                 <ResourceDictionary Source="Templates/BoardCollectionTemplate.xaml"/>
                 <ResourceDictionary Source="Templates/RandomPictureCollectionTemplate.xaml"/>
                 <ResourceDictionary Source="Templates/CreateNewBoardTemplate.xaml"/>
+                <ResourceDictionary Source="Templates/UserNotificationTemplate.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

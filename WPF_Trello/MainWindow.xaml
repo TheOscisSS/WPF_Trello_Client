@@ -78,19 +78,20 @@
                             </Button>
                         </Border>
 
-                        <Border Background="#4d98c3" Margin="0 3 0 3" 
+                        <Border x:Name="HeaderNotificationButton" Background="#4d98c3" Margin="0 3 0 3" 
                             BorderThickness="1" CornerRadius="3,3,3,3">
                             <Button
                             Height="26"
                             Width="28"
                             Padding="0"
-                          
+                            Command="{Binding ShowNotificationsCommand}"
                             Style="{StaticResource MaterialDesignFlatButton}"
                             ToolTip="MaterialDesignFlatButton">
                                 <materialDesign:PackIcon
-                                Kind="NotificationsNone"
-                                Height="24"
-                                Width="24" />
+                                    Name="HeaderNotificationsIcon"
+                                    Kind="NotificationsNone"
+                                    Height="24"
+                                    Width="24" />
                             </Button>
                         </Border>
                         <Button
@@ -109,12 +110,15 @@
                 <DataTrigger Binding="{Binding IsAuthenticated, UpdateSourceTrigger=PropertyChanged}" Value="false">
                     <Setter TargetName="Header" Property="Visibility" Value="Collapsed" />
                 </DataTrigger>
+                <DataTrigger Binding="{Binding IsExistUnreadNotification, UpdateSourceTrigger=PropertyChanged}" Value="true">
+                    <Setter TargetName="HeaderNotificationButton" Property="Background" Value="#d0503e" />
+                    <Setter TargetName="HeaderNotificationsIcon" Property="Foreground" Value="White" />
+                </DataTrigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
     </Window.Resources>
     <Grid>
-        <ContentControl Panel.ZIndex="2" Template="{StaticResource CreateNewBoardTemplate}"/>
-
+        <ContentControl Panel.ZIndex="3" Template="{StaticResource CreateNewBoardTemplate}"/>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="35"/>
@@ -126,9 +130,12 @@
             </Border>
 
             <Grid Grid.Row="1" >
-                <Frame Panel.ZIndex="1" Content="{Binding PageSource}" NavigationUIVisibility="Hidden" Grid.ColumnSpan="2" Margin="0,0,-0.4,-0.4"/>
+                <Canvas Panel.ZIndex="4">
+                    <ContentControl Canvas.Right="7" Canvas.Top="7" Template="{StaticResource UserNotificationTemplate}"/>
+                </Canvas>
+                <Frame Panel.ZIndex="1" Content="{Binding PageSource}" NavigationUIVisibility="Hidden"/>
             </Grid>
         </Grid>
     </Grid>
-    
+
 </Window>

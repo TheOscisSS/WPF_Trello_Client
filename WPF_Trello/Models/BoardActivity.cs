@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WPF_Trello.Models
 {
-    public class BoardActivity : BindableBase
+    public class BoardActivity
     {
         public BoardActivity(
             string id, 
@@ -32,6 +32,10 @@ namespace WPF_Trello.Models
         public string FormattedMessage
         {
             get => $"{Sender.Username} {Message}";
+        }
+        public string CreatedAtToString
+        {
+            get => CreatedAt.ToUniversalTime().ToString();
         }
     }
 }

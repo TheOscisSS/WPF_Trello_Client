@@ -26,45 +26,5 @@
                 </Style>
             </ListBox.ItemContainerStyle>
         </ListBox>
-
-        <!--<ListBox>
-            <ListBox.Resources>
-                <CollectionViewSource x:Key="BoardCollection" Source="{Binding Boards}"/>
-                <behaviours:BindingProxy x:Key="Proxy" DataContext="{Binding}"/>
-                <DataTemplate DataType="{x:Type models:Board}">
-                    <Border CornerRadius="3" Background="#e7e9ed">
-                        <Border CornerRadius="3">
-                            <Grid>
-                                <TextBlock Text="{Binding Path=Title}" Foreground="White" FontSize="16" 
-                                        FontWeight="Bold" Padding="7 3 5 3" Width="195" Height="96"
-                                        TextWrapping="Wrap">
-                                </TextBlock>
-                            </Grid>
-                            <Border.Background>
-                                <ImageBrush ImageSource="{Binding Path=Background}" Stretch="UniformToFill"/>
-                            </Border.Background>
-                        </Border>
-                    </Border>
-                </DataTemplate>
-            </ListBox.Resources>
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" IsItemsHost="True" Cursor="Hand"/>
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-            <ListBox.ItemsSource>
-                <CompositeCollection>
-                    <CollectionContainer Collection="{Binding Source={StaticResource BoardCollection}}"/>
-                    <Border CornerRadius="3" Background="#e7e9ed" Width="195" Height="96">
-                        <Grid>
-                            <TextBlock Text="Create new board" Foreground="#172b4d" 
-                                    FontWeight="DemiBold" VerticalAlignment="Center"
-                                    HorizontalAlignment="Center" TextWrapping="Wrap">
-                            </TextBlock>
-                        </Grid>
-                    </Border>
-                </CompositeCollection>
-            </ListBox.ItemsSource>
-        </ListBox>-->
     </Grid>
 </Page>

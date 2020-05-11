@@ -33,7 +33,68 @@ namespace WPF_Trello.Services
                 return HttpHelper.ParseJsonToPreviewBoards(joResponse.ToString());
             }
         }
+        public async Task<ObservableCollection<UserNotification>> GetAllUserNotifications()
+        {
+            HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Get, "notification");
 
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+                var joResponse = JObject.Parse(result);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    //TODO: Generate suitable exception 
+                    var joMessage = (JValue)joResponse.SelectToken("message");
+                    throw new UnauthorizedAccessException(joMessage.ToString());
+                }
+
+                return HttpHelper.ParseJsonToUserNotifications(joResponse.ToString());
+            }
+        }
+        public async Task<UserNotification> ReadNotificationById(string notificationID)
+        {
+            StringContent strContent
+                = new StringContent("{\"notificationID\":\"" + notificationID + "\"}",
+                                    Encoding.UTF8,
+                                    "application/json");
+
+            HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Put, "notification/read", strContent);
+
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+                var joResponse = JObject.Parse(result);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    //TODO: Generate suitable exception 
+                    var joMessage = (JValue)joResponse.SelectToken("message");
+                    throw new UnauthorizedAccessException(joMessage.ToString());
+                }
+
+                return HttpHelper.ParseJsonToUserNotification(joResponse.ToString());
+            }
+        }
+        public async Task<User> KickOutMemberFromBoardById(string boardID, string memberID)
+        {
+            HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Delete, $"board/member/{boardID}&{memberID}");
+
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+                var joResponse = JObject.Parse(result);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    //TODO: Generate suitable exception 
+                    var joMessage = (JValue)joResponse.SelectToken("message");
+                    throw new UnauthorizedAccessException(joMessage.ToString());
+                }
+
+                return HttpHelper.ParseJsonToUserCredentials(joResponse.ToString());
+            }
+        }
         public async Task<Board> GetBoardById(string id)
         {
             HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Get, $"board/{id}");

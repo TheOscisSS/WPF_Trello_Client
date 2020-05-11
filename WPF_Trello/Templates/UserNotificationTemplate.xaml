@@ -1,0 +1,141 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                    xmlns:local="clr-namespace:WPF_Trello.Templates">
+    <ControlTemplate x:Key="UserNotificationTemplate">
+        <Border x:Name="UserNotificationContainer" Background="#f4f5f7" CornerRadius="3">
+            <Grid Width="360" MinHeight="100" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <StackPanel>
+                        <Grid Margin="0 9 0 9">
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                               FontSize="14" Foreground="#5e6c84">
+                                Notifications
+                            </TextBlock>
+                            <Button
+                            Height="23"
+                            Width="23"
+                            Padding="0"
+                            Margin="0 0 5 0"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Command="{Binding HideNotificationsCommand}"
+                            ToolTip="MaterialDesignFlatButton">
+                                <materialDesign:PackIcon
+                                Kind="Close"
+                                Height="20"
+                                Foreground="#172b4d"
+                                Width="20" />
+                            </Button>
+                        </Grid>
+                        <Separator Background="#d5d9e0"/>
+                        <Grid>
+                            <TextBlock x:Name="ShowOnlyRead" VerticalAlignment="Center" 
+                                HorizontalAlignment="Left" Margin="10 5">
+                                <Hyperlink Command="{Binding ShowOnlyUnreadNotificationsCommand}" TextDecorations="None">
+                                    <TextBlock Foreground="#5e6c84" Text="Show unread only"/>
+                                </Hyperlink>
+                            </TextBlock>
+                            <TextBlock x:Name="ShowAll" VerticalAlignment="Center" 
+                                HorizontalAlignment="Left" Margin="10 5">
+                                <Hyperlink Command="{Binding ShowAllNotificationsCommand}" TextDecorations="None">
+                                    <TextBlock Foreground="#5e6c84" Text="Show all"/>
+                                </Hyperlink>
+                            </TextBlock>
+                            <TextBlock x:Name="MarkAllAsRead" VerticalAlignment="Center" 
+                                HorizontalAlignment="Right" Margin="10 5">
+                                <Hyperlink Command="{Binding }" TextDecorations="None">
+                                    <TextBlock Foreground="#5e6c84" Text="Mark all as read"/>
+                                </Hyperlink>
+                            </TextBlock>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="1" Margin="0 0 0 5" MaxHeight="400">
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                        <Grid>
+                            <ListBox ItemsSource="{Binding UserNotificationCollection}"
+                                SelectedItem="{Binding SelectedUserNotification}"
+                                Name="ContainerForOnlyUnreadNotifications"
+                                HorizontalAlignment="Stretch"
+                                ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                ScrollViewer.CanContentScroll="False">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseDoubleClick">
+                                        <i:InvokeCommandAction Command="{Binding ReadNotificationCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="Template" Value="{StaticResource OnlyUnreadNotificationTemplate}" />
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Vertical" VerticalAlignment="Top" />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                            </ListBox>
+                            <ListBox ItemsSource="{Binding UserNotificationCollection, UpdateSourceTrigger=PropertyChanged}"
+                                Name="ContainerForAllNotifications"
+                                HorizontalAlignment="Stretch"
+                                ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                ScrollViewer.CanContentScroll="False">
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="Template" Value="{StaticResource AllNotificationTemplate}" />
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Vertical" VerticalAlignment="Top" />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                            </ListBox>
+                        </Grid>
+                    </ScrollViewer>
+                </Grid>
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsOpenNotificationsTrigger, UpdateSourceTrigger=PropertyChanged}" Value="false">
+                <Setter TargetName="UserNotificationContainer" Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+            
+            <DataTrigger Binding="{Binding IsShowAllNotifications, UpdateSourceTrigger=PropertyChanged}" Value="false">
+                <Setter TargetName="ShowAll" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsShowAllNotifications, UpdateSourceTrigger=PropertyChanged}" Value="false">
+                <Setter TargetName="ShowOnlyRead" Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsShowAllNotifications, UpdateSourceTrigger=PropertyChanged}" Value="false">
+                <Setter TargetName="ContainerForOnlyUnreadNotifications" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsShowAllNotifications, UpdateSourceTrigger=PropertyChanged}" Value="false">
+                <Setter TargetName="ContainerForAllNotifications" Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+            
+            <DataTrigger Binding="{Binding IsShowAllNotifications, UpdateSourceTrigger=PropertyChanged}" Value="true">
+                <Setter TargetName="ShowAll" Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsShowAllNotifications, UpdateSourceTrigger=PropertyChanged}" Value="true">
+                <Setter TargetName="ShowOnlyRead" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsShowAllNotifications, UpdateSourceTrigger=PropertyChanged}" Value="true">
+                <Setter TargetName="ContainerForOnlyUnreadNotifications" Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsShowAllNotifications, UpdateSourceTrigger=PropertyChanged}" Value="true">
+                <Setter TargetName="ContainerForAllNotifications" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+</ResourceDictionary>

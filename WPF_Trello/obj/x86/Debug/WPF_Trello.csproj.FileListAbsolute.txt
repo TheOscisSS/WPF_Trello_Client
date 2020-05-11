@@ -58,7 +58,6 @@ D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\Microsoft.Extensions.
 D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\Newtonsoft.Json.dll
 D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\System.Runtime.CompilerServices.Unsafe.dll
 D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\System.Threading.Tasks.Extensions.dll
-D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\websocket-sharp.dll
 D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\DevExpress.Mvvm.pdb
 D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\DevExpress.Mvvm.UI.pdb
 D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\MaterialDesignColors.pdb
@@ -107,3 +106,12 @@ D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\BoardCollec
 D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\CreateNewBoardTemplate.baml
 D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\RandomPictureCollectionTemplate.baml
 D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\BoardActivityTemplate.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\EngineIoClientDotNet.dll
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\SocketIoClientDotNet.dll
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\WebSocket4Net.dll
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\NotificationTemplate.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\UserNotificationTemplate.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\Microsoft.Expression.Interactions.dll
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\System.Windows.Interactivity.dll
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\Microsoft.Expression.Interactions.xml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\System.Windows.Interactivity.xml

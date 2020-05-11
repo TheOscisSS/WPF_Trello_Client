@@ -31,6 +31,7 @@ namespace WPF_Trello.ViewModels
         private readonly EventBusService _eventBusService;
         private readonly BoardService _boardService;
         private readonly MessageBusService _messageBusService;
+        private readonly WebSocketService _webSocketService;
 
         private Models.Board _selectedBoard;
 
@@ -46,31 +47,57 @@ namespace WPF_Trello.ViewModels
         }
 
         public HomeViewModel(PageService pageService, AuthenticationService authenticationService, EventBusService eventBusService,
-                BoardService boardService, MessageBusService messageBusService)
+                BoardService boardService, MessageBusService messageBusService, WebSocketService webSocketService)
         {
             _pageService = pageService;
             _authenticationService = authenticationService;
             _eventBusService = eventBusService;
             _boardService = boardService;
             _messageBusService = messageBusService;
+            _webSocketService = webSocketService;
+
+            Boards = new ObservableCollection<Models.Board>();
 
             _eventBusService.Subscribe<AuthorizatedEvent>(async _ => Debug.WriteLine("Authorizated"));
             _eventBusService.Subscribe<CreatedUserEvent>(async _ => Debug.WriteLine("Create new account"));
             _eventBusService.Subscribe<GetBoardsEvent>(async _ => RenderBoards());
-            _eventBusService.Subscribe<GoToHomeEvent>(async _ => _selectedBoard = null);
+            _eventBusService.Subscribe<GoToHomeEvent>(async _ => 
+            {
+                _webSocketService.LeaveFromBoard();
+                _selectedBoard = null;
+            });
 
             _messageBusService.Receive<CreateBoardMessage>(this, async message =>
             {
                 AddNewBoard(message.Title, message.Background);
             });
+            _messageBusService.Receive<AddNewBoardMessage>(this, async message =>
+            {
+                Boards.Add(message.Board);
+            });
+            _messageBusService.Receive<KickOutMemberMessage>(this, async message =>
+            {
+                try
+                {
+                    var DeleteBoardById = Boards
+                        .Where(board => board.ID == message.BoardID) as Models.Board;
+                    Boards.Remove(DeleteBoardById);
+                }
+                catch(Exception e)
+                {
+                    //TODO: ad error handler
+                    Debug.WriteLine(e.Message);
+                }
+            });
+            
         }
 
         private async void SendToBoardPreloadData()
         {
             await _messageBusService.SendTo<BoardViewModel>(new BoardPreloadMessage(_selectedBoard.ID, _selectedBoard.Title,
                    _selectedBoard.Description, _selectedBoard.Background, _selectedBoard.CreatedAt, _selectedBoard.UpdatedAt));
-            _pageService.ChangePage(new Pages.Board());
 
+            _webSocketService.JoinIntoBoard(_selectedBoard.ID);
             _pageService.ChangePage(new Pages.Board());
         }
 

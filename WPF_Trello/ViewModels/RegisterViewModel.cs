@@ -19,6 +19,7 @@ namespace WPF_Trello.ViewModels
         private readonly PageService _pageService;
         private readonly AuthenticationService _authenticationService;
         private readonly EventBusService _eventBusService;
+        private readonly WebSocketService _webSocketService;
 
         public string UsernameInputField { get; set; }
         public string PasswordInputField { get; set; }
@@ -26,11 +27,13 @@ namespace WPF_Trello.ViewModels
         public string ShowStatus { get; set; }
         public bool isAuthError => ShowStatus.Equals(string.Empty) ? false : true;
 
-        public RegisterViewModel(PageService pageService, AuthenticationService authenticationService, EventBusService eventBusService)
+        public RegisterViewModel(PageService pageService, AuthenticationService authenticationService, EventBusService eventBusService,
+            WebSocketService webSocketService)
         {
             _pageService = pageService;
             _authenticationService = authenticationService;
             _eventBusService = eventBusService;
+            _webSocketService = webSocketService;
 
             ShowStatus = string.Empty;
         }
@@ -50,9 +53,16 @@ namespace WPF_Trello.ViewModels
                     return;
                 }
 
-                User user = await _authenticationService.CreateUser(UsernameInputField, PasswordInputField);
+                if(PasswordInputField != ConfirmPasswordInputField)
+                {
+                    ShowStatus = "Passwords must match";
+                    return;
+                }
+
+                User user = await _authenticationService.CreateUser(UsernameInputField, PasswordInputField, ConfirmPasswordInputField);
 
                 _authenticationService.SetCustomPrincipal(user);
+                _webSocketService.JoinIntoAccount(user);
 
                 UsernameInputField = string.Empty;
                 PasswordInputField = string.Empty;
