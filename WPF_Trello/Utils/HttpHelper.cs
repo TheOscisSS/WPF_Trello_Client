@@ -21,6 +21,7 @@ namespace WPF_Trello.Utils
             var joUser = JObject.Parse(data);
 
             var joId = (JValue)joUser.SelectToken("_id");
+            var joIcon = (JValue)joUser.SelectToken("icon");
             var joUsername = (JValue)joUser.SelectToken("username");
             var joCreatedAt = (JValue)joUser.SelectToken("createdAt");
             var joUpdatedAt = (JValue)joUser.SelectToken("updatedAt");
@@ -29,6 +30,7 @@ namespace WPF_Trello.Utils
             return new User(
                 joId.ToString(),
                 joUsername.ToString(),
+                joIcon.ToString(),
                 DateTime.Parse(joCreatedAt.ToString()),
                 DateTime.Parse(joUpdatedAt.ToString()),
                 new string[] { }

@@ -14,9 +14,12 @@ FD:\Курсовой C#\WPF_Trello\WPF_Trello\Templates\BoardInviteMemberTemplat
 FD:\Курсовой C#\WPF_Trello\WPF_Trello\Templates\BoardListTemplate.xaml;;
 FD:\Курсовой C#\WPF_Trello\WPF_Trello\Templates\BoardMemberTemplate.xaml;;
 FD:\Курсовой C#\WPF_Trello\WPF_Trello\Templates\BoardMenuTemplate.xaml;;
+FD:\Курсовой C#\WPF_Trello\WPF_Trello\Templates\CardDetailTemplate.xaml;;
 FD:\Курсовой C#\WPF_Trello\WPF_Trello\Templates\CreateNewBoardTemplate.xaml;;
 FD:\Курсовой C#\WPF_Trello\WPF_Trello\Templates\NotificationTemplate.xaml;;
 FD:\Курсовой C#\WPF_Trello\WPF_Trello\Templates\RandomPictureCollectionTemplate.xaml;;
 FD:\Курсовой C#\WPF_Trello\WPF_Trello\Templates\ShowMenuButtonTemplate.xaml;;
+FD:\Курсовой C#\WPF_Trello\WPF_Trello\Templates\EditUserInfoTemplate.xaml;;
+FD:\Курсовой C#\WPF_Trello\WPF_Trello\Templates\UserInfoButtonTemplate.xaml;;
 FD:\Курсовой C#\WPF_Trello\WPF_Trello\Templates\UserNotificationTemplate.xaml;;
 

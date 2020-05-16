@@ -3,7 +3,7 @@
                     xmlns:local="clr-namespace:WPF_Trello.Templates">
     <ControlTemplate x:Key="BoardActivityTemplate" TargetType="ListBoxItem">
         <StackPanel Orientation="Horizontal" Margin="0 8">
-            <Button
+            <!--<Button
                 Style="{StaticResource MaterialDesignIconButton}"
                 VerticalAlignment="Top"
                 HorizontalAlignment="Left"
@@ -11,6 +11,20 @@
                 Height="32"
                 Width="32"
                 Background="#eaecf0">
+                <TextBlock FontSize="12" Text="{Binding Sender.FirstNameCharacter}"/>
+            </Button>-->
+            <Button
+                Name="UserIconButton"
+                Style="{StaticResource MaterialDesignIconButton}"
+                ToolTip="MaterialDesignIconButton"
+                Height="32"
+                Width="32"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Left"
+                >
+                <Button.Background>
+                    <ImageBrush ImageSource="{Binding Sender.Icon, UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
+                </Button.Background>
                 <TextBlock FontSize="12" Text="{Binding Sender.FirstNameCharacter}"/>
             </Button>
             <StackPanel Orientation="Vertical" Margin="10 0 0 0" VerticalAlignment="Top">

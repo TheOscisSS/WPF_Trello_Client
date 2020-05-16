@@ -47,6 +47,8 @@ namespace WPF_Trello.ViewModels
             SelectedUserNotification = null;
             UserNotificationCollection = new ObservableCollection<UserNotification>();
             IsExistUnreadNotification = false;
+            IsShowUserInfo = false;
+            IsShowUserInfoAddIcon = false;
             IsAddBoardTrigger = false;
             IsOpenNotificationsTrigger = false;
             IsShowAllNotifications = false;
@@ -58,12 +60,12 @@ namespace WPF_Trello.ViewModels
             _eventBusService.Subscribe<AuthorizatedEvent>(async _ =>
             {
                 _authenticationService.ChangeStatus(Thread.CurrentPrincipal.Identity.IsAuthenticated);
-                FirstChapterFromName = Thread.CurrentPrincipal.Identity.Name[0];
+                CurrentUser = _authenticationService.CurrentUser;
             });
             _eventBusService.Subscribe<CreatedUserEvent>(async _ =>
             {
                 _authenticationService.ChangeStatus(Thread.CurrentPrincipal.Identity.IsAuthenticated);
-                FirstChapterFromName = Thread.CurrentPrincipal.Identity.Name[0];
+                CurrentUser = _authenticationService.CurrentUser;
             });
 
             _messageBusService.Receive<NewBoardResponseMessage>(this, async message =>
@@ -108,8 +110,9 @@ namespace WPF_Trello.ViewModels
                     User user = await _authenticationService.GetCurrentUser();
                     _webSocketService.JoinIntoAccount(user);
                     _authenticationService.SetCustomPrincipal(user);
-                    await _messageBusService.SendTo<WelcomeViewModel>(new TextMessage("Welcome back " + user.Username));
-                    FirstChapterFromName = Thread.CurrentPrincipal.Identity.Name[0];
+
+                    CurrentUser = _authenticationService.CurrentUser;
+                    await _messageBusService.SendTo<WelcomeViewModel>(new SendUserCredentialMessage(CurrentUser, "Welcome back " + user.Username));
 
                     GetUserNotificatons();
 
@@ -123,7 +126,7 @@ namespace WPF_Trello.ViewModels
             catch (UnauthorizedAccessException e)
             {
                 Debug.WriteLine(e.Message);
-                await _messageBusService.SendTo<WelcomeViewModel>(new TextMessage(e.Message));
+                await _messageBusService.SendTo<WelcomeViewModel>(new SendUserCredentialMessage(e.Message));
                 _pageService.ChangePage(new Welcome());
             }
             catch (Exception ex)
@@ -178,6 +181,8 @@ namespace WPF_Trello.ViewModels
 
         public ICommand LogoutButton => new AsyncCommand(async () =>
         {
+            IsShowUserInfo = false;
+            _webSocketService.LeaveFromAccount();
             Logout();
             _authenticationService.ChangeStatus(Thread.CurrentPrincipal.Identity.IsAuthenticated);
         });
@@ -207,6 +212,22 @@ namespace WPF_Trello.ViewModels
             SelectedPicture = null;
             GetPictureExamples();
         });
+        public ICommand AddUserBackgroundPicture => new AsyncCommand(async () =>
+        {
+            if (Uri.IsWellFormedUriString(UserBackroundPicture, UriKind.Absolute))
+            {
+                CurrentUser = await _authenticationService.SetUserIcon(UserBackroundPicture);
+                IsShowUserInfoAddIcon = false;
+                RaisePropertiesChanged("CurrentUser");
+                RaisePropertiesChanged("IsShowUserInfoAddIcon");
+                //await _messageBusService.SendTo<HomeViewModel>(new CreateBoardMessage(NewBoardTitle, BoardBackgrounPicture));
+            }
+            else
+            {
+                Debug.WriteLine("URL has the wrong format");
+                //TODO: Add error handler
+            }
+        });
         public ICommand AddNewBoardCommand => new AsyncCommand(async () =>
         {
             if (Uri.IsWellFormedUriString(BoardBackgrounPicture, UriKind.Absolute))
@@ -222,12 +243,31 @@ namespace WPF_Trello.ViewModels
 
         public ICommand ShowNotificationsCommand => new AsyncCommand(async () =>
         {
-
+            IsShowUserInfo = false;
             IsOpenNotificationsTrigger = true;
         });
         public ICommand HideNotificationsCommand => new AsyncCommand(async () =>
         {
             IsOpenNotificationsTrigger = false;
+        });
+        public ICommand ShowUserInfoCommand => new AsyncCommand(async () =>
+        {
+
+            IsShowUserInfo = true;
+            IsOpenNotificationsTrigger = false;
+        });
+        public ICommand HideUserInfoCommand => new AsyncCommand(async () =>
+        {
+            IsShowUserInfo = false;
+        });
+        public ICommand ShowUserInfIconCommand => new AsyncCommand(async () =>
+        {
+
+            IsShowUserInfoAddIcon = true;
+        });
+        public ICommand HideUserInfoIconCommand => new AsyncCommand(async () =>
+        {
+            IsShowUserInfoAddIcon = false;
         });
         public ICommand ShowAllNotificationsCommand => new AsyncCommand(async () =>
         {
@@ -253,11 +293,14 @@ namespace WPF_Trello.ViewModels
             }
         });
 
-        public char FirstChapterFromName { get; private set; }
+        public User CurrentUser { get; private set; }
         public bool IsAddBoardTrigger { get; private set; }
+        public bool IsShowUserInfo { get; private set; }
         public bool IsOpenNotificationsTrigger { get; private set; }
         public bool IsShowAllNotifications { get; private set; }
+        public bool IsShowUserInfoAddIcon { get; private set; }
         public bool IsExistUnreadNotification { get; private set; }
+        public string UserBackroundPicture { get; set; }
         public string BoardBackgrounPicture { get; set; }
         public string NewBoardTitle { get; set; }
         public PictureExample SelectedPicture

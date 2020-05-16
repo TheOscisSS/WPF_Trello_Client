@@ -77,17 +77,8 @@ namespace WPF_Trello.ViewModels
             });
             _messageBusService.Receive<KickOutMemberMessage>(this, async message =>
             {
-                try
-                {
-                    var DeleteBoardById = Boards
-                        .Where(board => board.ID == message.BoardID) as Models.Board;
-                    Boards.Remove(DeleteBoardById);
-                }
-                catch(Exception e)
-                {
-                    //TODO: ad error handler
-                    Debug.WriteLine(e.Message);
-                }
+                var DeleteBoardById = Boards.FirstOrDefault(board => board.ID == message.BoardID) as Models.Board;
+                Boards.Remove(DeleteBoardById);
             });
             
         }

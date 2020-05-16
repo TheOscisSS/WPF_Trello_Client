@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace WPF_Trello.Messages
 {
-    class KickOutMemberMessage : IMessage
+    class BoardDeleteMemberMessage : IMessage
     {
-        public KickOutMemberMessage(string boardID)
+        public BoardDeleteMemberMessage(string boardID)
         {
             BoardID = boardID;
         }
 
-        public KickOutMemberMessage(string boardID, string senderID) : this(boardID)
+        public BoardDeleteMemberMessage(string boardID, string senderID) : this(boardID)
         {
             this.senderID = senderID;
         }
 
-        public KickOutMemberMessage(string boardID, string senderID, string memberID) : this(boardID, senderID)
+        public BoardDeleteMemberMessage(string boardID, string senderID, string memberID) : this(boardID, senderID)
         {
             this.memberID = memberID;
         }

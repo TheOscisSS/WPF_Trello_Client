@@ -83,7 +83,19 @@ namespace WPF_Trello.Services
                     _messageBusService.SendTo<BoardViewModel>(new AddNewCardMessage(AddedCard, jvListID.ToString(), jvSenderID.ToString()));
                 });
             });
+            _socket.On("BOARD:DELETE_MEMBER", async (boardInfo) =>
+            {
+                var joBoardInfo = JObject.Parse(boardInfo.ToString());
 
+                var jvBoardID = (JValue)joBoardInfo.SelectToken("boardID");
+                var jvSenderID = (JValue)joBoardInfo.SelectToken("senderID");
+                var jvMemberID = (JValue)joBoardInfo.SelectToken("memberID");
+
+                App.Current.Dispatcher.Invoke(async () =>
+                {
+                    _messageBusService.SendTo<BoardViewModel>(new BoardDeleteMemberMessage(jvBoardID.ToString(), jvSenderID.ToString(), jvMemberID.ToString()));
+                });
+            });
             _socket.On("USER:NOTIFICATION", async (notify) => 
             {
                 UserNotification userNotification = HttpHelper.ParseJsonToUserNotification(notify.ToString());
@@ -105,18 +117,30 @@ namespace WPF_Trello.Services
                     _messageBusService.SendTo<HomeViewModel>(new AddNewBoardMessage(InvitedBoard, jvSenderID.ToString()));
                 });
             });
+            _socket.On("USER:USER:SET_ICON", async (iconInfo) =>
+            {
+                var joIconInfo = JObject.Parse(iconInfo.ToString());
 
+                var jvIcon = (JValue)joIconInfo.SelectToken("icon");
+                var jvSenderID = (JValue)joIconInfo.SelectToken("senderID");
+
+                App.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    _messageBusService.SendTo<BoardViewModel>(new AddNewUserIconMessage(jvIcon.ToString(), jvSenderID.ToString()));
+                });
+            });
             _socket.On("USER:KICK_OUT", async (boardInfo) =>
             {
                 var joBoardInfo = JObject.Parse(boardInfo.ToString());
 
                 var jvBoardID = (JValue)joBoardInfo.SelectToken("boardID");
                 var jvSenderID = (JValue)joBoardInfo.SelectToken("senderID");
+                var jvMemberID = (JValue)joBoardInfo.SelectToken("memberID");
 
-                App.Current.Dispatcher.Invoke((Action)delegate
+                App.Current.Dispatcher.Invoke(async () =>
                 {
-                    _messageBusService.SendTo<BoardViewModel>(new KickOutMemberMessage(jvBoardID.ToString(), jvSenderID.ToString()));
-                    _messageBusService.SendTo<HomeViewModel>(new KickOutMemberMessage(jvBoardID.ToString(), jvSenderID.ToString()));
+                    await _messageBusService.SendTo<BoardViewModel>(new KickOutMemberMessage(jvBoardID.ToString(), jvSenderID.ToString(), jvMemberID.ToString()));
+                    await _messageBusService.SendTo<HomeViewModel>(new KickOutMemberMessage(jvBoardID.ToString(), jvSenderID.ToString()));
                 });
             });
         }
@@ -139,6 +163,10 @@ namespace WPF_Trello.Services
         {
             string requestDataIntoString = "{\"userID\":\"" + _currentUser.ID + "\",\"memberID\":\"" + memberID + "\"}";
             _socket.Emit("USER:INVITED", requestDataIntoString);
+        }
+        public void LeaveFromAccount()
+        {
+            _socket.Disconnect();
         }
     }
 }

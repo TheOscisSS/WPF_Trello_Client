@@ -155,11 +155,13 @@
     <Compile Include="Messages\AddNewListMessage.cs" />
     <Compile Include="Messages\AddNewMemberMessage.cs" />
     <Compile Include="Messages\AddNewNotificationMessage.cs" />
+    <Compile Include="Messages\AddNewUserIconMessage.cs" />
     <Compile Include="Messages\BoardPreloadMessage.cs" />
     <Compile Include="Messages\CreateBoardMessage.cs" />
+    <Compile Include="Messages\BoardDeleteMemberMessage.cs" />
     <Compile Include="Messages\KickOutMemberMessage.cs" />
     <Compile Include="Messages\NewBoardResponseMessage.cs" />
-    <Compile Include="Messages\TextMessage.cs" />
+    <Compile Include="Messages\SendUserCredentialMessage.cs" />
     <Compile Include="Messages\IMessage.cs" />
     <Compile Include="Models\AnonymousIdentity.cs" />
     <Compile Include="Models\Board.cs" />
@@ -268,6 +270,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Templates\CardDetailTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Templates\CreateNewBoardTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -281,6 +287,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Templates\ShowMenuButtonTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates\EditUserInfoTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Templates\UserInfoButtonTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

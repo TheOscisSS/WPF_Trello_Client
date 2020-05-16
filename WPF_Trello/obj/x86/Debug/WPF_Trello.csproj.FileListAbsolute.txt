@@ -115,3 +115,6 @@ D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\Microsoft.Expression.
 D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\System.Windows.Interactivity.dll
 D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\Microsoft.Expression.Interactions.xml
 D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\System.Windows.Interactivity.xml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\EditUserInfoTemplate.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\UserInfoButtonTemplate.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\CardDetailTemplate.baml

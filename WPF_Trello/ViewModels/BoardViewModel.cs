@@ -27,15 +27,20 @@ namespace WPF_Trello.ViewModels
         private readonly MessageBusService _messageBusService;
         private readonly WebSocketService _webSocketService;
 
+        public string CardDetailTitle { get; private set; }
+        public string CardDetailCurrentList { get; private set; }
+        public string CardDetailDescription { get; set; }
         public string NewListTitle { get; set; }
         public string InviteMemberName { get; set; }
         public Models.Board CurrentBoard { get; private set; }
         public ObservableCollection<User> BoardMembers { get; set; }
         public BoardList SelectedList { get; set; }
+        public BoardCard SelectedCard { get; set; }
         public User SelectedMember { get; set; }
         public bool IsAddListTrigger { get; private set; }
         public bool IsMenuTrigger { get; private set; }
         public bool IsInviteMemberTrigger { get; private set; }
+        public bool IsShowCardDetails { get; private set; }
 
 
         public BoardViewModel(PageService pageService, AuthenticationService authenticationService, EventBusService eventBusService,
@@ -49,11 +54,16 @@ namespace WPF_Trello.ViewModels
             _webSocketService = webSocketService;
 
             SelectedMember = null;
+            SelectedCard = null;
             IsAddListTrigger = false;
             IsMenuTrigger = false;
             IsInviteMemberTrigger = false;
+            IsShowCardDetails = false;
             NewListTitle = string.Empty;
             InviteMemberName = string.Empty;
+            CardDetailTitle = string.Empty;
+            CardDetailCurrentList = string.Empty;
+            CardDetailDescription = string.Empty;
 
             _messageBusService.Receive<BoardPreloadMessage>(this, async message =>
             {
@@ -87,13 +97,30 @@ namespace WPF_Trello.ViewModels
                     ListByID.AddNewCard(message.BoardCard);
                 }
             });
+            _messageBusService.Receive<BoardDeleteMemberMessage>(this, async message =>
+            {
+                var deletedMemberById = BoardMembers.FirstOrDefault(member => member.ID == message.memberID);
+                BoardMembers.Remove(deletedMemberById);
+            });
             _messageBusService.Receive<KickOutMemberMessage>(this, async message =>
             {
-                if(CurrentBoard.ID == message.BoardID)
+                if (CurrentBoard.ID == message.BoardID)
                 {
                     await _eventBusService.Publish(new GoToHomeEvent());
                     _pageService.ChangePage(new Home());
                 }
+            });
+            _messageBusService.Receive<AddNewUserIconMessage>(this, async message =>
+            {
+                var memberById = BoardMembers.FirstOrDefault(member => member.ID == message.SenderID) as User;
+                memberById.SetIcon(message.Icon);
+                RaisePropertiesChanged("BoardMembers");
+
+                //if (CurrentBoard.ID == message.BoardID)
+                //{
+                //    await _eventBusService.Publish(new GoToHomeEvent());
+                //    _pageService.ChangePage(new Home());
+                //}
             });
         }
         private async void RenderBoard(string id)
@@ -152,18 +179,28 @@ namespace WPF_Trello.ViewModels
         {
             IsInviteMemberTrigger = false;
         });
+        public ICommand ShowCardDetailsCommand => new AsyncCommand(async () =>
+        {
+            CardDetailTitle = string.Copy(SelectedCard.Title);
+            CardDetailCurrentList = string.Copy(SelectedList.Title);
+            CardDetailDescription = string.Copy(SelectedCard.Description);
+            IsShowCardDetails = true;
+        });
+        public ICommand HideCardDetailsCommand => new AsyncCommand(async () =>
+        {
+            IsShowCardDetails = false;
+            CardDetailTitle = string.Empty;
+            CardDetailCurrentList = string.Empty;
+            CardDetailDescription = string.Empty;
+        });
         public ICommand DeleteMemberCommand => new AsyncCommand(async () =>
         {
             try
             {
-                if(_authenticationService.CurrentUser.ID != SelectedMember.ID)
+                if(_authenticationService.CurrentUser.ID != SelectedMember.ID &&
+                    CurrentBoard.Owner.ID != SelectedMember.ID)
                 {
                     _boardService.KickOutMemberFromBoardById(CurrentBoard.ID, string.Copy(SelectedMember.ID));
-                    BoardMembers.Remove(SelectedMember);
-                }
-                else
-                {
-                    //TODO:add error handler
                 }
             }
             catch (Exception ex)

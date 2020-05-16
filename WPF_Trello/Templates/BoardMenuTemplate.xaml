@@ -54,7 +54,7 @@
                                     </TextBlock>
                                 </Grid>
                                 <Grid VerticalAlignment="Center" Margin="4 15 4 8">
-                                    <Button
+                                    <!--<Button
                                     Style="{StaticResource MaterialDesignIconButton}"
                                     HorizontalAlignment="Left"
                                     ToolTip="MaterialDesignIconButton"
@@ -62,13 +62,26 @@
                                     Width="50"
                                     Background="#eaecf0">
                                         <TextBlock FontSize="18" Text="{Binding CurrentBoard.Owner.FirstNameCharacter}"/>
+                                    </Button>-->
+                                    <Button
+                                        Name="UserIconButton"
+                                        Style="{StaticResource MaterialDesignIconButton}"
+                                        ToolTip="MaterialDesignIconButton"
+                                        Height="50"
+                                        Width="50"
+                                        HorizontalAlignment="Left"
+                                        >       
+                                        <Button.Background>
+                                            <ImageBrush ImageSource="{Binding CurrentBoard.Owner.Icon, UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
+                                        </Button.Background>
+                                        <TextBlock FontSize="18" Text="{Binding CurrentBoard.Owner.FirstNameCharacter}"/>
                                     </Button>
                                     <StackPanel VerticalAlignment="Top">
                                         <TextBlock Foreground="#172b4d" FontWeight="DemiBold" Margin="70 0 0 0"
                                    FontSize="17" Text="{Binding CurrentBoard.Owner.Username}"/>
                                         <TextBlock Foreground="#172b4d" Margin="70 0 0 0"
                                    FontSize="13">
-                                Owner
+                                    Owner
                                         </TextBlock>
                                     </StackPanel>
                                 </Grid>

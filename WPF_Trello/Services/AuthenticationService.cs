@@ -79,6 +79,28 @@ namespace WPF_Trello.Services
             }
         }
 
+        public async Task<User> SetUserIcon(string icon)
+        {
+            StringContent strContent
+                = new StringContent("{\"icon\":\"" + icon + "\"}", Encoding.UTF8,"application/json");
+            HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Post, "user/icon", strContent);
+
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+                var joResponse = JObject.Parse(result);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var joMessage = (JValue)joResponse.SelectToken("message");
+                    throw new UnauthorizedAccessException(joMessage.ToString());
+                }
+
+                CurrentUser.SetIcon(icon);
+                return CurrentUser;
+            }
+        }
+
         public async Task<User> CreateUser(string username, string password, string confirmPassword)
         {
             StringContent strContent

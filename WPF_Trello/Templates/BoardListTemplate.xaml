@@ -1,10 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                   xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                     xmlns:local="clr-namespace:WPF_Trello.Templates">
 
     <ControlTemplate x:Key="BoardListTemplate" TargetType="ListBoxItem">
-        <Border Name="ListBoard" CornerRadius="3" Width="272" MinHeight="78" VerticalAlignment="Top" HorizontalAlignment="Left" Background="#ebecf0" Margin="8 0 4 0" Cursor="Hand">
+        <Border Name="ListBoard" CornerRadius="3" Width="272" MinHeight="78" VerticalAlignment="Top" 
+                HorizontalAlignment="Left" Background="#ebecf0" Margin="8 0 4 0" Cursor="Hand">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -14,17 +16,23 @@
 
                 <Grid Grid.Row="0">
                     <TextBlock Text="{Binding Title}" Foreground="#172b4d" FontSize="16" 
-                                                        FontWeight="DemiBold" TextWrapping="Wrap" Padding="8 10"/>
+                        FontWeight="DemiBold" TextWrapping="Wrap" Padding="8 10"/>
                 </Grid>
 
                 <Grid Grid.Row="1">
                     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                         <ListBox ItemsSource="{Binding Cards}" 
-                                Name="ContainerForCards"
-                                HorizontalAlignment="Stretch"
-                                ScrollViewer.VerticalScrollBarVisibility="Disabled" 
-                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                ScrollViewer.CanContentScroll="False">
+                            SelectedItem="{Binding ElementName=ContainerForMembers, Path=DataContext.SelectedCard}"
+                            Name="ContainerForCards"
+                            HorizontalAlignment="Stretch"
+                            ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                            ScrollViewer.CanContentScroll="False">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseLeftButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding ElementName=ContainerForMembers, Path=DataContext.ShowCardDetailsCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
                             <ListBox.ItemContainerStyle>
                                 <Style TargetType="ListBoxItem">
                                     <Setter Property="Template" Value="{StaticResource BoardCardTemplate}" />
@@ -58,7 +66,7 @@
                                 </Border.Effect>
                                 <TextBox 
                                     Name="NewCardTitleTextBox"
-                                    materialDesign:HintAssist.Hint="Enter list title..."
+                                    materialDesign:HintAssist.Hint="Enter a title for this card..."
                                     Text="{Binding NewCardTitle}"
                                     BorderThickness="0"
                                     MinHeight="32" FontSize="16"

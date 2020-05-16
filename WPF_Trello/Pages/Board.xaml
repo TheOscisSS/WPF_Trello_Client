@@ -23,7 +23,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-
+            <ContentControl Panel.ZIndex="3" Template="{StaticResource CardDetailTemplate}"/>
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -92,12 +92,12 @@
                                     </Grid.ColumnDefinitions>
                                     <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="0">
                                         <ListBox ItemsSource="{Binding CurrentBoard.Lists}"
-                                        SelectedItem="{Binding SelectedList}"     
-                                        Name="ContainerForLists"
-                                        HorizontalAlignment="Left"
-                                        ScrollViewer.VerticalScrollBarVisibility="Disabled" 
-                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                        ScrollViewer.CanContentScroll="False">
+                                            SelectedItem="{Binding SelectedList}"     
+                                            Name="ContainerForLists"
+                                            HorizontalAlignment="Left"
+                                            ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                            ScrollViewer.CanContentScroll="False">
                                             <ListBox.ItemContainerStyle>
                                                 <Style TargetType="ListBoxItem">
                                                     <Setter Property="Template" Value="{StaticResource BoardListTemplate}" />

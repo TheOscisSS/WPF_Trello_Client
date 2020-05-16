@@ -5,7 +5,7 @@
                     xmlns:local="clr-namespace:WPF_Trello.Templates">
     <ControlTemplate x:Key="UserNotificationTemplate">
         <Border x:Name="UserNotificationContainer" Background="#f4f5f7" CornerRadius="3">
-            <Grid Width="360" MinHeight="100" Grid.Column="1">
+            <Grid Width="360" MinHeight="100" Height="Auto" Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
@@ -19,15 +19,15 @@
                                 Notifications
                             </TextBlock>
                             <Button
-                            Height="23"
-                            Width="23"
-                            Padding="0"
-                            Margin="0 0 5 0"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Right"
-                            Style="{StaticResource MaterialDesignFlatButton}"
-                            Command="{Binding HideNotificationsCommand}"
-                            ToolTip="MaterialDesignFlatButton">
+                                Height="23"
+                                Width="23"
+                                Padding="0"
+                                Margin="0 0 5 0"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right"
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Command="{Binding HideNotificationsCommand}"
+                                ToolTip="MaterialDesignFlatButton">
                                 <materialDesign:PackIcon
                                 Kind="Close"
                                 Height="20"
@@ -58,7 +58,7 @@
                         </Grid>
                     </StackPanel>
                 </Grid>
-                <Grid Grid.Row="1" Margin="0 0 0 5" MaxHeight="400">
+                <Grid Grid.Row="1" Margin="0 0 0 5" MaxHeight="400" Height="Auto">
                     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                         <Grid>
                             <ListBox ItemsSource="{Binding UserNotificationCollection}"
