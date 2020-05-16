@@ -11,11 +11,20 @@
       Title="Welcome">
 
     <Grid Background="#fafbfd">
-        <StackPanel VerticalAlignment="Center" Margin="0 -100 0 0">
+        <StackPanel VerticalAlignment="Center" Margin="0 -50 0 0">
+            <Ellipse
+                Canvas.Left="-70"
+                Canvas.Top="50"
+                Width="100"
+                Height="100"
+                Margin="10">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="{Binding CurrentUser.Icon, UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
+                </Ellipse.Fill>
+            </Ellipse>
             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="#5E6C84" FontSize="28" TextAlignment="Center"
-                        FontWeight="Bold" Margin="0 30 0 50" Text="{Binding DisplayMessage, UpdateSourceTrigger=PropertyChanged}"
+                        FontWeight="Bold" Margin="0 10 0 30" Text="{Binding DisplayMessage, UpdateSourceTrigger=PropertyChanged}"
             />
-
             <Button Height="44" Background="#026aa7" BorderBrush="Transparent" 
                         materialDesign:ShadowAssist.ShadowDepth="Depth0" MaxWidth="350px"
                         Command="{Binding ContinueButton}" FontSize="20">

@@ -2,8 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:WPF_Trello.Styles">
 
-    <ControlTemplate x:Key="BoardCardItems" TargetType="ListBoxItem">
-        <Border Name="CardBoard" CornerRadius="3" MinHeight="44" Background="White" Margin="8 0 8 8" Padding="8 6 8 2" Cursor="Hand">
+    <ControlTemplate x:Key="BoardCardTemplate" TargetType="ListBoxItem">
+        <Border Name="CardBoard" CornerRadius="3" MinHeight="44" Background="White" 
+                Margin="8 0 8 8" Padding="8 6 8 2" Cursor="Hand">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="1.5" Color="LightGray" Direction="-90" RenderingBias="Quality" ShadowDepth="1"/>
             </Border.Effect>

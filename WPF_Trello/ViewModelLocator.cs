@@ -12,7 +12,7 @@ namespace WPF_Trello
         {
             var services = new ServiceCollection();
 
-            services.AddTransient<MainViewModel>();
+            services.AddScoped<MainViewModel>();
             services.AddTransient<LoginViewModel>();
             services.AddTransient<RegisterViewModel>();
             services.AddScoped<WelcomeViewModel>();
@@ -24,6 +24,7 @@ namespace WPF_Trello
             services.AddSingleton<EventBusService>();
             services.AddSingleton<MessageBusService>();
             services.AddSingleton<BoardService>();
+            services.AddSingleton<WebSocketService>();
 
             _provider = services.BuildServiceProvider();
 

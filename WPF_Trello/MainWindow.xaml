@@ -52,7 +52,7 @@
                             Height="26"
                             Width="28"
                             Padding="0"
-                          
+                            Command="{Binding ShowCreateNewBoardCommand}"
                             Style="{StaticResource MaterialDesignFlatButton}"
                             ToolTip="MaterialDesignFlatButton">
                                 <materialDesign:PackIcon
@@ -78,30 +78,53 @@
                             </Button>
                         </Border>
 
-                        <Border Background="#4d98c3" Margin="0 3 0 3" 
+                        <Border x:Name="HeaderNotificationButton" Background="#4d98c3" Margin="0 3 0 3" 
                             BorderThickness="1" CornerRadius="3,3,3,3">
                             <Button
                             Height="26"
                             Width="28"
                             Padding="0"
-                          
+                            Command="{Binding ShowNotificationsCommand}"
                             Style="{StaticResource MaterialDesignFlatButton}"
                             ToolTip="MaterialDesignFlatButton">
                                 <materialDesign:PackIcon
-                                Kind="NotificationsNone"
-                                Height="24"
-                                Width="24" />
+                                    Name="HeaderNotificationsIcon"
+                                    Kind="NotificationsNone"
+                                    Height="24"
+                                    Width="24" />
                             </Button>
                         </Border>
+                        
                         <Button
+                            Name="UserIconButton"
                             Style="{StaticResource MaterialDesignIconButton}"
                             ToolTip="MaterialDesignIconButton"
                             Height="28"
                             Width="28"
                             Margin="3 0 0 0"
-                            Background="#dfe1e6">
-                            <TextBlock FontSize="18" Text="{Binding FirstChapterFromName}"/>
+                            HorizontalAlignment="Left"
+                            Command="{Binding ShowUserInfoCommand}"
+                            >
+                            <Button.Background>
+                                <ImageBrush ImageSource="{Binding CurrentUser.Icon, UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
+                            </Button.Background>
+                            <TextBlock FontSize="18" Text="{Binding CurrentUser.FirstNameCharacter}"/>
                         </Button>
+                        <!--<Border CornerRadius="50">
+                            <Button
+                            Style="{StaticResource MaterialDesignIconButton}"
+                            ToolTip="MaterialDesignIconButton"
+                            Height="28"
+                            Width="28"
+                            Margin="3 0 0 0"
+                            Command="{Binding ShowUserInfoCommand}"
+                            Background="#dfe1e6">
+                                <TextBlock FontSize="18" Text="{Binding CurrentUser.FirstNameCharacter}"/>
+                            </Button>
+                            <Border.Background>
+                                <ImageBrush ImageSource="{Binding CurrentUser.Icon, UpdateSourceTrigger=PropertyChanged}" Stretch="Fill"/>
+                            </Border.Background>
+                        </Border>-->
                     </StackPanel>
                 </Grid>
             </Grid>
@@ -109,21 +132,35 @@
                 <DataTrigger Binding="{Binding IsAuthenticated, UpdateSourceTrigger=PropertyChanged}" Value="false">
                     <Setter TargetName="Header" Property="Visibility" Value="Collapsed" />
                 </DataTrigger>
+                <DataTrigger Binding="{Binding IsExistUnreadNotification, UpdateSourceTrigger=PropertyChanged}" Value="true">
+                    <Setter TargetName="HeaderNotificationButton" Property="Background" Value="#d0503e" />
+                    <Setter TargetName="HeaderNotificationsIcon" Property="Foreground" Value="White" />
+                </DataTrigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
     </Window.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="35"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <ContentControl Panel.ZIndex="3" Template="{StaticResource CreateNewBoardTemplate}"/>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <Border Background="#fafbfd">
-            <ContentControl Grid.Column="0" Template="{StaticResource HeaderTemplate}"/>
-        </Border>
+            <Border Background="#fafbfd">
+                <ContentControl Grid.Column="0" Template="{StaticResource HeaderTemplate}"/>
+            </Border>
 
-        <Grid Grid.Row="1">
-            <Frame Content="{Binding PageSource}" NavigationUIVisibility="Hidden" Grid.ColumnSpan="2" Margin="0,0,-0.4,-0.4"/>
+            <Grid Grid.Row="1" >
+                <Canvas Panel.ZIndex="4">
+                    <ContentControl Canvas.Right="7" Canvas.Top="7" Template="{StaticResource UserNotificationTemplate}"/>
+                </Canvas>
+                <Canvas Panel.ZIndex="5">
+                    <ContentControl Canvas.Right="7" Canvas.Top="7" Template="{StaticResource EditUserInfoTemplate}"/>
+                </Canvas>
+                <Frame Panel.ZIndex="1" Content="{Binding PageSource}" NavigationUIVisibility="Hidden"/>
+            </Grid>
         </Grid>
     </Grid>
+
 </Window>

@@ -1,0 +1,62 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:local="clr-namespace:WPF_Trello.Templates">
+    <ControlTemplate x:Key="AddListButtonTemplate" x:Name="LastButtonOnListBox">
+        <Grid>
+            <Button VerticalAlignment="Top"
+                    HorizontalAlignment="Left"
+                    Style="{StaticResource MaterialDesignOutlinedButton}"
+                    ToolTip="MaterialDesignOutlinedButton"
+                    Foreground="#5e6c84"
+                    Name="AddListButton_false"
+                    Command="{Binding ShowAddListButton}"
+                    Margin="5 0"
+                    Width="272"
+                    >
+                + Add another list
+            </Button>
+            <Border x:Name="AddListButton_true" CornerRadius="3" Width="272" MinHeight="78" VerticalAlignment="Top" Background="#ebecf0" Margin="8 0 4 0" Padding="4">
+                <StackPanel>
+                    <Border CornerRadius="3" BorderThickness="2" Background="White" BorderBrush="#0079bf">
+                        <TextBox Width="264" 
+                                    Name="TitleForNewList"
+                                    Text="{Binding NewListTitle, UpdateSourceTrigger=PropertyChanged}"
+                                    materialDesign:HintAssist.Hint="Enter list title..."
+                                    BorderThickness="0"
+                                    Height="32" FontSize="16" 
+                                    Padding="2 0" Background="Transparent"/>
+                    </Border>
+                    <StackPanel Orientation="Horizontal" Margin="0 4 0 0">
+                        <Button Height="32" Background="#5AAC44" BorderBrush="Transparent" 
+                                    materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                    Command="{Binding AddAnotherListCommand}">
+                            Add List
+                        </Button>
+                        <Button 
+                                    Style="{StaticResource MaterialDesignOutlinedButton}"
+                                    Command="{Binding HideAddListButton}"
+                                    ToolTip="MaterialDesignOutlinedButton"
+                                    Foreground="#5e6c84"
+                                    Height="32"
+                                    Margin="4 0"
+                                    >
+                            Cancel
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsAddListTrigger, UpdateSourceTrigger=PropertyChanged}" Value="false">
+                <Setter TargetName="AddListButton_false" Property="Visibility" Value="Visible" />
+                <Setter TargetName="AddListButton_true" Property="Visibility" Value="Collapsed" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsAddListTrigger, UpdateSourceTrigger=PropertyChanged}" Value="true">
+                <Setter TargetName="AddListButton_false" Property="Visibility" Value="Collapsed" />
+                <Setter TargetName="AddListButton_true" Property="Visibility" Value="Visible" />
+            </DataTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+</ResourceDictionary>

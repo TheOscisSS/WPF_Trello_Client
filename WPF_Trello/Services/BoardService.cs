@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
@@ -24,6 +25,7 @@ namespace WPF_Trello.Services
 
                 if (!response.IsSuccessStatusCode)
                 {
+                    //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
                     throw new UnauthorizedAccessException(joMessage.ToString());
                 }
@@ -31,7 +33,68 @@ namespace WPF_Trello.Services
                 return HttpHelper.ParseJsonToPreviewBoards(joResponse.ToString());
             }
         }
+        public async Task<ObservableCollection<UserNotification>> GetAllUserNotifications()
+        {
+            HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Get, "notification");
 
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+                var joResponse = JObject.Parse(result);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    //TODO: Generate suitable exception 
+                    var joMessage = (JValue)joResponse.SelectToken("message");
+                    throw new UnauthorizedAccessException(joMessage.ToString());
+                }
+
+                return HttpHelper.ParseJsonToUserNotifications(joResponse.ToString());
+            }
+        }
+        public async Task<UserNotification> ReadNotificationById(string notificationID)
+        {
+            StringContent strContent
+                = new StringContent("{\"notificationID\":\"" + notificationID + "\"}",
+                                    Encoding.UTF8,
+                                    "application/json");
+
+            HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Put, "notification/read", strContent);
+
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+                var joResponse = JObject.Parse(result);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    //TODO: Generate suitable exception 
+                    var joMessage = (JValue)joResponse.SelectToken("message");
+                    throw new UnauthorizedAccessException(joMessage.ToString());
+                }
+
+                return HttpHelper.ParseJsonToUserNotification(joResponse.ToString());
+            }
+        }
+        public async Task<User> KickOutMemberFromBoardById(string boardID, string memberID)
+        {
+            HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Delete, $"board/member/{boardID}&{memberID}");
+
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+                var joResponse = JObject.Parse(result);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    //TODO: Generate suitable exception 
+                    var joMessage = (JValue)joResponse.SelectToken("message");
+                    throw new UnauthorizedAccessException(joMessage.ToString());
+                }
+
+                return HttpHelper.ParseJsonToUserCredentials(joResponse.ToString());
+            }
+        }
         public async Task<Board> GetBoardById(string id)
         {
             HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Get, $"board/{id}");
@@ -43,6 +106,7 @@ namespace WPF_Trello.Services
 
                 if (!response.IsSuccessStatusCode)
                 {
+                    //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
                     throw new UnauthorizedAccessException(joMessage.ToString());
                 }
@@ -69,6 +133,7 @@ namespace WPF_Trello.Services
 
                 if (!response.IsSuccessStatusCode)
                 {
+                    //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
                     throw new UnauthorizedAccessException(joMessage.ToString());
                 }
@@ -93,11 +158,78 @@ namespace WPF_Trello.Services
 
                 if (!response.IsSuccessStatusCode)
                 {
+                    //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
                     throw new UnauthorizedAccessException(joMessage.ToString());
                 }
 
                 return HttpHelper.ParseJsonToBoardCard(joResponse.ToString());
+            }
+        }
+
+        public async Task<User> InviteNewMember(string boardID, string memberName)
+        {
+            StringContent strContent
+                = new StringContent("{\"boardID\":\"" + boardID + "\",\"memberName\":\"" + memberName + "\"}",
+                                    Encoding.UTF8,
+                                    "application/json");
+
+            HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Post, $"board/invite", strContent);
+
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+                var joResponse = JObject.Parse(result);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    //TODO: Generate suitable exception 
+                    var joMessage = (JValue)joResponse.SelectToken("message");
+                    throw new UnauthorizedAccessException(joMessage.ToString());
+                }
+
+                return HttpHelper.ParseJsonToUserCredentials(joResponse.ToString());
+            }
+        }
+        public async Task<Board> CreateNewBoard(string title, string background)
+        {
+            StringContent strContent
+                = new StringContent("{\"title\":\"" + title + "\",\"background\":\"" + background + "\"}",
+                                    Encoding.UTF8,
+                                    "application/json");
+
+            HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Post, $"board/create", strContent);
+
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+                var joResponse = JObject.Parse(result);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    //TODO: Generate suitable exception 
+                    var joMessage = (JValue)joResponse.SelectToken("message");
+                    throw new UnauthorizedAccessException(joMessage.ToString());
+                }
+
+                return HttpHelper.ParseJsonToPreviewBoard(joResponse.ToString());
+            }
+        }
+        public async Task<ObservableCollection<PictureExample>> GetRandomPicture(string query = "wallpaper", string orientation = "landscape", int count = 9)
+        {
+            HttpResponseMessage response = await HttpHelper.HttpRequestForUnsplash(HttpMethod.Get, $"photos/random?query={query}&count={count}&orientation={orientation}");
+
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    //TODO: Generate suitable exception 
+                    throw new Exception("May be time is over");
+                }
+
+                return HttpHelper.ParseJsonToPicturesUrl(result);
             }
         }
     }

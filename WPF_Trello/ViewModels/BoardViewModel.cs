@@ -13,6 +13,7 @@ using System.Windows.Media;
 using WPF_Trello.Events;
 using WPF_Trello.Messages;
 using WPF_Trello.Models;
+using WPF_Trello.Pages;
 using WPF_Trello.Services;
 
 namespace WPF_Trello.ViewModels
@@ -24,30 +25,102 @@ namespace WPF_Trello.ViewModels
         private readonly EventBusService _eventBusService;
         private readonly BoardService _boardService;
         private readonly MessageBusService _messageBusService;
+        private readonly WebSocketService _webSocketService;
 
+        public string CardDetailTitle { get; private set; }
+        public string CardDetailCurrentList { get; private set; }
+        public string CardDetailDescription { get; set; }
         public string NewListTitle { get; set; }
-        public Board CurrentBoard { get; private set; }
-        public ObservableCollection<User> BoardMembers { get; private set; }
+        public string InviteMemberName { get; set; }
+        public Models.Board CurrentBoard { get; private set; }
+        public ObservableCollection<User> BoardMembers { get; set; }
         public BoardList SelectedList { get; set; }
+        public BoardCard SelectedCard { get; set; }
+        public User SelectedMember { get; set; }
         public bool IsAddListTrigger { get; private set; }
+        public bool IsMenuTrigger { get; private set; }
+        public bool IsInviteMemberTrigger { get; private set; }
+        public bool IsShowCardDetails { get; private set; }
+
 
         public BoardViewModel(PageService pageService, AuthenticationService authenticationService, EventBusService eventBusService,
-                BoardService boardService, MessageBusService messageBusService)
+                BoardService boardService, MessageBusService messageBusService, WebSocketService webSocketService)
         {
             _pageService = pageService;
             _authenticationService = authenticationService;
             _eventBusService = eventBusService;
             _boardService = boardService;
             _messageBusService = messageBusService;
+            _webSocketService = webSocketService;
 
+            SelectedMember = null;
+            SelectedCard = null;
             IsAddListTrigger = false;
+            IsMenuTrigger = false;
+            IsInviteMemberTrigger = false;
+            IsShowCardDetails = false;
             NewListTitle = string.Empty;
+            InviteMemberName = string.Empty;
+            CardDetailTitle = string.Empty;
+            CardDetailCurrentList = string.Empty;
+            CardDetailDescription = string.Empty;
 
             _messageBusService.Receive<BoardPreloadMessage>(this, async message =>
             {
-                CurrentBoard = new Board(message.ID, message.Title, message.Description, message.Background, message.CreatedAt, message.UpdatedAt);
+                CurrentBoard = new Models.Board(message.ID, message.Title, message.Description, message.Background, message.CreatedAt, message.UpdatedAt);
                 BoardMembers = new ObservableCollection<User>();
                 RenderBoard(message.ID);
+            });
+            _messageBusService.Receive<AddNewActivityMessage>(this, async message =>
+            {
+                CurrentBoard.AddNewActivity(message.AddedActivity);   
+            });
+            _messageBusService.Receive<AddNewMemberMessage>(this, async message =>
+            {
+                BoardMembers.Add(message.InvitedMember);
+            });
+            _messageBusService.Receive<AddNewListMessage>(this, async message =>
+            {
+                NewListTitle = string.Empty;
+                CurrentBoard.AddNewList(message.BoardList);
+            });
+            _messageBusService.Receive<AddNewCardMessage>(this, async message =>
+            {
+                if(_authenticationService.CurrentUser.ID == message.SenderID)
+                {
+                    SelectedList.AddNewCard(message.BoardCard);
+                    SelectedList.NewCardTitle = string.Empty;
+                }
+                else
+                {
+                    var ListByID = CurrentBoard.Lists.FirstOrDefault(list => list.ID == message.ListID);
+                    ListByID.AddNewCard(message.BoardCard);
+                }
+            });
+            _messageBusService.Receive<BoardDeleteMemberMessage>(this, async message =>
+            {
+                var deletedMemberById = BoardMembers.FirstOrDefault(member => member.ID == message.memberID);
+                BoardMembers.Remove(deletedMemberById);
+            });
+            _messageBusService.Receive<KickOutMemberMessage>(this, async message =>
+            {
+                if (CurrentBoard.ID == message.BoardID)
+                {
+                    await _eventBusService.Publish(new GoToHomeEvent());
+                    _pageService.ChangePage(new Home());
+                }
+            });
+            _messageBusService.Receive<AddNewUserIconMessage>(this, async message =>
+            {
+                var memberById = BoardMembers.FirstOrDefault(member => member.ID == message.SenderID) as User;
+                memberById.SetIcon(message.Icon);
+                RaisePropertiesChanged("BoardMembers");
+
+                //if (CurrentBoard.ID == message.BoardID)
+                //{
+                //    await _eventBusService.Publish(new GoToHomeEvent());
+                //    _pageService.ChangePage(new Home());
+                //}
             });
         }
         private async void RenderBoard(string id)
@@ -55,7 +128,9 @@ namespace WPF_Trello.ViewModels
             try
             {
                 IsAddListTrigger = false;
+                IsInviteMemberTrigger = false;
                 NewListTitle = string.Empty;
+                InviteMemberName = string.Empty;
                 CurrentBoard = await _boardService.GetBoardById(id);
                 BoardMembers.Add(CurrentBoard.Owner);
                 foreach(User member in CurrentBoard.Members)
@@ -66,7 +141,6 @@ namespace WPF_Trello.ViewModels
             catch (UnauthorizedAccessException e)
             {
                 Debug.WriteLine(e.Message);
-                //ShowStatus = e.Message;
             }
             catch (Exception ex)
             {
@@ -81,41 +155,90 @@ namespace WPF_Trello.ViewModels
         {
             IsAddListTrigger = false;
         });
+        public ICommand ShowMenu => new AsyncCommand(async () =>
+        {
+            IsMenuTrigger = true;
+        });
+        public ICommand HideMenu => new AsyncCommand(async () =>
+        {
+            IsMenuTrigger = false;
+        });
         public ICommand ShowAddCardButton => new AsyncCommand(async () =>
         {
-            Debug.WriteLine(SelectedList.Title);
             SelectedList.IsAddCardTrigger = true;
         });
         public ICommand HideAddCardButton => new AsyncCommand(async () =>
         {
             SelectedList.IsAddCardTrigger = false;
         });
-
+        public ICommand ShowInviteButton => new AsyncCommand(async () =>
+        {
+            IsInviteMemberTrigger = true;
+        });
+        public ICommand HideInviteButton => new AsyncCommand(async () =>
+        {
+            IsInviteMemberTrigger = false;
+        });
+        public ICommand ShowCardDetailsCommand => new AsyncCommand(async () =>
+        {
+            CardDetailTitle = string.Copy(SelectedCard.Title);
+            CardDetailCurrentList = string.Copy(SelectedList.Title);
+            CardDetailDescription = string.Copy(SelectedCard.Description);
+            IsShowCardDetails = true;
+        });
+        public ICommand HideCardDetailsCommand => new AsyncCommand(async () =>
+        {
+            IsShowCardDetails = false;
+            CardDetailTitle = string.Empty;
+            CardDetailCurrentList = string.Empty;
+            CardDetailDescription = string.Empty;
+        });
+        public ICommand DeleteMemberCommand => new AsyncCommand(async () =>
+        {
+            try
+            {
+                if(_authenticationService.CurrentUser.ID != SelectedMember.ID &&
+                    CurrentBoard.Owner.ID != SelectedMember.ID)
+                {
+                    _boardService.KickOutMemberFromBoardById(CurrentBoard.ID, string.Copy(SelectedMember.ID));
+                }
+            }
+            catch (Exception ex)
+            {
+                //TODO: add error handler
+                Debug.WriteLine(ex.Message);
+            }
+        });
         public ICommand AddAnotherListCommand => new AsyncCommand(async () =>
         {
             try
             {
                 BoardList newList = await _boardService.CreateNewList(CurrentBoard.ID, NewListTitle);
-
-                NewListTitle = string.Empty;
-                //IsAddListTrigger = false;
-                CurrentBoard.AddNewList(newList);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
             }
         });
-
         public ICommand AddAnotherCardCommand => new AsyncCommand(async () =>
         {
             try
             {
                 BoardCard newCard = await _boardService.CreateNewCard(SelectedList.ID, SelectedList.NewCardTitle);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        });
+        public ICommand InviteMemberCommand => new AsyncCommand(async () =>
+        {
+            try
+            {
+                User newMember = await _boardService.InviteNewMember(CurrentBoard.ID, InviteMemberName);
+                _webSocketService.NotifyInvitedMember(newMember.ID);
 
-                SelectedList.NewCardTitle = string.Empty;
-                //SelectedList.IsAddCardTrigger = false;
-                SelectedList.AddNewCard(newCard);
+                InviteMemberName = string.Empty;
             }
             catch (Exception ex)
             {

@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:WPF_Trello.Templates">
+    <!--<ControlTemplate x:Key="UserInfoButtonTemplate" >
+        <Button
+            Name="UserIconButton"
+            Style="{StaticResource MaterialDesignIconButton}"
+            ToolTip="MaterialDesignIconButton"
+            Height="{TemplateBinding Height}"
+            Width="{TemplateBinding Width}"
+            Command="{Binding ShowUserInfoCommand}"
+            >
+            <Button.Background>
+                <ImageBrush ImageSource="{Binding CurrentUser.Icon, UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
+            </Button.Background>
+            <TextBlock FontSize="18" Text="{Binding CurrentUser.FirstNameCharacter}"/>
+        </Button>
+    </ControlTemplate>-->
+    
+    <!--<Style x:Key="UserInfoButtonTemplate" TargetType="button">
+        <Setter Property="Template">
+            <Setter.Value>
+                
+            </Setter.Value>
+        </Setter>
+    </Style>-->
+</ResourceDictionary>
