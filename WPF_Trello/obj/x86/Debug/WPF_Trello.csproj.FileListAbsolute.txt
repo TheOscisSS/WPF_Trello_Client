@@ -118,3 +118,6 @@ D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\System.Windows.Intera
 D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\EditUserInfoTemplate.baml
 D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\UserInfoButtonTemplate.baml
 D:\Курсовой C#\WPF_Trello\WPF_Trello\obj\x86\Debug\Templates\CardDetailTemplate.baml
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\GongSolutions.WPF.DragDrop.dll
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\GongSolutions.WPF.DragDrop.pdb
+D:\Курсовой C#\WPF_Trello\WPF_Trello\bin\x86\Debug\GongSolutions.WPF.DragDrop.xml

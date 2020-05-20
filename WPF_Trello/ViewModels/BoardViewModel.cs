@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using GongSolutions.Wpf.DragDrop;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,7 +19,7 @@ using WPF_Trello.Services;
 
 namespace WPF_Trello.ViewModels
 {
-    public class BoardViewModel : BindableBase
+    public class BoardViewModel : BindableBase, IDropTarget
     {
         private readonly PageService _pageService;
         private readonly AuthenticationService _authenticationService;
@@ -82,6 +83,7 @@ namespace WPF_Trello.ViewModels
             _messageBusService.Receive<AddNewListMessage>(this, async message =>
             {
                 NewListTitle = string.Empty;
+                //message.BoardList.Cards = new ObservableCollection<BoardCard>();
                 CurrentBoard.AddNewList(message.BoardList);
             });
             _messageBusService.Receive<AddNewCardMessage>(this, async message =>
@@ -114,13 +116,18 @@ namespace WPF_Trello.ViewModels
             {
                 var memberById = BoardMembers.FirstOrDefault(member => member.ID == message.SenderID) as User;
                 memberById.SetIcon(message.Icon);
-                RaisePropertiesChanged("BoardMembers");
+                CurrentBoard.UpdateEachActivityIcon(message.Icon, message.SenderID);
 
-                //if (CurrentBoard.ID == message.BoardID)
-                //{
-                //    await _eventBusService.Publish(new GoToHomeEvent());
-                //    _pageService.ChangePage(new Home());
-                //}
+            });
+            _messageBusService.Receive<MoveBoardListMessage>(this, async message =>
+            {
+                var movableList = CurrentBoard.Lists.ElementAt(message.From);
+
+                if(_authenticationService.CurrentUser.ID != message.SenderID)
+                {
+                    CurrentBoard.Lists.Remove(movableList);
+                    CurrentBoard.Lists.Insert(message.To, movableList);
+                }
             });
         }
         private async void RenderBoard(string id)
@@ -147,6 +154,52 @@ namespace WPF_Trello.ViewModels
                 Debug.WriteLine(ex.Message);
             }
         }
+
+        public void DragOver(IDropInfo dropInfo)
+        {
+            object sourceItem = null, 
+                   targetItem = null;
+
+            sourceItem = dropInfo.Data as BoardList;
+            targetItem = dropInfo.TargetItem as BoardList;
+
+            if (sourceItem != null && targetItem != null)
+            {
+                dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+                dropInfo.Effects = DragDropEffects.Move;
+            }
+        }
+
+        public void Drop(IDropInfo dropInfo){
+
+            BoardList sourceItem = dropInfo.Data as BoardList;
+            BoardList targetItem = dropInfo.TargetItem as BoardList;
+
+            if (sourceItem.ID != targetItem.ID)
+            {
+                int sourceIndex = CurrentBoard.Lists.IndexOf(sourceItem);
+                int targetIndex = CurrentBoard.Lists.IndexOf(targetItem);
+
+                CurrentBoard.Lists.Remove(sourceItem);
+                if (sourceIndex < targetIndex)
+                {
+                    int toIndex = dropInfo.InsertIndex - 1 < 0 ? 0 : dropInfo.InsertIndex - 1;
+                    SendMoveListData(sourceIndex, toIndex, CurrentBoard.ID);
+                    CurrentBoard.Lists.Insert(toIndex, sourceItem);
+                }
+                else
+                {
+                    SendMoveListData(sourceIndex, dropInfo.InsertIndex, CurrentBoard.ID);
+                    CurrentBoard.Lists.Insert(dropInfo.InsertIndex, sourceItem);
+                }
+            }
+        }
+
+        private async Task<List<string>> SendMoveListData(int from, int to, string boardID)
+        {
+            return await _boardService.MoveBoardList(from, to, boardID);
+        }
+
         public ICommand ShowAddListButton => new AsyncCommand(async () =>
         {
             IsAddListTrigger = true;
@@ -200,7 +253,7 @@ namespace WPF_Trello.ViewModels
                 if(_authenticationService.CurrentUser.ID != SelectedMember.ID &&
                     CurrentBoard.Owner.ID != SelectedMember.ID)
                 {
-                    _boardService.KickOutMemberFromBoardById(CurrentBoard.ID, string.Copy(SelectedMember.ID));
+                    await _boardService.KickOutMemberFromBoardById(CurrentBoard.ID, string.Copy(SelectedMember.ID));
                 }
             }
             catch (Exception ex)

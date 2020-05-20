@@ -21,7 +21,7 @@ namespace WPF_Trello.Models
             string id,
             string title,
             ObservableCollection<BoardCard> cards,
-             DateTime createdAt,
+            DateTime createdAt,
             DateTime updatedAt)
         {
             ID = id;

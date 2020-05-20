@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExpress.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WPF_Trello.Models
 {
-    public class User
+    public class User : BindableBase
     {
 
         public User(string username)
@@ -35,11 +36,12 @@ namespace WPF_Trello.Models
         public void SetIcon(string icon)
         {
             Icon = icon;
+            RaisePropertiesChanged("Icon");
         }
 
         public string ID { get; private set; }
         public string Username { get; private set; }
-        public string Icon { get; private set; }
+        public string Icon { get; set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
     }

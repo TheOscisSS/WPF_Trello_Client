@@ -82,6 +82,9 @@
     <Reference Include="EngineIoClientDotNet, Version=0.9.22.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EngineIoClientDotNet.0.9.22\lib\net45\EngineIoClientDotNet.dll</HintPath>
     </Reference>
+    <Reference Include="GongSolutions.WPF.DragDrop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=91f1945125b7a587, processorArchitecture=MSIL">
+      <HintPath>..\packages\gong-wpf-dragdrop.2.2.0\lib\net47\GongSolutions.WPF.DragDrop.dll</HintPath>
+    </Reference>
     <Reference Include="MaterialDesignColors, Version=1.2.2.920, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.1.2.2\lib\net45\MaterialDesignColors.dll</HintPath>
     </Reference>
@@ -160,6 +163,7 @@
     <Compile Include="Messages\CreateBoardMessage.cs" />
     <Compile Include="Messages\BoardDeleteMemberMessage.cs" />
     <Compile Include="Messages\KickOutMemberMessage.cs" />
+    <Compile Include="Messages\MoveBoardListMessage.cs" />
     <Compile Include="Messages\NewBoardResponseMessage.cs" />
     <Compile Include="Messages\SendUserCredentialMessage.cs" />
     <Compile Include="Messages\IMessage.cs" />
@@ -191,6 +195,7 @@
       <DependentUpon>Welcome.xaml</DependentUpon>
     </Compile>
     <Compile Include="PasswordBoxAssistant.cs" />
+    <Compile Include="DragDropExtension.cs" />
     <Compile Include="Services\AuthenticationService.cs" />
     <Compile Include="Services\BoardService.cs" />
     <Compile Include="Services\EventBusService.cs" />

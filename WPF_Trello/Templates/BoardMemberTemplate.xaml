@@ -3,16 +3,30 @@
                     xmlns:local="clr-namespace:WPF_Trello.Styles">
 
     <ControlTemplate x:Key="BoardMemberTemplate" TargetType="ListBoxItem">
-        <!--<Button Name="MemberButton"
+        <Button
+            Name="UserIconButton"
             Style="{StaticResource MaterialDesignIconButton}"
             ToolTip="MaterialDesignIconButton"
-            Margin="-5 0 0 0"
             Height="32"
             Width="32"
-            Background="#dfe1e6">
-            <TextBlock FontSize="18" Text="{Binding FirstNameCharacter}"/>
-        </Button>-->
-        <Button
+            Margin="-5 0 0 0"
+            Background="#dfe1e6"
+            Command="{Binding ShowUserInfoCommand}"
+            >
+            <Grid>
+                <Ellipse
+                    Panel.ZIndex="2"
+                    Width="32"
+                    Height="32">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="{Binding Icon, UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <TextBlock FontSize="18" HorizontalAlignment="Center" Panel.ZIndex="1" 
+                    VerticalAlignment="Center" Text="{Binding FirstNameCharacter}"/>
+            </Grid>
+        </Button>
+        <!--<Button
             Name="UserIconButton"
             Style="{StaticResource MaterialDesignIconButton}"
             ToolTip="MaterialDesignIconButton"
@@ -24,7 +38,7 @@
                 <ImageBrush ImageSource="{Binding Icon, UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
             </Button.Background>
             <TextBlock FontSize="18" Text="{Binding FirstNameCharacter}"/>
-        </Button>
+        </Button>-->
         <ControlTemplate.Triggers>
             <Trigger Property="IsSelected" Value="true">
             </Trigger>

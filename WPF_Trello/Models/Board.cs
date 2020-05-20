@@ -69,6 +69,17 @@ namespace WPF_Trello.Models
         public DateTime UpdatedAt { get; private set; }
         public ObservableCollection<BoardList> Lists { get; private set; }
 
+        public void UpdateEachActivityIcon(string icon, string userID)
+        {
+            foreach(var activity in Activities)
+            {
+                if(activity.Sender.ID == userID)
+                {
+                    activity.SetIcon(icon);
+                }
+            }
+        }
+
         public void AddNewList(BoardList newList)
         {
             Lists.Add(newList);

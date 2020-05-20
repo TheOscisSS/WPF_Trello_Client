@@ -8,18 +8,31 @@
             <Grid Width="250" Height="Auto" Grid.Column="1">
                 <StackPanel x:Name="UserInfo">
                     <Grid VerticalAlignment="Top" Margin="4 10 4 8">
-                        <!--<Button
+                        <Button
+                            Name="UserIconButton"
                             Style="{StaticResource MaterialDesignIconButton}"
-                            Command="{Binding ShowUserInfIconCommand}"
-                            HorizontalAlignment="Left"
                             ToolTip="MaterialDesignIconButton"
                             Height="60"
                             Width="60"
                             Margin="5 0"
-                            Background="#eaecf0">
-                            <TextBlock FontSize="25" Text="{Binding CurrentUser.FirstNameCharacter}"/>
-                        </Button>-->
-                        <Button
+                            HorizontalAlignment="Left"
+                            Background="#dfe1e6"
+                            Command="{Binding ShowUserInfIconCommand}"
+                            >
+                            <Grid>
+                                <Ellipse
+                                    Panel.ZIndex="2"
+                                    Width="60"
+                                    Height="60">
+                                    <Ellipse.Fill>
+                                        <ImageBrush ImageSource="{Binding CurrentUser.Icon, UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock FontSize="25" HorizontalAlignment="Center" Panel.ZIndex="1"
+                                           VerticalAlignment="Center" Text="{Binding CurrentUser.FirstNameCharacter}"/>
+                            </Grid>
+                        </Button>
+                        <!--<Button
                             Name="UserIconButton"
                             Style="{StaticResource MaterialDesignIconButton}"
                             ToolTip="MaterialDesignIconButton"
@@ -33,7 +46,7 @@
                                 <ImageBrush ImageSource="{Binding CurrentUser.Icon, UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
                             </Button.Background>
                             <TextBlock FontSize="25" Text="{Binding CurrentUser.FirstNameCharacter}"/>
-                        </Button>
+                        </Button>-->
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock Foreground="#172b4d" FontWeight="DemiBold" Margin="50 0 0 0" MaxWidth="135"
                             FontSize="17" Text="{Binding CurrentUser.Username}" TextWrapping="Wrap"/>

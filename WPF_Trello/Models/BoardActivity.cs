@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WPF_Trello.Models
 {
-    public class BoardActivity
+    public class BoardActivity : BindableBase
     {
         public BoardActivity(
             string id, 
@@ -28,6 +28,12 @@ namespace WPF_Trello.Models
         public User Sender { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
+
+        public void SetIcon(string icon)
+        {
+            Sender.SetIcon(icon);
+            RaisePropertiesChanged("Sender");
+        }
 
         public string FormattedMessage
         {

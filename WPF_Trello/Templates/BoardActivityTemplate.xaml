@@ -3,17 +3,30 @@
                     xmlns:local="clr-namespace:WPF_Trello.Templates">
     <ControlTemplate x:Key="BoardActivityTemplate" TargetType="ListBoxItem">
         <StackPanel Orientation="Horizontal" Margin="0 8">
-            <!--<Button
+            <Button
+                Name="UserIconButton"
                 Style="{StaticResource MaterialDesignIconButton}"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Left"
                 ToolTip="MaterialDesignIconButton"
                 Height="32"
                 Width="32"
-                Background="#eaecf0">
-                <TextBlock FontSize="12" Text="{Binding Sender.FirstNameCharacter}"/>
-            </Button>-->
-            <Button
+                VerticalAlignment="Top"
+                HorizontalAlignment="Left"
+                Background="#dfe1e6"
+                >
+                <Grid>
+                    <Ellipse
+                        Panel.ZIndex="2"
+                        Width="32"
+                        Height="32">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="{Binding Sender.Icon, UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                    <TextBlock FontSize="12" HorizontalAlignment="Center" Panel.ZIndex="1"
+                        VerticalAlignment="Center" Text="{Binding Sender.FirstNameCharacter}"/>
+                </Grid>
+            </Button>
+            <!--<Button
                 Name="UserIconButton"
                 Style="{StaticResource MaterialDesignIconButton}"
                 ToolTip="MaterialDesignIconButton"
@@ -26,11 +39,11 @@
                     <ImageBrush ImageSource="{Binding Sender.Icon, UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
                 </Button.Background>
                 <TextBlock FontSize="12" Text="{Binding Sender.FirstNameCharacter}"/>
-            </Button>
+            </Button>-->
             <StackPanel Orientation="Vertical" Margin="10 0 0 0" VerticalAlignment="Top">
                 <TextBlock Text="{Binding FormattedMessage}" FontSize="14" MaxWidth="250" Foreground="#172b4d" 
                            FontWeight="DemiBold" TextWrapping="Wrap"/>
-                <TextBlock Text="{Binding CreatedAtToString}"/>
+                <TextBlock Text="{Binding CreatedAt}"/>
             </StackPanel>
         </StackPanel>
     </ControlTemplate>

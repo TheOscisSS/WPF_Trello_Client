@@ -94,7 +94,7 @@
                                     Width="24" />
                             </Button>
                         </Border>
-                        
+
                         <Button
                             Name="UserIconButton"
                             Style="{StaticResource MaterialDesignIconButton}"
@@ -103,28 +103,23 @@
                             Width="28"
                             Margin="3 0 0 0"
                             HorizontalAlignment="Left"
+                            Background="#dfe1e6"
                             Command="{Binding ShowUserInfoCommand}"
                             >
-                            <Button.Background>
-                                <ImageBrush ImageSource="{Binding CurrentUser.Icon, UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
-                            </Button.Background>
-                            <TextBlock FontSize="18" Text="{Binding CurrentUser.FirstNameCharacter}"/>
+                            <Grid Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center"> 
+                                <Ellipse
+                                    Panel.ZIndex="2"
+                                    Width="28"
+                                    Margin="0"
+                                    Height="28">
+                                    <Ellipse.Fill>
+                                        <ImageBrush ImageSource="{Binding CurrentUser.Icon, UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock FontSize="18" HorizontalAlignment="Center" Panel.ZIndex="1"
+                                    VerticalAlignment="Center" Text="{Binding CurrentUser.FirstNameCharacter}"/>
+                            </Grid>
                         </Button>
-                        <!--<Border CornerRadius="50">
-                            <Button
-                            Style="{StaticResource MaterialDesignIconButton}"
-                            ToolTip="MaterialDesignIconButton"
-                            Height="28"
-                            Width="28"
-                            Margin="3 0 0 0"
-                            Command="{Binding ShowUserInfoCommand}"
-                            Background="#dfe1e6">
-                                <TextBlock FontSize="18" Text="{Binding CurrentUser.FirstNameCharacter}"/>
-                            </Button>
-                            <Border.Background>
-                                <ImageBrush ImageSource="{Binding CurrentUser.Icon, UpdateSourceTrigger=PropertyChanged}" Stretch="Fill"/>
-                            </Border.Background>
-                        </Border>-->
                     </StackPanel>
                 </Grid>
             </Grid>

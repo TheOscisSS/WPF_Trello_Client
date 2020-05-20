@@ -54,16 +54,29 @@
                                     </TextBlock>
                                 </Grid>
                                 <Grid VerticalAlignment="Center" Margin="4 15 4 8">
-                                    <!--<Button
-                                    Style="{StaticResource MaterialDesignIconButton}"
-                                    HorizontalAlignment="Left"
-                                    ToolTip="MaterialDesignIconButton"
-                                    Height="50"
-                                    Width="50"
-                                    Background="#eaecf0">
-                                        <TextBlock FontSize="18" Text="{Binding CurrentBoard.Owner.FirstNameCharacter}"/>
-                                    </Button>-->
                                     <Button
+                                        Name="UserIconButton"
+                                        Style="{StaticResource MaterialDesignIconButton}"
+                                        ToolTip="MaterialDesignIconButton"
+                                        Height="50"
+                                        Width="50"
+                                        HorizontalAlignment="Left"
+                                        Background="#dfe1e6"
+                                        >   
+                                        <Grid>
+                                            <Ellipse
+                                                Panel.ZIndex="2"
+                                                Width="50"
+                                                Height="50">
+                                                <Ellipse.Fill>
+                                                    <ImageBrush ImageSource="{Binding CurrentBoard.Owner.Icon, UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
+                                                </Ellipse.Fill>
+                                            </Ellipse>
+                                            <TextBlock FontSize="18" HorizontalAlignment="Center" Panel.ZIndex="1" 
+                                                VerticalAlignment="Center" Text="{Binding CurrentBoard.Owner.FirstNameCharacter}"/>
+                                        </Grid>
+                                    </Button>
+                                    <!--<Button
                                         Name="UserIconButton"
                                         Style="{StaticResource MaterialDesignIconButton}"
                                         ToolTip="MaterialDesignIconButton"
@@ -75,7 +88,7 @@
                                             <ImageBrush ImageSource="{Binding CurrentBoard.Owner.Icon, UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
                                         </Button.Background>
                                         <TextBlock FontSize="18" Text="{Binding CurrentBoard.Owner.FirstNameCharacter}"/>
-                                    </Button>
+                                    </Button>-->
                                     <StackPanel VerticalAlignment="Top">
                                         <TextBlock Foreground="#172b4d" FontWeight="DemiBold" Margin="70 0 0 0"
                                    FontSize="17" Text="{Binding CurrentBoard.Owner.Username}"/>

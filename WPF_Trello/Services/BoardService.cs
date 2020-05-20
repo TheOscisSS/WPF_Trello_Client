@@ -215,6 +215,39 @@ namespace WPF_Trello.Services
                 return HttpHelper.ParseJsonToPreviewBoard(joResponse.ToString());
             }
         }
+        public async Task<List<string>> MoveBoardList(int from, int to, string boardID)
+        {
+            StringContent strContent
+                = new StringContent("{\"boardID\":\"" + boardID + "\",\"from\":\"" + from + "\", \"to\":\"" + to + "\"}",
+                                    Encoding.UTF8,
+                                    "application/json");
+
+            HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Put, $"list/move", strContent);
+
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+                var joResponse = JObject.Parse(result);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    //TODO: Generate suitable exception 
+                    var joMessage = (JValue)joResponse.SelectToken("message");
+                    throw new UnauthorizedAccessException(joMessage.ToString());
+                }
+
+                var newLists = new List<string>();
+
+                var jaLists = JArray.Parse(joResponse.ToString());
+
+                for (int i = 0; i < jaLists.Count; i++)
+                {
+                    newLists.Add(jaLists[i].ToString());
+                }
+
+                return newLists;
+            }
+        }
         public async Task<ObservableCollection<PictureExample>> GetRandomPicture(string query = "wallpaper", string orientation = "landscape", int count = 9)
         {
             HttpResponseMessage response = await HttpHelper.HttpRequestForUnsplash(HttpMethod.Get, $"photos/random?query={query}&count={count}&orientation={orientation}");
