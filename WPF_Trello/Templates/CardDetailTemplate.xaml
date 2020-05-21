@@ -1,20 +1,29 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-                    xmlns:local="clr-namespace:WPF_Trello.Templates">
+                    xmlns:toolkit ="http://schemas.xceed.com/wpf/xaml/toolkit"
+                    xmlns:local="clr-namespace:WPF_Trello.Templates"
+                    xmlns:behavior="clr-namespace:WPF_Trello">
+
     <ControlTemplate x:Key="CardDetailTemplate">
         <Grid x:Name="CardDetailsContainer">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
             <Grid.Background>
                 <SolidColorBrush Color="Black" Opacity="0.7"/>
             </Grid.Background>
-            <Border MaxWidth="668" MinWidth="300" Background="#f4f5f7" CornerRadius="3" Margin="10 48 10 80">
-                <Grid Margin="17 10 12 10"> 
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="60"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0" >
-                        <Button
+            <ScrollViewer Panel.ZIndex="3"  
+                VerticalScrollBarVisibility="Hidden"
+                HorizontalScrollBarVisibility="Disabled">
+                <Border Grid.Row="0" MaxWidth="740" MinWidth="300" Background="#f4f5f7" CornerRadius="3" Margin="10 48 10 30">
+                    <Grid Margin="17 10 12 10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="60"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" >
+                            <Button
                         Height="26"
                         Width="26"
                         Padding="0"
@@ -23,63 +32,141 @@
                         Style="{StaticResource MaterialDesignFlatButton}"
                         Command="{Binding HideCardDetailsCommand}"
                         ToolTip="MaterialDesignFlatButton">
-                            <materialDesign:PackIcon
+                                <materialDesign:PackIcon
                             Kind="Close"
                             Height="24"
                             Width="24" />
-                        </Button>
-                        <StackPanel>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" 
+                            </Button>
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" 
                                     VerticalAlignment="Top" Margin="5 10 0 0">
-                                <materialDesign:PackIcon Kind="IdCard" Foreground="#42526e" Width="27" Height="27"/>
-                                <TextBlock VerticalAlignment="Center" FontSize="19" Margin="20 0 10 0"
-                                       FontWeight="DemiBold" Foreground="#172b4d" Text="{Binding CardDetailTitle}"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Foreground="#5e6c84" Margin="54 5 0 0" FontSize="14" Text="in list"/>
-                                <TextBlock Foreground="#5e6c84" Margin="3 5 0 0" FontSize="14" 
+                                    <materialDesign:PackIcon Kind="IdCard" Foreground="#42526e" Width="27" Height="27"/>
+                                    <TextBlock VerticalAlignment="Center" FontSize="19" Margin="20 0 10 0"
+                                       FontWeight="DemiBold" Foreground="#172b4d" Text="{Binding SelectedCard.Title}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Foreground="#5e6c84" Margin="54 5 0 0" FontSize="14" Text="in list"/>
+                                    <TextBlock Foreground="#5e6c84" Margin="3 5 0 0" FontSize="14" 
                                            TextDecorations="Underline" Text="{Binding CardDetailCurrentList}"/>
+                                </StackPanel>
                             </StackPanel>
-                        </StackPanel>
-                    </Grid>
-                    <Grid Grid.Row="1" Margin="5 30 0 0">
-                        <StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="TextSubject" Foreground="#42526e" Width="27" Height="27"/>
-                                <TextBlock VerticalAlignment="Center" FontSize="16" Margin="20 0 10 17"
+                        </Grid>
+                        <Grid Grid.Row="1" Margin="5 30 0 0">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="TextSubject" Foreground="#42526e" Width="27" Height="27"/>
+                                    <TextBlock VerticalAlignment="Center" FontSize="16" Margin="20 0 10 17"
                                        FontWeight="DemiBold" Foreground="#172b4d" Text="Description"/>
-                                <Button
-                                    Style="{StaticResource MaterialDesignOutlinedButton}"
-                                    ToolTip="MaterialDesignOutlinedButton"
-                                    Foreground="#172b4d"
-                                    Margin="0 0 0 13"
-                                    FontWeight="Normal"
-                                    Command="{Binding ShowInviteButton}"
-                                    >
-                                    Edit
-                                </Button>
+                                    <Button x:Name="EditButton"
+                                        Style="{StaticResource MaterialDesignOutlinedButton}"
+                                        ToolTip="MaterialDesignOutlinedButton"
+                                        Foreground="#172b4d"
+                                        Margin="0 0 0 13"
+                                        FontWeight="Normal"
+                                        Command="{Binding StartEditingDescripntionCommand}"
+                                        >
+                                        Edit
+                                    </Button>
+                                </StackPanel>
+
+                                <toolkit:RichTextBox x:Name="DescriptionText"
+                                    Foreground="#172b4d" FontWeight="Normal" FontSize="14"  
+                                    Margin="40 5 10 10" Background="Transparent" BorderThickness="0"
+                                    behavior:HtmlRichTextBoxBehavior.Text="{Binding CardDetailDescription, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}"
+                                    IsDocumentEnabled="True"
+                                    IsReadOnly="True">
+                                    <toolkit:RichTextBox.Resources>
+                                        <Style TargetType="{x:Type Paragraph}">
+                                            <Setter Property="Margin" Value="0"/>
+                                        </Style>
+                                    </toolkit:RichTextBox.Resources>
+                                </toolkit:RichTextBox>
+
+
+                                <Border x:Name="NewDescriptionText" CornerRadius="3" MinHeight="44" Background="White" 
+                                        Padding="8 6 8 2" Margin="0 5 0 10"> 
+
+                                    <Grid>
+                                        <toolkit:RichTextBox 
+                                            Foreground="#172b4d" FontWeight="Normal" FontSize="14"  
+                                            Margin="0 5 10 25" Background="Transparent" BorderThickness="0"
+                                            behavior:HtmlRichTextBoxBehavior.Text="{Binding CardDetailDescription, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}"
+                                            IsDocumentEnabled="True"
+                                            IsReadOnly="True">
+                                            <toolkit:RichTextBox.Resources>
+                                                <Style TargetType="{x:Type Paragraph}">
+                                                    <Setter Property="Margin" Value="0"/>
+                                                </Style>
+                                            </toolkit:RichTextBox.Resources>
+                                        </toolkit:RichTextBox>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                                            <materialDesign:PackIcon
+                                            Kind="User"
+                                            Height="20"
+                                            Foreground="#5e6c84"
+                                            Width="20" />
+                                            <TextBlock Foreground="#5e6c84" Margin="3 0 0 0" FontSize="13.5" Text="Changed by"/>
+                                            <TextBlock Foreground="#5e6c84" Margin="2 0 0 0" TextDecorations="Underline" FontSize="13.5" Text="{Binding CardDetailChangedBy}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+
+                                <Border Name="DescriptionEditor" CornerRadius="3" MinHeight="44" Background="White" Padding="8 6 8 2">
+                                    <toolkit:RichTextBox 
+                                        materialDesign:HintAssist.Hint="Add a more detailed description..."
+                                        VerticalScrollBarVisibility="Auto"
+                                        Text="{Binding DescriptionTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        BorderThickness="0" MaxHeight="300"
+                                        MinHeight="32" FontSize="16"
+                                        Height="Auto" Margin="0 0 0 20"
+                                        Padding="0 0" Background="Transparent">
+                                        <toolkit:RichTextBox.TextFormatter>
+                                            <toolkit:PlainTextFormatter />
+                                        </toolkit:RichTextBox.TextFormatter>
+                                        <toolkit:RichTextBox.Resources>
+                                            <Style TargetType="{x:Type Paragraph}">
+                                                <Setter Property="Margin" Value="0"/>
+                                            </Style>
+                                        </toolkit:RichTextBox.Resources>
+                                    </toolkit:RichTextBox>
+                                </Border>
+                                <StackPanel Name="EditingPanel" Orientation="Horizontal" Margin="0 10">
+                                    <Button Height="30" Background="#5AAC44" BorderBrush="Transparent" 
+                                        materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                        Command="{Binding SaveEditingDescriptionCommand}">
+                                        Save
+                                    </Button>
+                                    <Button
+                                        Height="30"
+                                        Width="28"
+                                        Padding="0"
+                                        Margin="5 0 5 0"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Right"
+                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                        Command="{Binding CancelEditingDescriptionCommand}"
+                                        ToolTip="MaterialDesignFlatButton">
+                                        <materialDesign:PackIcon
+                                            Kind="Close"
+                                            Height="24"
+                                            Foreground="#5e6c84"
+                                            Width="24" />
+                                    </Button>
+                                    <StackPanel x:Name="ChangesHint" Orientation="Horizontal" VerticalAlignment="Center" Margin="10 0 10 0">
+                                        <materialDesign:PackIcon
+                                            VerticalAlignment="Top"
+                                            Kind="ArrowCompressUp"
+                                            Height="20"
+                                            Foreground="#5e6c84"
+                                            Width="20" />
+                                        <TextBlock Foreground="#5e6c84" Margin="3 0 0 0" FontSize="13.5" Text="Check new changes"/>
+                                    </StackPanel>
+                                </StackPanel>
                             </StackPanel>
-                            <!--<TextBlock Foreground="#172b4d" FontWeight="Normal" FontSize="14"  
-                                TextWrapping="Wrap" Margin="50 5 10 10"
-                                Text="{Binding CardDetailDescription}" />-->
-                            <Border CornerRadius="3" MinHeight="44" Background="White" Padding="8 6 8 2">
-                                <Border.Effect>
-                                    <DropShadowEffect BlurRadius="1.5" Color="LightGray" Direction="-90" RenderingBias="Quality" ShadowDepth="1"/>
-                                </Border.Effect>
-                                <TextBox 
-                                    Name="NewCardTitleTextBox"
-                                    materialDesign:HintAssist.Hint="Add a more detailed description..."
-                                    Text="{Binding CardDetailDescription}"
-                                    BorderThickness="0"
-                                    MinHeight="32" FontSize="16"
-                                    Height="Auto"
-                                    TextWrapping="Wrap"
-                                    Padding="0 0" Background="Transparent"/>
-                            </Border>
-                        </StackPanel>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </Border>
+                </Border>
+            </ScrollViewer>
         </Grid>
         <ControlTemplate.Triggers>
             <DataTrigger Binding="{Binding IsShowCardDetails, UpdateSourceTrigger=PropertyChanged}" Value="false">
@@ -87,6 +174,46 @@
             </DataTrigger>
             <DataTrigger Binding="{Binding IsShowCardDetails, UpdateSourceTrigger=PropertyChanged}" Value="true">
                 <Setter TargetName="CardDetailsContainer" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding IsEditingDescription, UpdateSourceTrigger=PropertyChanged}" Value="true">
+                <Setter TargetName="EditButton" Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsEditingDescription, UpdateSourceTrigger=PropertyChanged}" Value="true">
+                <Setter TargetName="DescriptionText" Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsEditingDescription, UpdateSourceTrigger=PropertyChanged}" Value="true">
+                <Setter TargetName="DescriptionEditor" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsEditingDescription, UpdateSourceTrigger=PropertyChanged}" Value="true">
+                <Setter TargetName="EditingPanel" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding IsEditingDescription, UpdateSourceTrigger=PropertyChanged}" Value="false">
+                <Setter TargetName="EditButton" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsEditingDescription, UpdateSourceTrigger=PropertyChanged}" Value="false">
+                <Setter TargetName="DescriptionText" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsEditingDescription, UpdateSourceTrigger=PropertyChanged}" Value="false">
+                <Setter TargetName="DescriptionEditor" Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsEditingDescription, UpdateSourceTrigger=PropertyChanged}" Value="false">
+                <Setter TargetName="EditingPanel" Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding IsExistConflictChanges, UpdateSourceTrigger=PropertyChanged}" Value="true">
+                <Setter TargetName="NewDescriptionText" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsExistConflictChanges, UpdateSourceTrigger=PropertyChanged}" Value="true">
+                <Setter TargetName="ChangesHint" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            
+            <DataTrigger Binding="{Binding IsExistConflictChanges, UpdateSourceTrigger=PropertyChanged}" Value="false">
+                <Setter TargetName="NewDescriptionText" Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsExistConflictChanges, UpdateSourceTrigger=PropertyChanged}" Value="false">
+                <Setter TargetName="ChangesHint" Property="Visibility" Value="Collapsed"/>
             </DataTrigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>

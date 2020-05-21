@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Quobject.SocketIoClientDotNet.Client;
 using Newtonsoft.Json.Linq;
 using WPF_Trello.Models;
 using WPF_Trello.ViewModels;
 using WPF_Trello.Messages;
 using WPF_Trello.Utils;
-using WPF_Trello.Events;
 
 namespace WPF_Trello.Services
 {
@@ -154,6 +151,19 @@ namespace WPF_Trello.Services
                 App.Current.Dispatcher.Invoke(async () =>
                 {
                     await _messageBusService.SendTo<BoardViewModel>(new MoveBoardListMessage((int)jvFromID, (int)jvToID, jvSenderID.ToString()));
+                });
+            });
+            _socket.On("CARD:SET_DESCRIPTION", (cardInfo) =>
+            {
+                var joCardInfo = JObject.Parse(cardInfo.ToString());
+
+                var jvSenderID = (JValue)joCardInfo.SelectToken("senderID");
+                var jvCardID = (JValue)joCardInfo.SelectToken("cardID");
+                var jvDescription = (JValue)joCardInfo.SelectToken("description");
+
+                App.Current.Dispatcher.Invoke(async () =>
+                {
+                    await _messageBusService.SendTo<BoardViewModel>(new UpdateDescriptionMessage(jvSenderID.ToString(), jvCardID.ToString(), jvDescription.ToString()));
                 });
             });
         }

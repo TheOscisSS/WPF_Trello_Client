@@ -2,10 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WPF_Trello.Models;
 using WPF_Trello.Utils;
@@ -213,6 +213,54 @@ namespace WPF_Trello.Services
                 }
 
                 return HttpHelper.ParseJsonToPreviewBoard(joResponse.ToString());
+            }
+        }
+        public async Task<BoardCard> SetDescription(string cardID, string description)
+        {
+            var replaced = Regex.Replace(description, @"\r\n|\n\n|\r\r|\n|\r", "\\r\\n");
+                replaced = Regex.Replace(replaced, @"\t", "\\t");
+            StringContent strContent
+                = new StringContent("{\"cardID\":\"" + cardID + "\",\"description\":\"" + replaced + "\"}",
+                                    Encoding.UTF8,
+                                    "application/json");
+
+            HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Put, $"card/description", strContent);
+
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+                var joResponse = JObject.Parse(result);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    //TODO: Generate suitable exception 
+                    var joMessage = (JValue)joResponse.SelectToken("message");
+                    throw new UnauthorizedAccessException(joMessage.ToString());
+                }
+
+                return HttpHelper.ParseJsonToBoardCard(joResponse.ToString());
+            }
+        }
+        public async Task<string> GetDescription(string cardID)
+        {
+            HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Get, $"card/description/{cardID}");
+
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+                var joResponse = JObject.Parse(result);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    //TODO: Generate suitable exception 
+                    var joMessage = (JValue)joResponse.SelectToken("message");
+                    throw new UnauthorizedAccessException(joMessage.ToString());
+                }
+
+                var joCardDescription = JObject.Parse(joResponse.ToString());
+                var jvdescription = (JValue)joCardDescription.SelectToken("description");
+
+                return jvdescription.ToString();
             }
         }
         public async Task<List<string>> MoveBoardList(int from, int to, string boardID)

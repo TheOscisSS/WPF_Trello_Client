@@ -1,16 +1,14 @@
 ﻿using DevExpress.Mvvm;
 using GongSolutions.Wpf.DragDrop;
+using Markdig;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using WPF_Trello.Events;
 using WPF_Trello.Messages;
 using WPF_Trello.Models;
@@ -28,9 +26,13 @@ namespace WPF_Trello.ViewModels
         private readonly MessageBusService _messageBusService;
         private readonly WebSocketService _webSocketService;
 
+        public string CardDetailID { get; private set; }
         public string CardDetailTitle { get; private set; }
         public string CardDetailCurrentList { get; private set; }
-        public string CardDetailDescription { get; set; }
+        public string CardDetailDescription { get; private set; }
+        public string CardDetail { get; private set; }
+        public string DescriptionTextBox { get; set; }
+        public string CardDetailChangedBy { get; private set; }
         public string NewListTitle { get; set; }
         public string InviteMemberName { get; set; }
         public Models.Board CurrentBoard { get; private set; }
@@ -42,6 +44,8 @@ namespace WPF_Trello.ViewModels
         public bool IsMenuTrigger { get; private set; }
         public bool IsInviteMemberTrigger { get; private set; }
         public bool IsShowCardDetails { get; private set; }
+        public bool IsEditingDescription { get; private set; }
+        public bool IsExistConflictChanges { get; private set; }
 
 
         public BoardViewModel(PageService pageService, AuthenticationService authenticationService, EventBusService eventBusService,
@@ -60,11 +64,16 @@ namespace WPF_Trello.ViewModels
             IsMenuTrigger = false;
             IsInviteMemberTrigger = false;
             IsShowCardDetails = false;
+            IsEditingDescription = false;
+            IsExistConflictChanges = false;
             NewListTitle = string.Empty;
             InviteMemberName = string.Empty;
+            CardDetailID = string.Empty;
             CardDetailTitle = string.Empty;
             CardDetailCurrentList = string.Empty;
             CardDetailDescription = string.Empty;
+            DescriptionTextBox = string.Empty;
+            CardDetailChangedBy = string.Empty;
 
             _messageBusService.Receive<BoardPreloadMessage>(this, async message =>
             {
@@ -83,7 +92,6 @@ namespace WPF_Trello.ViewModels
             _messageBusService.Receive<AddNewListMessage>(this, async message =>
             {
                 NewListTitle = string.Empty;
-                //message.BoardList.Cards = new ObservableCollection<BoardCard>();
                 CurrentBoard.AddNewList(message.BoardList);
             });
             _messageBusService.Receive<AddNewCardMessage>(this, async message =>
@@ -127,6 +135,22 @@ namespace WPF_Trello.ViewModels
                 {
                     CurrentBoard.Lists.Remove(movableList);
                     CurrentBoard.Lists.Insert(message.To, movableList);
+                }
+            });
+            _messageBusService.Receive<UpdateDescriptionMessage>(this, async message =>
+            {
+                if(IsShowCardDetails && SelectedCard.ID == message.CardID && 
+                    _authenticationService.CurrentUser.ID != message.SenderID)
+                {
+                    SelectedCard.SetDescription(message.Description);
+                    CardDetailDescription = Markdown.ToHtml(SelectedCard.Description);
+
+                    if (IsEditingDescription)
+                    {
+                        var sender = BoardMembers.FirstOrDefault(user => user.ID == message.SenderID);
+                        CardDetailChangedBy = sender.Username;
+                        IsExistConflictChanges = true;
+                    }
                 }
             });
         }
@@ -232,19 +256,58 @@ namespace WPF_Trello.ViewModels
         {
             IsInviteMemberTrigger = false;
         });
+        public ICommand StartEditingDescripntionCommand => new AsyncCommand(async () =>
+        {
+            DescriptionTextBox = Markdown.Normalize(SelectedCard.Description);
+            IsEditingDescription = true;
+        });
+        public ICommand SaveEditingDescriptionCommand => new AsyncCommand(async () =>
+        {
+            var newCard = await _boardService.SetDescription(SelectedCard.ID, DescriptionTextBox);
+            CardDetailDescription = Markdown.ToHtml(newCard.Description);
+            SelectedCard.SetDescription(newCard.Description);
+
+            IsEditingDescription = false;
+            CardDetailChangedBy = string.Empty;
+            IsExistConflictChanges = false;
+
+        });
+        public ICommand CancelEditingDescriptionCommand => new AsyncCommand(async () =>
+        {
+            IsEditingDescription = false;
+            CardDetailChangedBy = string.Empty;
+            IsExistConflictChanges = false;
+        });
         public ICommand ShowCardDetailsCommand => new AsyncCommand(async () =>
         {
-            CardDetailTitle = string.Copy(SelectedCard.Title);
             CardDetailCurrentList = string.Copy(SelectedList.Title);
-            CardDetailDescription = string.Copy(SelectedCard.Description);
+            IsEditingDescription = false;
             IsShowCardDetails = true;
+            SelectedCard.SetDescription(await _boardService.GetDescription(SelectedCard.ID));
+            CardDetailDescription = Markdown.ToHtml(SelectedCard.Description);
         });
         public ICommand HideCardDetailsCommand => new AsyncCommand(async () =>
         {
+
+            if (IsEditingDescription)
+            {
+                if (!IsExistConflictChanges)
+                {
+                    var newCard = await _boardService.SetDescription(SelectedCard.ID, DescriptionTextBox);
+                    CardDetailDescription = Markdown.ToHtml(newCard.Description);
+                    SelectedCard.SetDescription(newCard.Description);
+                }
+                IsEditingDescription = false;
+            }
+
             IsShowCardDetails = false;
-            CardDetailTitle = string.Empty;
             CardDetailCurrentList = string.Empty;
             CardDetailDescription = string.Empty;
+            DescriptionTextBox = string.Empty;
+            CardDetailChangedBy = string.Empty;
+            IsExistConflictChanges = false;
+
+            SelectedCard = null;
         });
         public ICommand DeleteMemberCommand => new AsyncCommand(async () =>
         {

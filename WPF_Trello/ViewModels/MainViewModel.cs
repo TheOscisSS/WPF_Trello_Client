@@ -1,7 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -12,7 +11,6 @@ using WPF_Trello.Utils;
 using WPF_Trello.Messages;
 using WPF_Trello.Events;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using System.Linq;
 
 namespace WPF_Trello.ViewModels

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Controls;
-using WPF_Trello.Pages;
 
 namespace WPF_Trello.Services
 {

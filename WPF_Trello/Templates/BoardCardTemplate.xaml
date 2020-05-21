@@ -23,8 +23,11 @@
             <Trigger Property="IsSelected" Value="true">
                 <Setter TargetName="CardBoard" Property="Background" Value="#f4f5f7" />
             </Trigger>
-            <Trigger Property="IsMouseOver" Value="true">
+            <Trigger Property="Button.IsPressed" Value="true">
                 <Setter Property="IsSelected" Value="True"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter TargetName="CardBoard" Property="Background" Value="#f4f5f7" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
