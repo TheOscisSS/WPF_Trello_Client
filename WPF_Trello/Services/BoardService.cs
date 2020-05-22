@@ -296,6 +296,63 @@ namespace WPF_Trello.Services
                 return newLists;
             }
         }
+        public async Task<List<string>> MoveBoardCard(int from, int to, string listID)
+        {
+            StringContent strContent
+                = new StringContent("{\"listID\":\"" + listID + "\",\"from\":\"" + from + "\", \"to\":\"" + to + "\"}",
+                                    Encoding.UTF8,
+                                    "application/json");
+
+            HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Put, $"card/move", strContent);
+
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+                var joResponse = JObject.Parse(result);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    //TODO: Generate suitable exception 
+                    var joMessage = (JValue)joResponse.SelectToken("message");
+                    throw new UnauthorizedAccessException(joMessage.ToString());
+                }
+
+                var newCards= new List<string>();
+
+                var jaCards = JArray.Parse(joResponse.ToString());
+
+                for (int i = 0; i < jaCards.Count; i++)
+                {
+                    newCards.Add(jaCards[i].ToString());
+                }
+
+                return newCards;
+            }
+        }
+        public async Task<bool> MoveBoardCardBetweenLists(int from, int to, string fromListID, string toListID)
+        {
+            StringContent strContent
+                = new StringContent("{\"fromListID\":\"" + fromListID + "\", \"toListID\":\"" + toListID + "\", \"from\":\"" + from + "\", \"to\":\"" + to + "\"}",
+                                    Encoding.UTF8,
+                                    "application/json");
+
+            HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Put, $"card/moveToAnotherList", strContent);
+
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+                var joResponse = JObject.Parse(result);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    //TODO: Generate suitable exception 
+                    var joMessage = (JValue)joResponse.SelectToken("message");
+                    throw new UnauthorizedAccessException(joMessage.ToString());
+                }
+
+                return true;
+            }
+        }
         public async Task<ObservableCollection<PictureExample>> GetRandomPicture(string query = "wallpaper", string orientation = "landscape", int count = 9)
         {
             HttpResponseMessage response = await HttpHelper.HttpRequestForUnsplash(HttpMethod.Get, $"photos/random?query={query}&count={count}&orientation={orientation}");

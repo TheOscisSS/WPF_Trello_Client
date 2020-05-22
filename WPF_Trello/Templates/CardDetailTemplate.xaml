@@ -24,14 +24,14 @@
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0" >
                             <Button
-                        Height="26"
-                        Width="26"
-                        Padding="0"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Right"
-                        Style="{StaticResource MaterialDesignFlatButton}"
-                        Command="{Binding HideCardDetailsCommand}"
-                        ToolTip="MaterialDesignFlatButton">
+                                Height="26"
+                                Width="26"
+                                Padding="0"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Right"
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Command="{Binding HideCardDetailsCommand}"
+                                ToolTip="MaterialDesignFlatButton">
                                 <materialDesign:PackIcon
                             Kind="Close"
                             Height="24"
@@ -42,12 +42,12 @@
                                     VerticalAlignment="Top" Margin="5 10 0 0">
                                     <materialDesign:PackIcon Kind="IdCard" Foreground="#42526e" Width="27" Height="27"/>
                                     <TextBlock VerticalAlignment="Center" FontSize="19" Margin="20 0 10 0"
-                                       FontWeight="DemiBold" Foreground="#172b4d" Text="{Binding SelectedCard.Title}"/>
+                                       FontWeight="DemiBold" Foreground="#172b4d" Text="{Binding SelectedCard.Title, UpdateSourceTrigger=PropertyChanged}"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Foreground="#5e6c84" Margin="54 5 0 0" FontSize="14" Text="in list"/>
                                     <TextBlock Foreground="#5e6c84" Margin="3 5 0 0" FontSize="14" 
-                                           TextDecorations="Underline" Text="{Binding CardDetailCurrentList}"/>
+                                           TextDecorations="Underline" Text="{Binding CardDetailCurrentList, UpdateSourceTrigger=PropertyChanged}"/>
                                 </StackPanel>
                             </StackPanel>
                         </Grid>

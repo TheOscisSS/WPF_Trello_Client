@@ -137,6 +137,49 @@ namespace WPF_Trello.ViewModels
                     CurrentBoard.Lists.Insert(message.To, movableList);
                 }
             });
+            _messageBusService.Receive<MoveBoardCardMessage>(this, async message =>
+            {
+                var collection = CurrentBoard.Lists.FirstOrDefault(list => list.ID == message.ListID);
+               
+                if (_authenticationService.CurrentUser.ID != message.SenderID)
+                {
+                    var movableCard = collection.Cards.ElementAt(message.From);
+                    var isEditingMovableCard = SelectedCard != null && SelectedCard.ID == movableCard.ID;
+
+                    collection.Cards.Remove(movableCard);
+                    collection.Cards.Insert(message.To, movableCard);
+
+                    if (IsShowCardDetails && isEditingMovableCard)
+                    {
+                        SelectedCard = movableCard;
+                        CardDetailCurrentList = collection.Title;
+                        RaisePropertiesChanged("SelectedCard");
+                        //RaisePropertiesChanged("SelectedCard.Title");
+                    }
+                }
+            });
+            _messageBusService.Receive<MoveCardBetweenListsMessage>(this, async message =>
+            {
+                var sourceCollection = CurrentBoard.Lists.FirstOrDefault(list => list.ID == message.FromListID);
+                var targetCollection = CurrentBoard.Lists.FirstOrDefault(list => list.ID == message.ToListID);
+
+                if (_authenticationService.CurrentUser.ID != message.SenderID)
+                {
+                    var movableCard = sourceCollection.Cards.ElementAt(message.From);
+                    var isEditingMovableCard = SelectedCard != null && SelectedCard.ID == movableCard.ID;
+
+                    sourceCollection.Cards.Remove(movableCard);
+                    targetCollection.Cards.Insert(message.To, movableCard);
+
+                    if (IsShowCardDetails && isEditingMovableCard)
+                    {
+                        SelectedCard = movableCard;
+                        CardDetailCurrentList = targetCollection.Title;
+                        RaisePropertiesChanged("SelectedCard");
+                        //RaisePropertiesChanged("SelectedCard.Title");
+                    }
+                }
+            });
             _messageBusService.Receive<UpdateDescriptionMessage>(this, async message =>
             {
                 if(IsShowCardDetails && SelectedCard.ID == message.CardID && 
@@ -181,47 +224,151 @@ namespace WPF_Trello.ViewModels
 
         public void DragOver(IDropInfo dropInfo)
         {
-            object sourceItem = null, 
-                   targetItem = null;
-
-            sourceItem = dropInfo.Data as BoardList;
-            targetItem = dropInfo.TargetItem as BoardList;
-
-            if (sourceItem != null && targetItem != null)
+            if(dropInfo.Data is BoardList)
             {
-                dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
-                dropInfo.Effects = DragDropEffects.Move;
-            }
-        }
+                BoardList sourceItem = dropInfo.Data as BoardList;
+                BoardList targetItem = dropInfo.TargetItem as BoardList;
 
-        public void Drop(IDropInfo dropInfo){
-
-            BoardList sourceItem = dropInfo.Data as BoardList;
-            BoardList targetItem = dropInfo.TargetItem as BoardList;
-
-            if (sourceItem.ID != targetItem.ID)
-            {
-                int sourceIndex = CurrentBoard.Lists.IndexOf(sourceItem);
-                int targetIndex = CurrentBoard.Lists.IndexOf(targetItem);
-
-                CurrentBoard.Lists.Remove(sourceItem);
-                if (sourceIndex < targetIndex)
+                if (sourceItem != null && targetItem != null)
                 {
-                    int toIndex = dropInfo.InsertIndex - 1 < 0 ? 0 : dropInfo.InsertIndex - 1;
-                    SendMoveListData(sourceIndex, toIndex, CurrentBoard.ID);
-                    CurrentBoard.Lists.Insert(toIndex, sourceItem);
-                }
-                else
-                {
-                    SendMoveListData(sourceIndex, dropInfo.InsertIndex, CurrentBoard.ID);
-                    CurrentBoard.Lists.Insert(dropInfo.InsertIndex, sourceItem);
+                    dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+                    dropInfo.Effects = DragDropEffects.Move;
                 }
             }
+            else if(dropInfo.Data is BoardCard && dropInfo.TargetItem is BoardCard)
+            {
+                BoardCard sourceItem = dropInfo.Data as BoardCard;
+                BoardCard targetItem = dropInfo.TargetItem as BoardCard;
+
+                if (sourceItem != null && targetItem != null)
+                {
+                    dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+                    dropInfo.Effects = DragDropEffects.Move;
+                }
+            }
+            else if(dropInfo.TargetCollection is ObservableCollection<BoardCard>)
+            {
+                BoardCard sourceItem = dropInfo.Data as BoardCard;
+                var targetCollection = dropInfo.TargetCollection as ObservableCollection<BoardCard>;
+
+                if (sourceItem != null && targetCollection != null && targetCollection.Count == 0)
+                {
+                    dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+                    dropInfo.Effects = DragDropEffects.Move;
+                }
+            }
+            
         }
 
+        public void Drop(IDropInfo dropInfo)
+        {
+
+            if(dropInfo.Data is BoardList)
+            {
+                BoardList sourceItem = dropInfo.Data as BoardList;
+                BoardList targetItem = dropInfo.TargetItem as BoardList;
+
+                if (sourceItem.ID != targetItem.ID)
+                {
+                    int sourceIndex = CurrentBoard.Lists.IndexOf(sourceItem);
+                    int targetIndex = CurrentBoard.Lists.IndexOf(targetItem);
+
+                    CurrentBoard.Lists.Remove(sourceItem);
+                    if (sourceIndex < targetIndex)
+                    {
+                        int toIndex = dropInfo.InsertIndex - 1 < 0 ? 0 : dropInfo.InsertIndex - 1;
+                        SendMoveListData(sourceIndex, toIndex, CurrentBoard.ID);
+                        CurrentBoard.Lists.Insert(toIndex, sourceItem);
+                    }
+                    else
+                    {
+                        SendMoveListData(sourceIndex, dropInfo.InsertIndex, CurrentBoard.ID);
+                        CurrentBoard.Lists.Insert(dropInfo.InsertIndex, sourceItem);
+                    }
+                }
+            }
+            else if (dropInfo.Data is BoardCard && dropInfo.TargetItem is BoardCard)
+            {
+                BoardCard sourceItem = dropInfo.Data as BoardCard;
+                BoardCard targetItem = dropInfo.TargetItem as BoardCard;
+
+                var sourceCollection = dropInfo.DragInfo.SourceCollection as ObservableCollection<BoardCard>;
+                var targetCollection = dropInfo.TargetCollection as ObservableCollection<BoardCard>;
+
+                if (sourceItem.ID != targetItem.ID)
+                {
+                    int sourceIndex = sourceCollection.IndexOf(sourceItem);
+                    int targetIndex = targetCollection.IndexOf(targetItem);
+
+                    var sourceListCollection = CurrentBoard.Lists.FirstOrDefault(list => list.Cards == sourceCollection);
+                    var currentListCollection = CurrentBoard.Lists.FirstOrDefault(list => list.Cards == targetCollection);
+
+                    sourceCollection.Remove(sourceItem);
+
+                    if (sourceCollection == targetCollection)
+                    {
+                       
+                        if (sourceIndex < targetIndex)
+                        {
+                            int toIndex = dropInfo.InsertIndex - 1 < 0 ? 0 : dropInfo.InsertIndex - 1;
+                            SendMoveCardData(sourceIndex, toIndex, currentListCollection.ID);
+                            targetCollection.Insert(toIndex, sourceItem);
+                        }
+                        else
+                        {
+                            SendMoveCardData(sourceIndex, dropInfo.InsertIndex, currentListCollection.ID);
+                            targetCollection.Insert(dropInfo.InsertIndex, sourceItem);
+                        }
+                    }
+                    else
+                    {
+                        SendMoveCardToAnotherListData(sourceIndex, dropInfo.InsertIndex, sourceListCollection.ID, currentListCollection.ID);
+
+                        targetCollection.Insert(dropInfo.InsertIndex, sourceItem);
+                    }
+                    
+                }
+
+                SelectedCard = null;
+            }
+            else if (dropInfo.TargetCollection is ObservableCollection<BoardCard>)
+            {
+                BoardCard sourceItem = dropInfo.Data as BoardCard;
+
+                var sourceCollection = dropInfo.DragInfo.SourceCollection as ObservableCollection<BoardCard>;
+                var targetCollection = dropInfo.TargetCollection as ObservableCollection<BoardCard>;
+
+                var sourceListCollection = CurrentBoard.Lists.FirstOrDefault(list => list.Cards == sourceCollection);
+                var currentListCollection = CurrentBoard.Lists.FirstOrDefault(list => list.Cards == targetCollection);
+
+                if (targetCollection.Count == 0)
+                {
+                    int sourceIndex = sourceCollection.IndexOf(sourceItem);
+
+                    SendMoveCardToAnotherListData(sourceIndex, 0, sourceListCollection.ID, currentListCollection.ID);
+
+                    sourceCollection.Remove(sourceItem);
+                    targetCollection.Add(sourceItem);
+                }
+
+                SelectedCard = null;
+            }
+        }
+        private void UpdateListDetails()
+        {
+
+        }
         private async Task<List<string>> SendMoveListData(int from, int to, string boardID)
         {
             return await _boardService.MoveBoardList(from, to, boardID);
+        }
+        private async Task<List<string>> SendMoveCardData(int from, int to, string listID)
+        {
+            return await _boardService.MoveBoardCard(from, to, listID);
+        }
+        private async void SendMoveCardToAnotherListData(int from, int to, string fromListID, string toListID)
+        {
+            await _boardService.MoveBoardCardBetweenLists(from, to, fromListID, toListID);
         }
 
         public ICommand ShowAddListButton => new AsyncCommand(async () =>

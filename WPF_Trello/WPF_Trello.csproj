@@ -199,7 +199,9 @@
     <Compile Include="Messages\CreateBoardMessage.cs" />
     <Compile Include="Messages\BoardDeleteMemberMessage.cs" />
     <Compile Include="Messages\KickOutMemberMessage.cs" />
+    <Compile Include="Messages\MoveBoardCardMessage.cs" />
     <Compile Include="Messages\MoveBoardListMessage.cs" />
+    <Compile Include="Messages\MoveCardBetweenListsMessage.cs" />
     <Compile Include="Messages\NewBoardResponseMessage.cs" />
     <Compile Include="Messages\SendUserCredentialMessage.cs" />
     <Compile Include="Messages\IMessage.cs" />

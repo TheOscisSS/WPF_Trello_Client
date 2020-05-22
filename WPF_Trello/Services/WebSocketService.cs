@@ -5,6 +5,7 @@ using WPF_Trello.Models;
 using WPF_Trello.ViewModels;
 using WPF_Trello.Messages;
 using WPF_Trello.Utils;
+using System.Threading.Tasks;
 
 namespace WPF_Trello.Services
 {
@@ -153,6 +154,39 @@ namespace WPF_Trello.Services
                     await _messageBusService.SendTo<BoardViewModel>(new MoveBoardListMessage((int)jvFromID, (int)jvToID, jvSenderID.ToString()));
                 });
             });
+            _socket.On("BOARD:MOVE_CARD", (boardInfo) =>
+            {
+                var joBoardInfo = JObject.Parse(boardInfo.ToString());
+
+                var jvSenderID = (JValue)joBoardInfo.SelectToken("senderID");
+                var jvListID = (JValue)joBoardInfo.SelectToken("listID");
+                var jvFromID = (JValue)joBoardInfo.SelectToken("from");
+                var jvToID = (JValue)joBoardInfo.SelectToken("to");
+
+                App.Current.Dispatcher.Invoke(async () =>
+                {
+                    await _messageBusService.SendTo<BoardViewModel>(
+                        new MoveBoardCardMessage((int)jvFromID, (int)jvToID, jvSenderID.ToString(), jvListID.ToString())
+                        );
+                });
+            });
+            _socket.On("BOARD:MOVE_CARD_BETWEEN_LISTS", (boardInfo) =>
+            {
+                var joBoardInfo = JObject.Parse(boardInfo.ToString());
+
+                var jvSenderID = (JValue)joBoardInfo.SelectToken("senderID");
+                var jvFromListID = (JValue)joBoardInfo.SelectToken("fromListID");
+                var jvToListID = (JValue)joBoardInfo.SelectToken("toListID");
+                var jvFromID = (JValue)joBoardInfo.SelectToken("from");
+                var jvToID = (JValue)joBoardInfo.SelectToken("to");
+
+                App.Current.Dispatcher.Invoke(async () =>
+                {
+                    await _messageBusService.SendTo<BoardViewModel>(
+                        new MoveCardBetweenListsMessage(jvFromListID.ToString(), jvToListID.ToString(), (int)jvFromID, (int)jvToID, jvSenderID.ToString())
+                        ); 
+                });
+            });
             _socket.On("CARD:SET_DESCRIPTION", (cardInfo) =>
             {
                 var joCardInfo = JObject.Parse(cardInfo.ToString());
@@ -163,7 +197,9 @@ namespace WPF_Trello.Services
 
                 App.Current.Dispatcher.Invoke(async () =>
                 {
-                    await _messageBusService.SendTo<BoardViewModel>(new UpdateDescriptionMessage(jvSenderID.ToString(), jvCardID.ToString(), jvDescription.ToString()));
+                    await _messageBusService.SendTo<BoardViewModel>(
+                        new UpdateDescriptionMessage(jvSenderID.ToString(), jvCardID.ToString(), jvDescription.ToString())
+                        );
                 });
             });
         }

@@ -27,10 +27,11 @@
                         <ListBox ItemsSource="{Binding Cards}" 
                             SelectedItem="{Binding ElementName=ContainerForMembers, Path=DataContext.SelectedCard}"
                             Name="ContainerForCards"
-                            MinHeight="10"
                             dd:DragDrop.IsDragSource="True"
                             dd:DragDrop.IsDropTarget="True"
-                            
+                            MinHeight="10"
+                            Background="#ebecf0"
+                            dd:DragDrop.DropHandler="{Binding ElementName=ContainerForMembers, Path=DataContext}"
                             HorizontalAlignment="Stretch"
                             WpfExtensions:DragDropExtension.ScrollOnDragDrop="True"
                             ScrollViewer.VerticalScrollBarVisibility="Auto" 
@@ -48,7 +49,7 @@
                             </ListBox.ItemContainerStyle>
                             <ListBox.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Vertical" VerticalAlignment="Top" />
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Top" />
                                 </ItemsPanelTemplate>
                             </ListBox.ItemsPanel>
                         </ListBox>

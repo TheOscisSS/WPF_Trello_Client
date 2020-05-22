@@ -91,11 +91,7 @@
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled"
                             Name="HorizontalScrollForListBox" Margin="0 0 0 5">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left">
-                                <!--<Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>-->
-                                    <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="0">
+                                <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="0">
                                         <ListBox ItemsSource="{Binding CurrentBoard.Lists}"
                                             dd:DragDrop.IsDragSource="True"
                                             dd:DragDrop.IsDropTarget="True"
