@@ -7,23 +7,39 @@
     xmlns:local="clr-namespace:WPF_Trello.Templates">
 
     <ControlTemplate x:Key="BoardListTemplate" TargetType="ListBoxItem">
-        <Border Name="ListBoard" CornerRadius="3" Width="272" MinHeight="78" VerticalAlignment="Top" 
+        <StackPanel Orientation="Horizontal">
+            <Border Name="ListBoard" CornerRadius="3" Width="272" MinHeight="78" VerticalAlignment="Top" 
                 HorizontalAlignment="Left" Background="#ebecf0" Margin="8 0 4 0" Cursor="Hand">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0">
-                    <TextBlock Text="{Binding Title}" Foreground="#172b4d" FontSize="16" 
-                        FontWeight="DemiBold" TextWrapping="Wrap" Padding="8 10" />
-                </Grid>
-
-                <Grid Grid.Row="1">
-                    <!--<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">-->
-                    <!--dd:DragDrop.DropHandler="{Binding ElementName=ContainerForMembers, Path=DataContext}"-->
+                    <Grid Grid.Row="0" >
+                        <TextBlock Text="{Binding Title}" Foreground="#172b4d" FontSize="16" 
+                        FontWeight="DemiBold" TextWrapping="Wrap"  Margin="8 10"/>
+                        <Button
+                        Margin="8"
+                        Height="26"
+                        Width="26"
+                        Padding="0"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Right"
+                        Foreground="#6b778c"
+                        Style="{StaticResource MaterialDesignFlatButton}"
+                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.ShowListAdditionOptions}"
+                        ToolTip="MaterialDesignFlatButton">
+                            <materialDesign:PackIcon
+                            Kind="MoreHoriz"
+                            Height="22"
+                            Width="22" />
+                        </Button>
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <!--<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">-->
+                        <!--dd:DragDrop.DropHandler="{Binding ElementName=ContainerForMembers, Path=DataContext}"-->
                         <ListBox ItemsSource="{Binding Cards}" 
                             SelectedItem="{Binding ElementName=ContainerForMembers, Path=DataContext.SelectedCard}"
                             Name="ContainerForCards"
@@ -49,15 +65,15 @@
                             </ListBox.ItemContainerStyle>
                             <ListBox.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical" VerticalAlignment="Top" />
+                                    <StackPanel Orientation="Vertical" VerticalAlignment="Top" />
                                 </ItemsPanelTemplate>
                             </ListBox.ItemsPanel>
                         </ListBox>
-                    <!--</ScrollViewer>-->
-                </Grid>
+                        <!--</ScrollViewer>-->
+                    </Grid>
 
-                <Grid Grid.Row="2">
-                    <Button
+                    <Grid Grid.Row="2">
+                        <Button
                         Style="{StaticResource MaterialDesignOutlinedButton}"
                         ToolTip="MaterialDesignOutlinedButton"
                         Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.ShowAddCardButton}"
@@ -65,15 +81,15 @@
                         Foreground="#5e6c84"
                         Margin="7.2 5 7.2 5"
                         >
-                        + Add another card
-                    </Button>
-                    <Border x:Name="AddCardButton_true" CornerRadius="3" MinHeight="90" VerticalAlignment="Top" Background="#ebecf0" Margin="8 0 4 0" Padding="0 4 4 4">
-                        <StackPanel>
-                            <Border CornerRadius="3" MinHeight="44" Background="White" Padding="8 6 8 2">
-                                <Border.Effect>
-                                    <DropShadowEffect BlurRadius="1.5" Color="LightGray" Direction="-90" RenderingBias="Quality" ShadowDepth="1"/>
-                                </Border.Effect>
-                                <TextBox 
+                            + Add another card
+                        </Button>
+                        <Border x:Name="AddCardButton_true" CornerRadius="3" MinHeight="90" VerticalAlignment="Top" Background="#ebecf0" Margin="8 0 4 0" Padding="0 4 4 4">
+                            <StackPanel>
+                                <Border CornerRadius="3" MinHeight="44" Background="White" Padding="8 6 8 2">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="1.5" Color="LightGray" Direction="-90" RenderingBias="Quality" ShadowDepth="1"/>
+                                    </Border.Effect>
+                                    <TextBox 
                                     Name="NewCardTitleTextBox"
                                     materialDesign:HintAssist.Hint="Enter a title for this card..."
                                     Text="{Binding NewCardTitle}"
@@ -82,14 +98,14 @@
                                     Height="Auto"
                                     TextWrapping="Wrap"
                                     Padding="0 0" Background="Transparent"/>
-                            </Border>
-                            <StackPanel Orientation="Horizontal" Margin="0 4 0 0">
-                                <Button Height="32" Background="#5AAC44" BorderBrush="Transparent" 
+                                </Border>
+                                <StackPanel Orientation="Horizontal" Margin="0 4 0 0">
+                                    <Button Height="32" Background="#5AAC44" BorderBrush="Transparent" 
                                         Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.AddAnotherCardCommand}"
                                         materialDesign:ShadowAssist.ShadowDepth="Depth0">
-                                    Add Card
-                                </Button>
-                                <Button 
+                                        Add Card
+                                    </Button>
+                                    <Button 
                                     Style="{StaticResource MaterialDesignOutlinedButton}"
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.HideAddCardButton}"
                                     ToolTip="MaterialDesignOutlinedButton"
@@ -97,15 +113,49 @@
                                     Height="32"
                                     Margin="4 0"
                                     >
-                                    Cancel
-                                </Button>
+                                        Cancel
+                                    </Button>
+                                </StackPanel>
                             </StackPanel>
-                        </StackPanel>
-                    </Border>
+                        </Border>
+                    </Grid>
                 </Grid>
-            </Grid>
-        </Border>
-        
+            </Border>
+            <Border Name="ListAdditionOptions" CornerRadius="3" Width="200" MinHeight="50" VerticalAlignment="Top" 
+                HorizontalAlignment="Left" Background="#ebecf0" Margin="0 0 4 0" Cursor="Hand">
+                <StackPanel>
+                    <Grid Margin="0 9 0 6">
+                        <TextBlock HorizontalAlignment="Center" FontWeight="Normal"
+                               FontSize="14" Foreground="#5e6c84">
+                                List Actions
+                        </TextBlock>
+                        <Button
+                            Height="20"
+                            Width="20"
+                            Padding="0"
+                            Margin="0 0 5 0"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.HideListAdditionOptions}"
+                            ToolTip="MaterialDesignFlatButton">
+                            <materialDesign:PackIcon
+                                Kind="Close"
+                                Height="20"
+                                Foreground="#5e6c84"
+                                Width="20" />
+                        </Button>
+                    </Grid>
+                    <Separator Width="180" Background="#d5d9e0"/>
+                    <Button Content="Delete list" Foreground="#172b4d" FontWeight="Light"
+                        Padding="10 2" Margin="0 5 0 10" FontSize="14"  HorizontalContentAlignment="Left"
+                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.DeleteBoardListCommand}"
+                        Style="{StaticResource MaterialDesignFlatButton}"
+                    />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
         <ControlTemplate.Triggers>
             <DataTrigger Binding="{Binding IsAddCardTrigger}" Value="false">
                 <Setter TargetName="AddCardButton_false" Property="Visibility" Value="Visible" />
@@ -114,6 +164,12 @@
             <DataTrigger Binding="{Binding IsAddCardTrigger}" Value="true">
                 <Setter TargetName="AddCardButton_false" Property="Visibility" Value="Collapsed" />
                 <Setter TargetName="AddCardButton_true" Property="Visibility" Value="Visible" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsShowListAdditionOptions}" Value="true">
+                <Setter TargetName="ListAdditionOptions" Property="Visibility" Value="Visible" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsShowListAdditionOptions}" Value="false">
+                <Setter TargetName="ListAdditionOptions" Property="Visibility" Value="Collapsed" />
             </DataTrigger>
             <Trigger Property="IsSelected" Value="true">
                 <!--<Setter TargetName="ListBoard" Property="Background" Value="Blue" />-->

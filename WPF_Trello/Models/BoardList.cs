@@ -26,6 +26,7 @@ namespace WPF_Trello.Models
             UpdatedAt = updatedAt;
 
             IsAddCardTrigger = false;
+            IsShowListAdditionOptions = false;
             NewCardTitle = string.Empty;
         }
 
@@ -35,6 +36,7 @@ namespace WPF_Trello.Models
         }
 
         public bool IsAddCardTrigger { get; set; }
+        public bool IsShowListAdditionOptions { get; set; }
         public string NewCardTitle { get; set; }
     }
 }

@@ -76,19 +76,7 @@
                                                 VerticalAlignment="Center" Text="{Binding CurrentBoard.Owner.FirstNameCharacter}"/>
                                         </Grid>
                                     </Button>
-                                    <!--<Button
-                                        Name="UserIconButton"
-                                        Style="{StaticResource MaterialDesignIconButton}"
-                                        ToolTip="MaterialDesignIconButton"
-                                        Height="50"
-                                        Width="50"
-                                        HorizontalAlignment="Left"
-                                        >       
-                                        <Button.Background>
-                                            <ImageBrush ImageSource="{Binding CurrentBoard.Owner.Icon, UpdateSourceTrigger=PropertyChanged}" Stretch="UniformToFill"/>
-                                        </Button.Background>
-                                        <TextBlock FontSize="18" Text="{Binding CurrentBoard.Owner.FirstNameCharacter}"/>
-                                    </Button>-->
+                                  
                                     <StackPanel VerticalAlignment="Top">
                                         <TextBlock Foreground="#172b4d" FontWeight="DemiBold" Margin="70 0 0 0"
                                    FontSize="17" Text="{Binding CurrentBoard.Owner.Username}"/>
@@ -107,7 +95,7 @@
                                                  Width="25" Height="25" HorizontalAlignment="Left"/>
                                     <TextBlock Foreground="#172b4d" FontWeight="DemiBold"
                                    FontSize="16" Margin="45 0 0 0">
-                            Description
+                                    Description
                                     </TextBlock>
                                 </Grid>
                                 <Grid Margin="0 10 0 0">
@@ -117,6 +105,45 @@
                                 </Grid>
                             </StackPanel>
                         </Grid>
+                        <Button FontWeight="Light" Name="ShowMoreBoardDetailsButton"
+                            Padding="0 0" Margin="5 -5 7 10"  HorizontalContentAlignment="Left"
+                            Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentControl}}, Path=DataContext.ShowMoreBoardDetailsCommand}"
+                            Style="{StaticResource MaterialDesignFlatButton}">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <materialDesign:PackIcon Kind="MoreHoriz" Foreground="#172b4d" Margin="3 0 0 0"
+                                    Width="22" Height="22" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <TextBlock Foreground="#172b4d" VerticalAlignment="Center" FontWeight="Normal"
+                                   FontSize="16" Margin="13 0 0 0">
+                                    More
+                                </TextBlock>
+                            </StackPanel>
+                        </Button>
+                        <Button FontWeight="Light" Name="HideBoardDetailsButton"
+                            Padding="0 0" Margin="5 -5 7 10"  HorizontalContentAlignment="Left"
+                            Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentControl}}, Path=DataContext.HideMoreBoardDetailsCommand}"
+                            Style="{StaticResource MaterialDesignFlatButton}">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <materialDesign:PackIcon Kind="Cancel" Foreground="#172b4d" Margin="3 0 0 0"
+                                    Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <TextBlock Foreground="#172b4d" VerticalAlignment="Center" FontWeight="Normal"
+                                   FontSize="16" Margin="15 0 0 0">
+                                    Hide
+                                </TextBlock>
+                            </StackPanel>
+                        </Button>
+                        <Button FontWeight="Light" Background="#eb5a46" Name="DeleteBoardButton"
+                            Padding="0 0" Margin="5 -5 7 10"  HorizontalContentAlignment="Left"
+                            Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentControl}}, Path=DataContext.DeleteBoardCommand}"
+                            Style="{StaticResource MaterialDesignFlatButton}">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <materialDesign:PackIcon Kind="Delete" Foreground="#fff" Margin="3 0 0 0"
+                                    Width="22" Height="22" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <TextBlock Foreground="#fff" VerticalAlignment="Center" FontWeight="Normal"
+                                   FontSize="16" Margin="13 0 0 0">
+                                    Delete board
+                                </TextBlock>
+                            </StackPanel>
+                        </Button>
                         <Separator Background="#d5d9e0"/>
                         <Grid Margin="4 0 0 5">
                             <materialDesign:PackIcon Kind="PlaylistCheck" Foreground="#172b4d" Margin="5 0 0 0"
@@ -150,6 +177,56 @@
         <ControlTemplate.Triggers>
             <DataTrigger Binding="{Binding IsMenuTrigger, UpdateSourceTrigger=PropertyChanged}" Value="false">
                 <Setter TargetName="BoardMenuContainer" Property="Visibility" Value="Collapsed" />
+            </DataTrigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding IsShowMoreBoardDetails, UpdateSourceTrigger=PropertyChanged}" Value="false"/>
+                    <Condition Binding="{Binding IsBoardOwner, UpdateSourceTrigger=PropertyChanged}" Value="true"/>
+                </MultiDataTrigger.Conditions>
+                <MultiDataTrigger.Setters>
+                    <Setter TargetName="ShowMoreBoardDetailsButton" Property="Visibility" Value="Visible" />
+                </MultiDataTrigger.Setters>
+            </MultiDataTrigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding IsShowMoreBoardDetails, UpdateSourceTrigger=PropertyChanged}" Value="true"/>
+                    <Condition Binding="{Binding IsBoardOwner, UpdateSourceTrigger=PropertyChanged}" Value="true"/>
+                </MultiDataTrigger.Conditions>
+                <MultiDataTrigger.Setters>
+                    <Setter TargetName="DeleteBoardButton" Property="Visibility" Value="Visible" />
+                </MultiDataTrigger.Setters>
+            </MultiDataTrigger>
+            
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding IsShowMoreBoardDetails, UpdateSourceTrigger=PropertyChanged}" Value="false"/>
+                    <Condition Binding="{Binding IsBoardOwner, UpdateSourceTrigger=PropertyChanged}" Value="false"/>
+                </MultiDataTrigger.Conditions>
+                <MultiDataTrigger.Setters>
+                    <Setter TargetName="ShowMoreBoardDetailsButton" Property="Visibility" Value="Collapsed" />
+                </MultiDataTrigger.Setters>
+            </MultiDataTrigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding IsShowMoreBoardDetails, UpdateSourceTrigger=PropertyChanged}" Value="true"/>
+                    <Condition Binding="{Binding IsBoardOwner, UpdateSourceTrigger=PropertyChanged}" Value="false"/>
+                </MultiDataTrigger.Conditions>
+                <MultiDataTrigger.Setters>
+                    <Setter TargetName="DeleteBoardButton" Property="Visibility" Value="Collapsed" />
+                </MultiDataTrigger.Setters>
+            </MultiDataTrigger>
+            
+            <DataTrigger Binding="{Binding IsShowMoreBoardDetails, UpdateSourceTrigger=PropertyChanged}" Value="false">
+                <Setter TargetName="HideBoardDetailsButton" Property="Visibility" Value="Collapsed" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsShowMoreBoardDetails, UpdateSourceTrigger=PropertyChanged}" Value="true">
+                <Setter TargetName="ShowMoreBoardDetailsButton" Property="Visibility" Value="Collapsed" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsShowMoreBoardDetails, UpdateSourceTrigger=PropertyChanged}" Value="true">
+                <Setter TargetName="HideBoardDetailsButton" Property="Visibility" Value="Visible" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsShowMoreBoardDetails, UpdateSourceTrigger=PropertyChanged}" Value="false">
+                <Setter TargetName="DeleteBoardButton" Property="Visibility" Value="Collapsed" />
             </DataTrigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>

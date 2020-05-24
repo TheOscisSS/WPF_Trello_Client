@@ -353,6 +353,72 @@ namespace WPF_Trello.Services
                 return true;
             }
         }
+        public async Task<string> DeleteBoardList(string listID)
+        {
+            HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Delete, $"list/{listID}");
+
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+                var joResponse = JObject.Parse(result);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    //TODO: Generate suitable exception 
+                    var joMessage = (JValue)joResponse.SelectToken("message");
+                    throw new UnauthorizedAccessException(joMessage.ToString());
+                }
+
+                var joListID = JObject.Parse(joResponse.ToString());
+                var jvListID = (JValue)joListID.SelectToken("listID");
+
+                return jvListID.ToString();
+            }
+        }
+        public async Task<string> DeleteBoardCard(string cardID)
+        {
+            HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Delete, $"card/{cardID}");
+
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+                var joResponse = JObject.Parse(result);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    //TODO: Generate suitable exception 
+                    var joMessage = (JValue)joResponse.SelectToken("message");
+                    throw new UnauthorizedAccessException(joMessage.ToString());
+                }
+
+                var joCardID = JObject.Parse(joResponse.ToString());
+                var jvCardID = (JValue)joCardID.SelectToken("cardID");
+
+                return jvCardID.ToString();
+            }
+        }
+        public async Task<string> DeleteBoard(string boardID)
+        {
+            HttpResponseMessage response = await HttpHelper.HttpRequest(HttpMethod.Delete, $"board/{boardID}");
+
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+                var joResponse = JObject.Parse(result);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    //TODO: Generate suitable exception 
+                    var joMessage = (JValue)joResponse.SelectToken("message");
+                    throw new UnauthorizedAccessException(joMessage.ToString());
+                }
+
+                var joBoardID = JObject.Parse(joResponse.ToString());
+                var jvBoardID = (JValue)joBoardID.SelectToken("boardID");
+
+                return jvBoardID.ToString();
+            }
+        }
         public async Task<ObservableCollection<PictureExample>> GetRandomPicture(string query = "wallpaper", string orientation = "landscape", int count = 9)
         {
             HttpResponseMessage response = await HttpHelper.HttpRequestForUnsplash(HttpMethod.Get, $"photos/random?query={query}&count={count}&orientation={orientation}");

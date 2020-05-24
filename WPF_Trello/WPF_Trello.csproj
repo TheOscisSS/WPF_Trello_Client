@@ -187,6 +187,7 @@
     <Compile Include="Events\GoToHomeEvent.cs" />
     <Compile Include="Events\IEvent.cs" />
     <Compile Include="Events\KickOutMemberEvent.cs" />
+    <Compile Include="Events\LogOutEvent.cs" />
     <Compile Include="HtmlRichTextBoxBehavior.cs" />
     <Compile Include="Messages\AddNewActivityMessage.cs" />
     <Compile Include="Messages\AddNewBoardMessage.cs" />
@@ -198,6 +199,9 @@
     <Compile Include="Messages\BoardPreloadMessage.cs" />
     <Compile Include="Messages\CreateBoardMessage.cs" />
     <Compile Include="Messages\BoardDeleteMemberMessage.cs" />
+    <Compile Include="Messages\DeleteBoardCardMessage.cs" />
+    <Compile Include="Messages\DeleteBoardListMessage.cs" />
+    <Compile Include="Messages\DeleteBoardMessage.cs" />
     <Compile Include="Messages\KickOutMemberMessage.cs" />
     <Compile Include="Messages\MoveBoardCardMessage.cs" />
     <Compile Include="Messages\MoveBoardListMessage.cs" />

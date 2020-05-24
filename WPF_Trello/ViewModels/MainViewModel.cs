@@ -12,6 +12,7 @@ using WPF_Trello.Messages;
 using WPF_Trello.Events;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace WPF_Trello.ViewModels
 {
@@ -42,16 +43,7 @@ namespace WPF_Trello.ViewModels
             _boardService = boardService;
             _webSocketService = webSocketService;
 
-            SelectedUserNotification = null;
-            UserNotificationCollection = new ObservableCollection<UserNotification>();
-            IsExistUnreadNotification = false;
-            IsShowUserInfo = false;
-            IsShowUserInfoAddIcon = false;
-            IsAddBoardTrigger = false;
-            IsOpenNotificationsTrigger = false;
-            IsShowAllNotifications = false;
-            NewBoardTitle = string.Empty;
-            SelectedPicture = null;
+            InitializeProperties();
 
             _pageService.OnPageChanged += (page) => PageSource = page;
             _authenticationService.OnStatusChanged += (status) => IsAuthenticated = status;
@@ -59,12 +51,17 @@ namespace WPF_Trello.ViewModels
             {
                 _authenticationService.ChangeStatus(Thread.CurrentPrincipal.Identity.IsAuthenticated);
                 CurrentUser = _authenticationService.CurrentUser;
+                GetUserNotificatons();
             });
             _eventBusService.Subscribe<CreatedUserEvent>(async _ =>
             {
                 _authenticationService.ChangeStatus(Thread.CurrentPrincipal.Identity.IsAuthenticated);
                 CurrentUser = _authenticationService.CurrentUser;
             });
+            //_eventBusService.Subscribe<LogOutEvent>(async _ =>
+            //{
+            //    InitializeProperties();
+            //});
 
             _messageBusService.Receive<NewBoardResponseMessage>(this, async message =>
             {
@@ -87,6 +84,21 @@ namespace WPF_Trello.ViewModels
 
             VerificyUserToken();
         }
+
+        private void InitializeProperties()
+        {
+            SelectedUserNotification = null;
+            UserNotificationCollection = new ObservableCollection<UserNotification>();
+            IsExistUnreadNotification = false;
+            IsShowUserInfo = false;
+            IsShowUserInfoAddIcon = false;
+            IsAddBoardTrigger = false;
+            IsOpenNotificationsTrigger = false;
+            IsShowAllNotifications = false;
+            NewBoardTitle = string.Empty;
+            SelectedPicture = null;
+        }
+
         private async void GetPictureExamples()
         {
             try
@@ -160,8 +172,9 @@ namespace WPF_Trello.ViewModels
                 IsExistUnreadNotification = false;
             }
         }
-        private void Logout()
+        private async Task Logout()
         {
+            await _eventBusService.Publish(new LogOutEvent());
             CustomPrincipal customPrincipal = Thread.CurrentPrincipal as CustomPrincipal;
             if (customPrincipal != null)
             {
@@ -171,6 +184,7 @@ namespace WPF_Trello.ViewModels
             AccessToken.Remove();
         }
 
+
         public ICommand ToHomePageButton => new AsyncCommand(async () =>
         {
             await _eventBusService.Publish(new GoToHomeEvent());
@@ -179,9 +193,9 @@ namespace WPF_Trello.ViewModels
 
         public ICommand LogoutButton => new AsyncCommand(async () =>
         {
-            IsShowUserInfo = false;
+            InitializeProperties();
             _webSocketService.LeaveFromAccount();
-            Logout();
+            await Logout();
             _authenticationService.ChangeStatus(Thread.CurrentPrincipal.Identity.IsAuthenticated);
         });
 

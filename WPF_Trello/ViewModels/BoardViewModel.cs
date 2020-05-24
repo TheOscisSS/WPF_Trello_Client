@@ -46,7 +46,8 @@ namespace WPF_Trello.ViewModels
         public bool IsShowCardDetails { get; private set; }
         public bool IsEditingDescription { get; private set; }
         public bool IsExistConflictChanges { get; private set; }
-
+        public bool IsShowMoreBoardDetails { get; private set; }
+        public bool IsBoardOwner { get; private set; }
 
         public BoardViewModel(PageService pageService, AuthenticationService authenticationService, EventBusService eventBusService,
                 BoardService boardService, MessageBusService messageBusService, WebSocketService webSocketService)
@@ -58,27 +59,18 @@ namespace WPF_Trello.ViewModels
             _messageBusService = messageBusService;
             _webSocketService = webSocketService;
 
-            SelectedMember = null;
-            SelectedCard = null;
-            IsAddListTrigger = false;
-            IsMenuTrigger = false;
-            IsInviteMemberTrigger = false;
-            IsShowCardDetails = false;
-            IsEditingDescription = false;
-            IsExistConflictChanges = false;
-            NewListTitle = string.Empty;
-            InviteMemberName = string.Empty;
-            CardDetailID = string.Empty;
-            CardDetailTitle = string.Empty;
-            CardDetailCurrentList = string.Empty;
-            CardDetailDescription = string.Empty;
-            DescriptionTextBox = string.Empty;
-            CardDetailChangedBy = string.Empty;
+            InitializeProperties();
+
+            _eventBusService.Subscribe<LogOutEvent>(async _ =>
+            {
+                InitializeProperties();
+            });
 
             _messageBusService.Receive<BoardPreloadMessage>(this, async message =>
             {
                 CurrentBoard = new Models.Board(message.ID, message.Title, message.Description, message.Background, message.CreatedAt, message.UpdatedAt);
                 BoardMembers = new ObservableCollection<User>();
+                IsShowMoreBoardDetails = false;
                 RenderBoard(message.ID);
             });
             _messageBusService.Receive<AddNewActivityMessage>(this, async message =>
@@ -120,6 +112,51 @@ namespace WPF_Trello.ViewModels
                     _pageService.ChangePage(new Home());
                 }
             });
+            _messageBusService.Receive<DeleteBoardListMessage>(this, async message =>
+            {
+                var deletedBoardListById = CurrentBoard.Lists.FirstOrDefault(list => list.ID == message.ListID);
+
+                if (IsShowCardDetails && deletedBoardListById.Cards.Contains(SelectedCard))
+                {
+                    IsShowCardDetails = false;
+                    CardDetailCurrentList = string.Empty;
+                    CardDetailDescription = string.Empty;
+                    DescriptionTextBox = string.Empty;
+                    CardDetailChangedBy = string.Empty;
+                    IsExistConflictChanges = false;
+                    IsEditingDescription = false;
+                }
+
+                CurrentBoard.Lists.Remove(deletedBoardListById);
+
+            });
+            _messageBusService.Receive<DeleteBoardCardMessage>(this, async message =>
+            {
+                var boardListContailerById = CurrentBoard.Lists.FirstOrDefault(list => list.ID == message.ListID);
+                var deletedBoardCardById = boardListContailerById.Cards.FirstOrDefault(card => card.ID == message.CardID);
+
+                if (IsShowCardDetails && deletedBoardCardById.ID == SelectedCard?.ID)
+                {
+                    IsShowCardDetails = false;
+                    CardDetailCurrentList = string.Empty;
+                    CardDetailDescription = string.Empty;
+                    DescriptionTextBox = string.Empty;
+                    CardDetailChangedBy = string.Empty;
+                    IsExistConflictChanges = false;
+                    IsEditingDescription = false;
+                }
+
+                boardListContailerById.Cards.Remove(deletedBoardCardById);
+
+
+            });
+            _messageBusService.Receive<DeleteBoardMessage>(this, async message =>
+            {
+                InitializeProperties();
+
+                await _eventBusService.Publish(new GoToHomeEvent());
+                _pageService.ChangePage(new Home());
+            });
             _messageBusService.Receive<AddNewUserIconMessage>(this, async message =>
             {
                 var memberById = BoardMembers.FirstOrDefault(member => member.ID == message.SenderID) as User;
@@ -154,7 +191,6 @@ namespace WPF_Trello.ViewModels
                         SelectedCard = movableCard;
                         CardDetailCurrentList = collection.Title;
                         RaisePropertiesChanged("SelectedCard");
-                        //RaisePropertiesChanged("SelectedCard.Title");
                     }
                 }
             });
@@ -176,7 +212,6 @@ namespace WPF_Trello.ViewModels
                         SelectedCard = movableCard;
                         CardDetailCurrentList = targetCollection.Title;
                         RaisePropertiesChanged("SelectedCard");
-                        //RaisePropertiesChanged("SelectedCard.Title");
                     }
                 }
             });
@@ -197,6 +232,30 @@ namespace WPF_Trello.ViewModels
                 }
             });
         }
+
+        private void InitializeProperties()
+        {
+            SelectedMember = null;
+            SelectedCard = null;
+            IsAddListTrigger = false;
+            IsMenuTrigger = false;
+            IsInviteMemberTrigger = false;
+            IsShowCardDetails = false;
+            IsEditingDescription = false;
+            IsExistConflictChanges = false;
+            IsShowMoreBoardDetails = false;
+            NewListTitle = string.Empty;
+            InviteMemberName = string.Empty;
+            CardDetailID = string.Empty;
+            CardDetailTitle = string.Empty;
+            CardDetailCurrentList = string.Empty;
+            CardDetailDescription = string.Empty;
+            DescriptionTextBox = string.Empty;
+            CardDetailChangedBy = string.Empty;
+
+            IsBoardOwner = false;
+        }
+
         private async void RenderBoard(string id)
         {
             try
@@ -211,6 +270,8 @@ namespace WPF_Trello.ViewModels
                 {
                     BoardMembers.Add(member);
                 }
+
+                IsBoardOwner = CurrentBoard.Owner.ID == _authenticationService.CurrentUser.ID;
             }
             catch (UnauthorizedAccessException e)
             {
@@ -354,10 +415,6 @@ namespace WPF_Trello.ViewModels
                 SelectedCard = null;
             }
         }
-        private void UpdateListDetails()
-        {
-
-        }
         private async Task<List<string>> SendMoveListData(int from, int to, string boardID)
         {
             return await _boardService.MoveBoardList(from, to, boardID);
@@ -386,6 +443,7 @@ namespace WPF_Trello.ViewModels
         public ICommand HideMenu => new AsyncCommand(async () =>
         {
             IsMenuTrigger = false;
+            IsShowMoreBoardDetails = false;
         });
         public ICommand ShowAddCardButton => new AsyncCommand(async () =>
         {
@@ -403,6 +461,22 @@ namespace WPF_Trello.ViewModels
         {
             IsInviteMemberTrigger = false;
         });
+        public ICommand ShowListAdditionOptions => new AsyncCommand(async () =>
+        {
+            SelectedList.IsShowListAdditionOptions = true;
+        });
+        public ICommand HideListAdditionOptions => new AsyncCommand(async () =>
+        {
+            SelectedList.IsShowListAdditionOptions = false;
+        });
+        public ICommand ShowMoreBoardDetailsCommand => new AsyncCommand(async () =>
+        {
+            IsShowMoreBoardDetails = true;
+        });
+        public ICommand HideMoreBoardDetailsCommand => new AsyncCommand(async () =>
+        {
+            IsShowMoreBoardDetails = false;
+        });
         public ICommand StartEditingDescripntionCommand => new AsyncCommand(async () =>
         {
             DescriptionTextBox = Markdown.Normalize(SelectedCard.Description);
@@ -417,7 +491,6 @@ namespace WPF_Trello.ViewModels
             IsEditingDescription = false;
             CardDetailChangedBy = string.Empty;
             IsExistConflictChanges = false;
-
         });
         public ICommand CancelEditingDescriptionCommand => new AsyncCommand(async () =>
         {
@@ -488,6 +561,39 @@ namespace WPF_Trello.ViewModels
             try
             {
                 BoardCard newCard = await _boardService.CreateNewCard(SelectedList.ID, SelectedList.NewCardTitle);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        });
+        public ICommand DeleteBoardListCommand => new AsyncCommand(async () =>
+        {
+            try
+            {
+                await _boardService.DeleteBoardList(SelectedList.ID);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        });
+        public ICommand DeleteBoardCardCommand => new AsyncCommand(async () =>
+        {
+            try
+            {
+                await _boardService.DeleteBoardCard(SelectedCard.ID);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        });
+        public ICommand DeleteBoardCommand => new AsyncCommand(async () =>
+        {
+            try
+            {
+                await _boardService.DeleteBoard(CurrentBoard.ID);
             }
             catch (Exception ex)
             {

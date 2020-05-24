@@ -27,7 +27,10 @@ namespace WPF_Trello.ViewModels
             set
             {
                 _selectedBoard = value;
-                SendToBoardPreloadData();
+                if (_selectedBoard != null) 
+                {
+                    SendToBoardPreloadData();
+                }
             }
         }
 
@@ -42,6 +45,7 @@ namespace WPF_Trello.ViewModels
             _webSocketService = webSocketService;
 
             Boards = new ObservableCollection<Models.Board>();
+            _selectedBoard = null;
 
             _eventBusService.Subscribe<AuthorizatedEvent>(async _ => Debug.WriteLine("Authorizated"));
             _eventBusService.Subscribe<CreatedUserEvent>(async _ => Debug.WriteLine("Create new account"));
@@ -49,6 +53,11 @@ namespace WPF_Trello.ViewModels
             _eventBusService.Subscribe<GoToHomeEvent>(async _ => 
             {
                 _webSocketService.LeaveFromBoard();
+                _selectedBoard = null;
+            });
+            _eventBusService.Subscribe<LogOutEvent>(async _ =>
+            {
+                Boards = new ObservableCollection<Models.Board>();
                 _selectedBoard = null;
             });
 
@@ -63,6 +72,11 @@ namespace WPF_Trello.ViewModels
             _messageBusService.Receive<KickOutMemberMessage>(this, async message =>
             {
                 var DeleteBoardById = Boards.FirstOrDefault(board => board.ID == message.BoardID) as Models.Board;
+                Boards.Remove(DeleteBoardById);
+            });
+            _messageBusService.Receive<DeleteBoardMessage>(this, async message =>
+            {
+                var DeleteBoardById = Boards.FirstOrDefault(board => board.ID == message.BoarID) as Models.Board;
                 Boards.Remove(DeleteBoardById);
             });
             

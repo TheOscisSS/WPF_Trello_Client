@@ -37,6 +37,5 @@ namespace WPF_Trello.Services
 
             return subscriber;
         }
-
     }
 }

@@ -202,6 +202,44 @@ namespace WPF_Trello.Services
                         );
                 });
             });
+            _socket.On("LIST:DELETE", (listInfo) =>
+            {
+                var joListInfo = JObject.Parse(listInfo.ToString());
+
+                var jvSenderID = (JValue)joListInfo.SelectToken("senderID");
+                var jvListID = (JValue)joListInfo.SelectToken("listID");
+
+                App.Current.Dispatcher.Invoke(async () =>
+                {
+                    await _messageBusService.SendTo<BoardViewModel>(new DeleteBoardListMessage(jvListID.ToString(), jvSenderID.ToString()));
+                });
+            });
+            _socket.On("CARD:DELETE", (cardInfo) =>
+            {
+                var joCardInfo = JObject.Parse(cardInfo.ToString());
+
+                var jvSenderID = (JValue)joCardInfo.SelectToken("senderID");
+                var jvListID = (JValue)joCardInfo.SelectToken("listID");
+                var jvCardID = (JValue)joCardInfo.SelectToken("cardID");
+
+                App.Current.Dispatcher.Invoke(async () =>
+                {
+                    await _messageBusService.SendTo<BoardViewModel>(new DeleteBoardCardMessage(jvListID.ToString(), jvCardID.ToString(), jvSenderID.ToString()));
+                });
+            });
+            _socket.On("BOARD:DELETE", (boardInfo) =>
+            {
+                var joBoardInfo = JObject.Parse(boardInfo.ToString());
+
+                var jvSenderID = (JValue)joBoardInfo.SelectToken("senderID");
+                var jvBoardID = (JValue)joBoardInfo.SelectToken("boardID");
+
+                App.Current.Dispatcher.Invoke(async () =>
+                {
+                    await _messageBusService.SendTo<BoardViewModel>(new DeleteBoardMessage(jvBoardID.ToString(), jvSenderID.ToString()));
+                    await _messageBusService.SendTo<HomeViewModel>(new DeleteBoardMessage(jvBoardID.ToString(), jvSenderID.ToString()));
+                });
+            });
         }
         public void JoinIntoAccount(User user)
         {
@@ -232,7 +270,7 @@ namespace WPF_Trello.Services
         }
         public void LeaveFromAccount()
         {
-            _socket.Disconnect();
+            _socket.Emit("USER:LEAVE");
         }
     }
 }
