@@ -17,6 +17,7 @@
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -29,7 +30,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -71,6 +71,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>iconfinder_trello_273180.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DevExpress.Mvvm, Version=19.2.0.0, Culture=neutral, PublicKeyToken=382ad28f6ae31f30, processorArchitecture=MSIL">
@@ -188,6 +191,9 @@
     <Compile Include="Events\IEvent.cs" />
     <Compile Include="Events\KickOutMemberEvent.cs" />
     <Compile Include="Events\LogOutEvent.cs" />
+    <Compile Include="Events\ResponseReceivedEvent.cs" />
+    <Compile Include="Events\WaitingResponseEvent.cs" />
+    <Compile Include="Exceptions\ServerResponseException.cs" />
     <Compile Include="HtmlRichTextBoxBehavior.cs" />
     <Compile Include="Messages\AddNewActivityMessage.cs" />
     <Compile Include="Messages\AddNewBoardMessage.cs" />
@@ -196,6 +202,7 @@
     <Compile Include="Messages\AddNewMemberMessage.cs" />
     <Compile Include="Messages\AddNewNotificationMessage.cs" />
     <Compile Include="Messages\AddNewUserIconMessage.cs" />
+    <Compile Include="Messages\NotifyAlertMessage.cs" />
     <Compile Include="Messages\BoardPreloadMessage.cs" />
     <Compile Include="Messages\CreateBoardMessage.cs" />
     <Compile Include="Messages\BoardDeleteMemberMessage.cs" />
@@ -210,6 +217,7 @@
     <Compile Include="Messages\SendUserCredentialMessage.cs" />
     <Compile Include="Messages\IMessage.cs" />
     <Compile Include="Messages\UpdateDescriptionMessage.cs" />
+    <Compile Include="Models\Alert.cs" />
     <Compile Include="Models\AnonymousIdentity.cs" />
     <Compile Include="Models\Board.cs" />
     <Compile Include="Models\BoardActivity.cs" />
@@ -396,6 +404,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="iconfinder_trello_273180.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

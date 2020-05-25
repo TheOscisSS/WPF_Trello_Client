@@ -4,7 +4,9 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using WPF_Trello.Events;
+using WPF_Trello.Exceptions;
 using WPF_Trello.Messages;
+using WPF_Trello.Models;
 using WPF_Trello.Services;
 
 namespace WPF_Trello.ViewModels
@@ -95,21 +97,35 @@ namespace WPF_Trello.ViewModels
         {
             try
             {
+                _eventBusService.Publish(new WaitingResponseEvent());
+
                 var newBoardItem = await _boardService.CreateNewBoard(title, background);
                 Boards.Add(newBoardItem);
+                _eventBusService.Publish(new ResponseReceivedEvent());
 
                 await _messageBusService.SendTo<MainViewModel>(new NewBoardResponseMessage(true, string.Empty));
             }
-            catch (UnauthorizedAccessException e)
+            catch (ServerResponseException ex)
             {
-                //TODO: Add error handler
-                Debug.WriteLine(e.Message);
-                await _messageBusService.SendTo<MainViewModel>(new NewBoardResponseMessage(false, e.Message));
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                string alertMessage = ex.Message;
+                string alertStatus = AlertStatus.ERROR;
+
+                Alert alert = new Alert(alertMessage, alertStatus);
+                _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
             }
             catch (Exception ex)
             {
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                string alertMessage = "Something was wrong";
+                string alertStatus = AlertStatus.ERROR;
+
+                Alert alert = new Alert(alertMessage, alertStatus);
+                _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+
                 Debug.WriteLine(ex.Message);
-                await _messageBusService.SendTo<MainViewModel>(new NewBoardResponseMessage(false, "Something was wrong"));
             }
         }
 
@@ -117,15 +133,32 @@ namespace WPF_Trello.ViewModels
         {
             try
             {
+                _eventBusService.Publish(new WaitingResponseEvent());
+
                 Boards = new ObservableCollection<Models.Board>(await _boardService.GetAllBoards());
+
+                _eventBusService.Publish(new ResponseReceivedEvent());
             }
-            catch (UnauthorizedAccessException e)
+            catch (ServerResponseException ex)
             {
-                //TODO: Add error handler
-                Debug.WriteLine(e.Message);
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                string alertMessage = ex.Message;
+                string alertStatus = AlertStatus.ERROR;
+
+                Alert alert = new Alert(alertMessage, alertStatus);
+                _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
             }
             catch (Exception ex)
             {
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                string alertMessage = "Something was wrong";
+                string alertStatus = AlertStatus.ERROR;
+
+                Alert alert = new Alert(alertMessage, alertStatus);
+                _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+
                 Debug.WriteLine(ex.Message);
             }
         }

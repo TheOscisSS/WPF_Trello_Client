@@ -8,6 +8,7 @@ using WPF_Trello.Models;
 using System.Threading;
 using WPF_Trello.Events;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace WPF_Trello.ViewModels
 {
@@ -47,6 +48,8 @@ namespace WPF_Trello.ViewModels
                     return;
                 }
 
+                _eventBusService.Publish(new WaitingResponseEvent());
+
                 User user = await _authenticationService.AuthenticateUser(UsernameInputField, PasswordInputField);
 
                 _authenticationService.SetCustomPrincipal(user);
@@ -63,11 +66,15 @@ namespace WPF_Trello.ViewModels
             }
             catch (UnauthorizedAccessException e)
             {
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
                 Debug.WriteLine(e.Message);
                 ShowStatus = e.Message;
             }
             catch (Exception ex)
             {
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
                 Debug.WriteLine(ex.Message);
                 ShowStatus = "Something was wrong";
             }
@@ -81,6 +88,8 @@ namespace WPF_Trello.ViewModels
         {
             await Login();
             _authenticationService.ChangeStatus(Thread.CurrentPrincipal.Identity.IsAuthenticated);
+
+            _eventBusService.Publish(new ResponseReceivedEvent());
 
         });
         public ICommand SendCredentialsToServer => new AsyncCommand(async () =>

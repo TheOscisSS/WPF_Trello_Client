@@ -12,7 +12,7 @@ namespace WPF_Trello.Utils
     public class HttpHelper
     {
         private const string ACCESS_KEY = "p_7Ur9RvtASiNnAupH2QqQ9LfWR1NMmV35uBi3uJfL8";
-        private const string URI = "http://localhost:3000/";
+        private const string URI = "https://intense-temple-88335.herokuapp.com/";
         private const string URI_UNSPLASH = "https://api.unsplash.com/";
         public static User ParseJsonToUserCredentials(string data)
         {

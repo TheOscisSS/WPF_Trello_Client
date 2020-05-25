@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using WPF_Trello.Events;
+using WPF_Trello.Exceptions;
 using WPF_Trello.Messages;
 using WPF_Trello.Models;
 using WPF_Trello.Pages;
@@ -68,6 +69,8 @@ namespace WPF_Trello.ViewModels
 
             _messageBusService.Receive<BoardPreloadMessage>(this, async message =>
             {
+                _eventBusService.Publish(new WaitingResponseEvent());
+
                 CurrentBoard = new Models.Board(message.ID, message.Title, message.Description, message.Background, message.CreatedAt, message.UpdatedAt);
                 BoardMembers = new ObservableCollection<User>();
                 IsShowMoreBoardDetails = false;
@@ -79,10 +82,32 @@ namespace WPF_Trello.ViewModels
             });
             _messageBusService.Receive<AddNewMemberMessage>(this, async message =>
             {
+                if(_authenticationService.CurrentUser.ID == message.SenderID)
+                {
+                    _eventBusService.Publish(new ResponseReceivedEvent());
+
+                    string alertMessage = $"User {message.InvitedMember.Username} was invited";
+                    string alertStatus = AlertStatus.SUCCESS;
+
+                    Alert alert = new Alert(alertMessage, alertStatus);
+                    _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+                }
+
                 BoardMembers.Add(message.InvitedMember);
             });
             _messageBusService.Receive<AddNewListMessage>(this, async message =>
             {
+                if (_authenticationService.CurrentUser.ID == message.SenderID)
+                {
+                    _eventBusService.Publish(new ResponseReceivedEvent());
+
+                    //string alertMessage = $"List {message.BoardList.Title} successfully added";
+                    //string alertStatus = AlertStatus.SUCCESS;
+
+                    //Alert alert = new Alert(alertMessage, alertStatus);
+                    //_messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+                }
+
                 NewListTitle = string.Empty;
                 CurrentBoard.AddNewList(message.BoardList);
             });
@@ -90,8 +115,18 @@ namespace WPF_Trello.ViewModels
             {
                 if(_authenticationService.CurrentUser.ID == message.SenderID)
                 {
-                    SelectedList.AddNewCard(message.BoardCard);
-                    SelectedList.NewCardTitle = string.Empty;
+                    _eventBusService.Publish(new ResponseReceivedEvent());
+
+                    //string alertMessage = $"Card {message.BoardCard.Title} successfully added";
+                    //string alertStatus = AlertStatus.SUCCESS;
+
+                    var selectedListByID = CurrentBoard.Lists.FirstOrDefault(list => list.ID == message.ListID);
+
+                    selectedListByID.AddNewCard(message.BoardCard);
+                    selectedListByID.NewCardTitle = string.Empty;
+
+                    //Alert alert = new Alert(alertMessage, alertStatus);
+                    //_messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
                 }
                 else
                 {
@@ -102,12 +137,30 @@ namespace WPF_Trello.ViewModels
             _messageBusService.Receive<BoardDeleteMemberMessage>(this, async message =>
             {
                 var deletedMemberById = BoardMembers.FirstOrDefault(member => member.ID == message.memberID);
+
+                if (_authenticationService.CurrentUser.ID == message.senderID)
+                {
+                    _eventBusService.Publish(new ResponseReceivedEvent());
+
+                    string alertMessage = $"User {deletedMemberById.Username} was kicked out";
+                    string alertStatus = AlertStatus.SUCCESS;
+
+                    Alert alert = new Alert(alertMessage, alertStatus);
+                    _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+
+                }
                 BoardMembers.Remove(deletedMemberById);
             });
             _messageBusService.Receive<KickOutMemberMessage>(this, async message =>
             {
                 if (CurrentBoard.ID == message.BoardID)
                 {
+                    string alertMessage = $"You has been kicked out from {CurrentBoard.Title}";
+                    string alertStatus = AlertStatus.WARNING;
+
+                    Alert alert = new Alert(alertMessage, alertStatus);
+                    _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+
                     await _eventBusService.Publish(new GoToHomeEvent());
                     _pageService.ChangePage(new Home());
                 }
@@ -115,6 +168,17 @@ namespace WPF_Trello.ViewModels
             _messageBusService.Receive<DeleteBoardListMessage>(this, async message =>
             {
                 var deletedBoardListById = CurrentBoard.Lists.FirstOrDefault(list => list.ID == message.ListID);
+
+                if (_authenticationService.CurrentUser.ID == message.SenderID)
+                {
+                    _eventBusService.Publish(new ResponseReceivedEvent());
+
+                    //string alertMessage = $"List {deletedBoardListById.Title} successfully deleted";
+                    //string alertStatus = AlertStatus.SUCCESS;
+
+                    //Alert alert = new Alert(alertMessage, alertStatus);
+                    //_messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+                }
 
                 if (IsShowCardDetails && deletedBoardListById.Cards.Contains(SelectedCard))
                 {
@@ -135,6 +199,17 @@ namespace WPF_Trello.ViewModels
                 var boardListContailerById = CurrentBoard.Lists.FirstOrDefault(list => list.ID == message.ListID);
                 var deletedBoardCardById = boardListContailerById.Cards.FirstOrDefault(card => card.ID == message.CardID);
 
+                if (_authenticationService.CurrentUser.ID == message.SenderID)
+                {
+                    _eventBusService.Publish(new ResponseReceivedEvent());
+
+                    //string alertMessage = $"Card {deletedBoardCardById.Title} successfully deleted";
+                    //string alertStatus = AlertStatus.SUCCESS;
+
+                    //Alert alert = new Alert(alertMessage, alertStatus);
+                    //_messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+                }
+
                 if (IsShowCardDetails && deletedBoardCardById.ID == SelectedCard?.ID)
                 {
                     IsShowCardDetails = false;
@@ -152,6 +227,25 @@ namespace WPF_Trello.ViewModels
             });
             _messageBusService.Receive<DeleteBoardMessage>(this, async message =>
             {
+                if (_authenticationService.CurrentUser.ID == message.SenderID)
+                {
+                    _eventBusService.Publish(new ResponseReceivedEvent());
+
+                    string alertMessage = $"Board {CurrentBoard.Title} successfully deleted";
+                    string alertStatus = AlertStatus.SUCCESS;
+
+                    Alert alert = new Alert(alertMessage, alertStatus);
+                    _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+                }
+                else
+                {
+                    string alertMessage = $"Board {CurrentBoard.Title} was deleted by owner";
+                    string alertStatus = AlertStatus.SUCCESS;
+
+                    Alert alert = new Alert(alertMessage, alertStatus);
+                    _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+                }
+
                 InitializeProperties();
 
                 await _eventBusService.Publish(new GoToHomeEvent());
@@ -159,6 +253,17 @@ namespace WPF_Trello.ViewModels
             });
             _messageBusService.Receive<AddNewUserIconMessage>(this, async message =>
             {
+                if (_authenticationService.CurrentUser.ID == message.SenderID)
+                {
+                    _eventBusService.Publish(new ResponseReceivedEvent());
+
+                    string alertMessage = $"Icon successfully updated";
+                    string alertStatus = AlertStatus.SUCCESS;
+
+                    Alert alert = new Alert(alertMessage, alertStatus);
+                    _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+                }
+
                 var memberById = BoardMembers.FirstOrDefault(member => member.ID == message.SenderID) as User;
                 memberById.SetIcon(message.Icon);
                 CurrentBoard.UpdateEachActivityIcon(message.Icon, message.SenderID);
@@ -217,17 +322,36 @@ namespace WPF_Trello.ViewModels
             });
             _messageBusService.Receive<UpdateDescriptionMessage>(this, async message =>
             {
-                if(IsShowCardDetails && SelectedCard.ID == message.CardID && 
-                    _authenticationService.CurrentUser.ID != message.SenderID)
+                if(IsShowCardDetails && SelectedCard.ID == message.CardID)
                 {
-                    SelectedCard.SetDescription(message.Description);
-                    CardDetailDescription = Markdown.ToHtml(SelectedCard.Description);
-
-                    if (IsEditingDescription)
+                    if(_authenticationService.CurrentUser.ID != message.SenderID)
                     {
-                        var sender = BoardMembers.FirstOrDefault(user => user.ID == message.SenderID);
-                        CardDetailChangedBy = sender.Username;
-                        IsExistConflictChanges = true;
+                        SelectedCard.SetDescription(message.Description);
+                        CardDetailDescription = Markdown.ToHtml(SelectedCard.Description);
+
+                        if (IsEditingDescription)
+                        {
+                            var sender = BoardMembers.FirstOrDefault(user => user.ID == message.SenderID);
+
+                            string alertMessage = $"User {sender.Username} has changed description in this card";
+                            string alertStatus = AlertStatus.WARNING;
+
+                            Alert alert = new Alert(alertMessage, alertStatus, 3000);
+                            _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+
+                            CardDetailChangedBy = sender.Username;
+                            IsExistConflictChanges = true;
+                        }
+                    }
+                    else
+                    {
+                        _eventBusService.Publish(new ResponseReceivedEvent());
+
+                        string alertMessage = $"Description successfully changed";
+                        string alertStatus = AlertStatus.SUCCESS;
+
+                        Alert alert = new Alert(alertMessage, alertStatus);
+                        _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
                     }
                 }
             });
@@ -272,13 +396,28 @@ namespace WPF_Trello.ViewModels
                 }
 
                 IsBoardOwner = CurrentBoard.Owner.ID == _authenticationService.CurrentUser.ID;
+                _eventBusService.Publish(new ResponseReceivedEvent());
             }
-            catch (UnauthorizedAccessException e)
+            catch (ServerResponseException ex)
             {
-                Debug.WriteLine(e.Message);
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                string alertMessage = ex.Message;
+                string alertStatus = AlertStatus.ERROR;
+
+                Alert alert = new Alert(alertMessage, alertStatus);
+                _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
             }
             catch (Exception ex)
             {
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                string alertMessage = "Something was wrong";
+                string alertStatus = AlertStatus.ERROR;
+
+                Alert alert = new Alert(alertMessage, alertStatus);
+                _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+
                 Debug.WriteLine(ex.Message);
             }
         }
@@ -484,6 +623,8 @@ namespace WPF_Trello.ViewModels
         });
         public ICommand SaveEditingDescriptionCommand => new AsyncCommand(async () =>
         {
+            _eventBusService.Publish(new WaitingResponseEvent());
+
             var newCard = await _boardService.SetDescription(SelectedCard.ID, DescriptionTextBox);
             CardDetailDescription = Markdown.ToHtml(newCard.Description);
             SelectedCard.SetDescription(newCard.Description);
@@ -491,34 +632,47 @@ namespace WPF_Trello.ViewModels
             IsEditingDescription = false;
             CardDetailChangedBy = string.Empty;
             IsExistConflictChanges = false;
+
+            _eventBusService.Publish(new ResponseReceivedEvent());
         });
         public ICommand CancelEditingDescriptionCommand => new AsyncCommand(async () =>
         {
+            _eventBusService.Publish(new ResponseReceivedEvent());
+
             IsEditingDescription = false;
             CardDetailChangedBy = string.Empty;
             IsExistConflictChanges = false;
         });
         public ICommand ShowCardDetailsCommand => new AsyncCommand(async () =>
         {
+            _eventBusService.Publish(new WaitingResponseEvent());
+
             CardDetailCurrentList = string.Copy(SelectedList.Title);
             IsEditingDescription = false;
             IsShowCardDetails = true;
             SelectedCard.SetDescription(await _boardService.GetDescription(SelectedCard.ID));
             CardDetailDescription = Markdown.ToHtml(SelectedCard.Description);
+
+            _eventBusService.Publish(new ResponseReceivedEvent());
         });
         public ICommand HideCardDetailsCommand => new AsyncCommand(async () =>
         {
-
             if (IsEditingDescription)
             {
                 if (!IsExistConflictChanges)
                 {
+                    _eventBusService.Publish(new WaitingResponseEvent());
+
                     var newCard = await _boardService.SetDescription(SelectedCard.ID, DescriptionTextBox);
                     CardDetailDescription = Markdown.ToHtml(newCard.Description);
                     SelectedCard.SetDescription(newCard.Description);
+
+                    _eventBusService.Publish(new ResponseReceivedEvent());
                 }
                 IsEditingDescription = false;
             }
+
+            _eventBusService.Publish(new ResponseReceivedEvent());
 
             IsShowCardDetails = false;
             CardDetailCurrentList = string.Empty;
@@ -526,6 +680,7 @@ namespace WPF_Trello.ViewModels
             DescriptionTextBox = string.Empty;
             CardDetailChangedBy = string.Empty;
             IsExistConflictChanges = false;
+
 
             SelectedCard = null;
         });
@@ -536,12 +691,31 @@ namespace WPF_Trello.ViewModels
                 if(_authenticationService.CurrentUser.ID != SelectedMember.ID &&
                     CurrentBoard.Owner.ID != SelectedMember.ID)
                 {
+                    _eventBusService.Publish(new WaitingResponseEvent());
+
                     await _boardService.KickOutMemberFromBoardById(CurrentBoard.ID, string.Copy(SelectedMember.ID));
                 }
             }
+            catch (ServerResponseException ex)
+            {
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                string alertMessage = ex.Message;
+                string alertStatus = AlertStatus.ERROR;
+
+                Alert alert = new Alert(alertMessage, alertStatus);
+                _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+            }
             catch (Exception ex)
             {
-                //TODO: add error handler
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                string alertMessage = "Something was wrong";
+                string alertStatus = AlertStatus.ERROR;
+
+                Alert alert = new Alert(alertMessage, alertStatus);
+                _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+
                 Debug.WriteLine(ex.Message);
             }
         });
@@ -549,10 +723,30 @@ namespace WPF_Trello.ViewModels
         {
             try
             {
+                _eventBusService.Publish(new WaitingResponseEvent());
+
                 BoardList newList = await _boardService.CreateNewList(CurrentBoard.ID, NewListTitle);
+            }
+            catch (ServerResponseException ex)
+            {
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                string alertMessage = ex.Message;
+                string alertStatus = AlertStatus.ERROR;
+
+                Alert alert = new Alert(alertMessage, alertStatus);
+                _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
             }
             catch (Exception ex)
             {
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                string alertMessage = "Something was wrong";
+                string alertStatus = AlertStatus.ERROR;
+
+                Alert alert = new Alert(alertMessage, alertStatus);
+                _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+
                 Debug.WriteLine(ex.Message);
             }
         });
@@ -560,10 +754,30 @@ namespace WPF_Trello.ViewModels
         {
             try
             {
+                _eventBusService.Publish(new WaitingResponseEvent());
+
                 BoardCard newCard = await _boardService.CreateNewCard(SelectedList.ID, SelectedList.NewCardTitle);
+            }
+            catch (ServerResponseException ex)
+            {
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                string alertMessage = ex.Message;
+                string alertStatus = AlertStatus.ERROR;
+
+                Alert alert = new Alert(alertMessage, alertStatus);
+                _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
             }
             catch (Exception ex)
             {
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                string alertMessage = "Something was wrong";
+                string alertStatus = AlertStatus.ERROR;
+
+                Alert alert = new Alert(alertMessage, alertStatus);
+                _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+
                 Debug.WriteLine(ex.Message);
             }
         });
@@ -571,10 +785,30 @@ namespace WPF_Trello.ViewModels
         {
             try
             {
+                _eventBusService.Publish(new WaitingResponseEvent());
+
                 await _boardService.DeleteBoardList(SelectedList.ID);
+            }
+            catch (ServerResponseException ex)
+            {
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                string alertMessage = ex.Message;
+                string alertStatus = AlertStatus.ERROR;
+
+                Alert alert = new Alert(alertMessage, alertStatus);
+                _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
             }
             catch (Exception ex)
             {
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                string alertMessage = "Something was wrong";
+                string alertStatus = AlertStatus.ERROR;
+
+                Alert alert = new Alert(alertMessage, alertStatus);
+                _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+
                 Debug.WriteLine(ex.Message);
             }
         });
@@ -582,10 +816,30 @@ namespace WPF_Trello.ViewModels
         {
             try
             {
+                _eventBusService.Publish(new WaitingResponseEvent());
+
                 await _boardService.DeleteBoardCard(SelectedCard.ID);
+            }
+            catch (ServerResponseException ex)
+            {
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                string alertMessage = ex.Message;
+                string alertStatus = AlertStatus.ERROR;
+
+                Alert alert = new Alert(alertMessage, alertStatus);
+                _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
             }
             catch (Exception ex)
             {
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                string alertMessage = "Something was wrong";
+                string alertStatus = AlertStatus.ERROR;
+
+                Alert alert = new Alert(alertMessage, alertStatus);
+                _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+
                 Debug.WriteLine(ex.Message);
             }
         });
@@ -593,10 +847,30 @@ namespace WPF_Trello.ViewModels
         {
             try
             {
+                _eventBusService.Publish(new WaitingResponseEvent());
+
                 await _boardService.DeleteBoard(CurrentBoard.ID);
+            }
+            catch (ServerResponseException ex)
+            {
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                string alertMessage = ex.Message;
+                string alertStatus = AlertStatus.ERROR;
+
+                Alert alert = new Alert(alertMessage, alertStatus);
+                _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
             }
             catch (Exception ex)
             {
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                string alertMessage = "Something was wrong";
+                string alertStatus = AlertStatus.ERROR;
+
+                Alert alert = new Alert(alertMessage, alertStatus);
+                _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+
                 Debug.WriteLine(ex.Message);
             }
         });
@@ -604,13 +878,33 @@ namespace WPF_Trello.ViewModels
         {
             try
             {
+                _eventBusService.Publish(new WaitingResponseEvent());
+
                 User newMember = await _boardService.InviteNewMember(CurrentBoard.ID, InviteMemberName);
                 _webSocketService.NotifyInvitedMember(newMember.ID);
 
                 InviteMemberName = string.Empty;
             }
+            catch (ServerResponseException ex)
+            {
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                string alertMessage = ex.Message;
+                string alertStatus = AlertStatus.ERROR;
+
+                Alert alert = new Alert(alertMessage, alertStatus);
+                _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+            }
             catch (Exception ex)
             {
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                string alertMessage = "Something was wrong";
+                string alertStatus = AlertStatus.ERROR;
+
+                Alert alert = new Alert(alertMessage, alertStatus);
+                _messageBusService.SendTo<MainViewModel>(new NotifyAlertMessage(alert));
+
                 Debug.WriteLine(ex.Message);
             }
         });

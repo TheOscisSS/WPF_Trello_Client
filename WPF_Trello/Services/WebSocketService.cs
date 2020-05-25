@@ -21,7 +21,7 @@ namespace WPF_Trello.Services
             _messageBusService = messageBusService;
             _eventBusService = eventBusService;
 
-            _socket = IO.Socket("http://localhost:3000");
+            _socket = IO.Socket("https://intense-temple-88335.herokuapp.com/");
             _socket.On("BOARD:JOINED", (message) =>
             {
                 // TODO: Add error handler;

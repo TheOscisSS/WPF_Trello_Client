@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using WPF_Trello.Exceptions;
 using WPF_Trello.Models;
 using WPF_Trello.Utils;
 
@@ -27,7 +28,7 @@ namespace WPF_Trello.Services
                 {
                     //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
-                    throw new UnauthorizedAccessException(joMessage.ToString());
+                    throw new ServerResponseException(joMessage.ToString());
                 }
 
                 return HttpHelper.ParseJsonToPreviewBoards(joResponse.ToString());
@@ -46,7 +47,7 @@ namespace WPF_Trello.Services
                 {
                     //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
-                    throw new UnauthorizedAccessException(joMessage.ToString());
+                    throw new ServerResponseException(joMessage.ToString());
                 }
 
                 return HttpHelper.ParseJsonToUserNotifications(joResponse.ToString());
@@ -70,7 +71,7 @@ namespace WPF_Trello.Services
                 {
                     //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
-                    throw new UnauthorizedAccessException(joMessage.ToString());
+                    throw new ServerResponseException(joMessage.ToString());
                 }
 
                 return HttpHelper.ParseJsonToUserNotification(joResponse.ToString());
@@ -89,7 +90,7 @@ namespace WPF_Trello.Services
                 {
                     //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
-                    throw new UnauthorizedAccessException(joMessage.ToString());
+                    throw new ServerResponseException(joMessage.ToString());
                 }
 
                 return HttpHelper.ParseJsonToUserCredentials(joResponse.ToString());
@@ -108,7 +109,7 @@ namespace WPF_Trello.Services
                 {
                     //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
-                    throw new UnauthorizedAccessException(joMessage.ToString());
+                    throw new ServerResponseException(joMessage.ToString());
                 }
 
                 var joBoard = (JObject)joResponse.SelectToken("board");
@@ -135,7 +136,7 @@ namespace WPF_Trello.Services
                 {
                     //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
-                    throw new UnauthorizedAccessException(joMessage.ToString());
+                    throw new ServerResponseException(joMessage.ToString());
                 }
 
                 return HttpHelper.ParseJsonToBoardList(joResponse.ToString());
@@ -160,7 +161,7 @@ namespace WPF_Trello.Services
                 {
                     //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
-                    throw new UnauthorizedAccessException(joMessage.ToString());
+                    throw new ServerResponseException(joMessage.ToString());
                 }
 
                 return HttpHelper.ParseJsonToBoardCard(joResponse.ToString());
@@ -185,7 +186,7 @@ namespace WPF_Trello.Services
                 {
                     //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
-                    throw new UnauthorizedAccessException(joMessage.ToString());
+                    throw new ServerResponseException(joMessage.ToString());
                 }
 
                 return HttpHelper.ParseJsonToUserCredentials(joResponse.ToString());
@@ -209,7 +210,7 @@ namespace WPF_Trello.Services
                 {
                     //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
-                    throw new UnauthorizedAccessException(joMessage.ToString());
+                    throw new ServerResponseException(joMessage.ToString());
                 }
 
                 return HttpHelper.ParseJsonToPreviewBoard(joResponse.ToString());
@@ -235,7 +236,7 @@ namespace WPF_Trello.Services
                 {
                     //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
-                    throw new UnauthorizedAccessException(joMessage.ToString());
+                    throw new ServerResponseException(joMessage.ToString());
                 }
 
                 return HttpHelper.ParseJsonToBoardCard(joResponse.ToString());
@@ -254,7 +255,7 @@ namespace WPF_Trello.Services
                 {
                     //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
-                    throw new UnauthorizedAccessException(joMessage.ToString());
+                    throw new ServerResponseException(joMessage.ToString());
                 }
 
                 var joCardDescription = JObject.Parse(joResponse.ToString());
@@ -281,7 +282,7 @@ namespace WPF_Trello.Services
                 {
                     //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
-                    throw new UnauthorizedAccessException(joMessage.ToString());
+                    throw new ServerResponseException(joMessage.ToString());
                 }
 
                 var newLists = new List<string>();
@@ -314,7 +315,7 @@ namespace WPF_Trello.Services
                 {
                     //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
-                    throw new UnauthorizedAccessException(joMessage.ToString());
+                    throw new ServerResponseException(joMessage.ToString());
                 }
 
                 var newCards= new List<string>();
@@ -347,7 +348,7 @@ namespace WPF_Trello.Services
                 {
                     //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
-                    throw new UnauthorizedAccessException(joMessage.ToString());
+                    throw new ServerResponseException(joMessage.ToString());
                 }
 
                 return true;
@@ -366,7 +367,7 @@ namespace WPF_Trello.Services
                 {
                     //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
-                    throw new UnauthorizedAccessException(joMessage.ToString());
+                    throw new ServerResponseException(joMessage.ToString());
                 }
 
                 var joListID = JObject.Parse(joResponse.ToString());
@@ -388,7 +389,7 @@ namespace WPF_Trello.Services
                 {
                     //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
-                    throw new UnauthorizedAccessException(joMessage.ToString());
+                    throw new ServerResponseException(joMessage.ToString());
                 }
 
                 var joCardID = JObject.Parse(joResponse.ToString());
@@ -410,7 +411,7 @@ namespace WPF_Trello.Services
                 {
                     //TODO: Generate suitable exception 
                     var joMessage = (JValue)joResponse.SelectToken("message");
-                    throw new UnauthorizedAccessException(joMessage.ToString());
+                    throw new ServerResponseException(joMessage.ToString());
                 }
 
                 var joBoardID = JObject.Parse(joResponse.ToString());
@@ -430,7 +431,7 @@ namespace WPF_Trello.Services
                 if (!response.IsSuccessStatusCode)
                 {
                     //TODO: Generate suitable exception 
-                    throw new Exception("May be time is over");
+                    throw new ServerResponseException("Something was wrong, try again later");
                 }
 
                 return HttpHelper.ParseJsonToPicturesUrl(result);

@@ -1,6 +1,7 @@
 ﻿using DevExpress.Mvvm;
 using System;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -50,11 +51,25 @@ namespace WPF_Trello.ViewModels
                     return;
                 }
 
-                if(PasswordInputField != ConfirmPasswordInputField)
+                if (!new Regex(@"^[a-zA-Z][a-zA-Z0-9]{3,13}$").IsMatch(UsernameInputField))
+                {
+                    ShowStatus = "Username can't containe special sumbols and was less then 3 characters";
+                    return;
+                }
+
+                if (PasswordInputField != ConfirmPasswordInputField)
                 {
                     ShowStatus = "Passwords must match";
                     return;
                 }
+
+                if (!new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})").IsMatch(PasswordInputField))
+                {
+                    ShowStatus = "Password is too easy";
+                    return;
+                }
+
+                _eventBusService.Publish(new WaitingResponseEvent());
 
                 User user = await _authenticationService.CreateUser(UsernameInputField, PasswordInputField, ConfirmPasswordInputField);
 
@@ -72,10 +87,15 @@ namespace WPF_Trello.ViewModels
             }
             catch (UnauthorizedAccessException e)
             {
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
+                Debug.WriteLine(e.Message);
                 ShowStatus = e.Message;
             }
             catch (Exception ex)
             {
+                _eventBusService.Publish(new ResponseReceivedEvent());
+
                 Debug.WriteLine(ex.Message);
                 ShowStatus = "Something was wrong";
             }
@@ -85,6 +105,8 @@ namespace WPF_Trello.ViewModels
         {
             await Registration();
             _authenticationService.ChangeStatus(Thread.CurrentPrincipal.Identity.IsAuthenticated);
+
+            _eventBusService.Publish(new ResponseReceivedEvent());
         });
         public ICommand ComeToLoginPage => new AsyncCommand(async () =>
         {

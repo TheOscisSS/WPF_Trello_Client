@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using WPF_Trello.Exceptions;
 using WPF_Trello.Models;
 using WPF_Trello.Utils;
 
@@ -41,8 +42,6 @@ namespace WPF_Trello.Services
             }
 
             customPrincipal.Identity = new CustomIdentity(user.Username, new string[] { });
-
-            //ChangeStatus(Thread.CurrentPrincipal.Identity.IsAuthenticated);
         }
         public async Task<User> AuthenticateUser(string username, string password)
         {
@@ -88,7 +87,7 @@ namespace WPF_Trello.Services
                 if (!response.IsSuccessStatusCode)
                 {
                     var joMessage = (JValue)joResponse.SelectToken("message");
-                    throw new UnauthorizedAccessException(joMessage.ToString());
+                    throw new ServerResponseException(joMessage.ToString());
                 }
 
                 CurrentUser.SetIcon(icon);
@@ -132,17 +131,4 @@ namespace WPF_Trello.Services
         public void ChangeStatus(bool status) => OnStatusChanged?.Invoke(status);
     }
 
-    public class HttpResponseException : Exception
-    {
-        public string Status { get; set; }
-        public HttpResponseException()
-        {
-        }
-
-        public HttpResponseException(string message, string status)
-            : base(message)
-        {
-            Status = status;
-        }
-    }
 }
